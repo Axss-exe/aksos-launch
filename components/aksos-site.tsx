@@ -20,11 +20,14 @@ const journey = [
   ['BEYOND', 'Expanding the system', 'Moving from the initial Zimbabwe operating context toward broader African intelligence infrastructure.'],
 ]
 
-function Mark({ small = false }: { small?: boolean }) {
+function Mark({ small = false, atis = false }: { small?: boolean; atis?: boolean }) {
   return (
-    <span className={small ? 'brand-mark brand-mark-small' : 'brand-mark'} aria-hidden="true">
-      <span /><span /><span />
-    </span>
+    <img
+      className={small ? 'brand-mark brand-mark-small' : atis ? 'atis-mark' : 'brand-mark'}
+      src={atis ? '/atis-symbol-traced.svg' : '/aksos-symbol-traced.svg'}
+      alt={small ? '' : atis ? 'ATIS symbol' : 'AKSOS symbol'}
+      aria-hidden={small ? true : undefined}
+    />
   )
 }
 
@@ -56,7 +59,7 @@ function DemoPanel() {
           <div className="demo-query"><span className="query-dot" />What connects this policy to current opportunity?</div>
           <div className="demo-result-heading"><span>ANALYSIS / 01</span><b>Emerging relationship map</b></div>
           <div className="mini-map"><span className="mini-line a" /><span className="mini-line b" /><span className="mini-line c" /><i className="mini-node n1">P</i><i className="mini-node n2">M</i><i className="mini-node n3">O</i><i className="mini-node n4">I</i></div>
-          <div className="demo-evidence"><span>Evidence retrieved</span><b>14 sources</b><span>Relationships surfaced</span><b>06 typed</b><span>Report status</span><b className="signal">Draft</b></div>
+          <div className="demo-evidence"><span>Current pilot</span><b>Zimbabwe focus</b><span>Analysis mode</span><b>RAG + RITA</b><span>System status</span><b className="signal">Experimental</b></div>
         </div>
       </div>
       <p className="demo-note">Conceptual interface — representative of the kind of system we are building.</p>
@@ -90,7 +93,7 @@ export function AksosSite() {
 
       <section className="section approach" id="approach"><SectionLabel>03 / THE AKSOS APPROACH</SectionLabel><h2>Technology is only part<br />of the infrastructure.</h2><div className="approach-grid"><div className="approach-side system"><div className="side-icon">ATIS</div><h3>The system</h3><p>ATIS + RITA + evidence architecture + intelligence workflows</p><div className="side-list"><span>Organize evidence</span><span>Identify relationships</span><span>Accelerate analysis</span></div></div><div className="approach-plus">+</div><div className="approach-side network"><div className="side-icon">AKSOS</div><h3>The network</h3><p>People + institutions + researchers + organizations + first-source information</p><div className="side-list"><span>Bring current context</span><span>Share domain expertise</span><span>Stay close to change</span></div></div></div><p className="approach-footer">We believe meaningful intelligence requires both. AKSOS is building both.</p></section>
 
-      <section className="section atis" id="atis"><div className="atis-header"><div><SectionLabel>04 / THE SYSTEM</SectionLabel><h2>ATIS</h2><p className="subhead">An intelligence platform we&apos;re building to connect evidence, relationships and emerging information.</p></div><div className="atis-arrow"><ArrowUpRight /></div></div><div className="atis-content"><div><p>ATIS is an intelligence platform powered by a Retrieval-Augmented Generation system and built around verified knowledge.</p><p>It is being developed to work across economic, legal, regulatory, government, organizational and other relevant information.</p><p>Users can ask questions in natural language and explore the evidence, relationships and context surrounding a subject. The system can then produce analytical reports that bring together relevant evidence, relationships, risks, opportunities and strategic considerations.</p><p className="fine-print">ATIS is still under active development. What you see here represents capabilities demonstrated by the current system — not the finished vision.</p></div><DemoPanel /></div></section>
+      <section className="section atis" id="atis"><div className="atis-header"><div><SectionLabel>04 / THE SYSTEM</SectionLabel><div className="atis-title"><Mark atis /><h2>ATIS</h2></div><p className="subhead">An intelligence platform we&apos;re building to connect evidence, relationships and emerging information.</p></div><a className="atis-arrow" href="https://av2-ten.vercel.app" target="_blank" rel="noreferrer" aria-label="Open the ATIS pilot briefing"><ArrowUpRight /></a></div><div className="atis-content"><div><p>ATIS is an intelligence platform powered by a Retrieval-Augmented Generation system and built around verified knowledge.</p><p>It is being developed to work across economic, legal, regulatory, government, organizational and other relevant information.</p><p>Users can ask questions in natural language and explore the evidence, relationships and context surrounding a subject. The system can then produce analytical reports that bring together relevant evidence, relationships, risks, opportunities and strategic considerations.</p><p className="fine-print">ATIS is still under active development. What you see here represents capabilities demonstrated by the current system — not the finished vision.</p></div><DemoPanel /></div></section>
 
       <section className="section capabilities"><SectionLabel>05 / CURRENT CAPABILITIES</SectionLabel><div className="cap-header"><h2>What ATIS can do today.</h2><p>Here is what we have been able to build so far. The interface is a window into an evolving system, not a promise of a finished product.</p></div><div className="cap-list"><div><span>01</span><b>Natural-language querying</b><p>Ask questions across a verified knowledge base.</p></div><div><span>02</span><b>Evidence retrieval</b><p>Trace an answer back to the sources that support it.</p></div><div><span>03</span><b>Relationship identification</b><p>Surface how entities, events and documents may connect.</p></div><div><span>04</span><b>Analytical reporting</b><p>Bring evidence, context and potential implications together.</p></div></div></section>
 
