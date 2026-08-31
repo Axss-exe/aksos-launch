@@ -1,5 +1,9 @@
 import { Analytics } from '@vercel/analytics/next'
+import { IBM_Plex_Mono, Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const plexMono = IBM_Plex_Mono({ subsets: ['latin'], variable: '--font-plex-mono', weight: ['400', '500'] })
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -37,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background">
-      <body className="antialiased">
+      <body className={`${inter.variable} ${plexMono.variable} antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
