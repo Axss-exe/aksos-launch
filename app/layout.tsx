@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'AKSOS is building the systems and relationships needed to understand how information connects across Africa.',
   generator: 'AKSOS',
   icons: {
-    icon: '/aksos-symbol-traced.svg'
+    icon: '/aksos-symbol-traced.svg',
     apple: '/aksos-symbol-traced.svg',
   },
 }
