@@ -60,7 +60,28 @@ const mockRitaStories = [
   { label: 'STORY 03 / POLICY + PEOPLE', title: 'A policy can move through people before it moves through markets.', body: 'RITA is being developed to surface the institutional and human relationships that sit between a decision and its possible consequences.', links: ['Policy shift', 'Ministry', 'Expert', 'Industry'] },
 ]
 
+const ritaCaseStudy = {
+  evidence: [
+    { source: 'News24', date: 'May 12, 2024', text: 'Zimbabwe announces a new 300MW solar initiative to address energy shortages and attract private investment.', tag: 'Policy / Energy' },
+    { source: 'The Herald', date: 'May 14, 2024', text: 'Cabinet approves reforms intended to accelerate independent power producer licensing.', tag: 'Government / Policy' },
+    { source: 'ZERA', date: 'May 15, 2024', text: 'Proposed tariff changes could increase renewable-energy integration.', tag: 'Regulatory / Energy' },
+    { source: 'Industry brief', date: 'May 16, 2024', text: 'Renewable-energy developers identify Zimbabwe as an emerging investment opportunity.', tag: 'Market / Investment' },
+  ],
+  connections: [
+    ['Government policy', '300MW solar initiative'], ['300MW solar initiative', 'IPP framework'], ['IPP framework', 'New tariff structure'], ['New tariff structure', 'Private investment'], ['Private investment', 'Renewable capacity'],
+  ],
+  story: { title: 'Zimbabwe is creating the conditions for a significant expansion in renewable-energy investment.', body: 'Policy reform, regulatory changes and updated tariff structures are converging to reduce barriers to renewable-energy development.', implications: ['Increased private investment', 'Faster IPP participation', 'Expansion of renewable capacity'] },
+  report: { title: "Zimbabwe’s Renewable Energy Acceleration", subtitle: 'Executive Intelligence Report', sections: ['Executive Summary', 'Key Findings', 'Key Entities', 'Opportunities', 'Risks & Constraints', 'Implications', 'Timeline / Outlook', 'Supporting Evidence'] },
+}
+
 function RITARedesign() {
+  const [stage, setStage] = useState(0)
+  const stages = ['Evidence', 'Connections', 'The Story', 'Intelligence']
+  const active = stages[stage]
+  return <section className="section rita-redesign" id="rita-redesign"><div className="rita-action-head"><SectionLabel>06 / RITA IN ACTION</SectionLabel><h2>From fragmented evidence<br />to <em>actionable intelligence.</em></h2><p>RITA connects the information that matters, revealing the story behind the signals.</p></div><div className="rita-experience"><div className="rita-stage-nav" role="tablist" aria-label="RITA analytical stages">{stages.map((item, i) => <button key={item} type="button" role="tab" aria-selected={stage === i} className={stage === i ? 'is-active' : ''} onClick={() => setStage(i)}><span>0{i + 1}</span>{item}</button>)}</div><div className={`rita-stage-view stage-${stage}`}><div className="rita-progress-note"><span>RITA / {active.toUpperCase()}</span><span>CASE STUDY / RENEWABLE ENERGY</span></div>{stage === 0 && <div className="evidence-view">{ritaCaseStudy.evidence.map((item) => <article className="evidence-fragment" key={item.source}><div><b>{item.source}</b><span>{item.date}</span></div><p>{item.text}</p><small>{item.tag}</small></article>)}</div>}{stage === 1 && <div className="connections-view"><div className="connection-chain" aria-label="Relationships discovered from the evidence">{ritaCaseStudy.connections.map(([from, to], i) => <div className="connection-step" key={to}><span className="connection-node">{from}</span><ChevronRight /><span className="connection-node emphasized">{to}</span>{i < ritaCaseStudy.connections.length - 1 && <ArrowDown />}</div>)}</div><p className="stage-explain">RITA filters the fragments down to the few relationships that change the meaning of the event.</p></div>}{stage === 2 && <div className="story-view"><div><span className="type-number">COHERENT STORY</span><h3>{ritaCaseStudy.story.title}</h3><p>{ritaCaseStudy.story.body}</p></div><div className="story-implications"><span className="type-number">WHY IT MATTERS</span>{ritaCaseStudy.story.implications.map((item) => <span key={item}><i />{item}</span>)}</div></div>}{stage === 3 && <div className="report-view"><div className="report-paper"><span>ATIS / INTELLIGENCE REPORT</span><h3>{ritaCaseStudy.report.title}</h3><p>{ritaCaseStudy.report.subtitle}</p><div className="report-rule" />{ritaCaseStudy.report.sections.map((item) => <span key={item}><i />{item}</span>)}</div><div className="report-copy"><span className="type-number">THE PAYOFF</span><h3>All of that fragmented information became this.</h3><p>Evidence, relationships and narrative are delivered as one traceable intelligence product.</p></div></div>}</div><div className="rita-controls"><button type="button" onClick={() => setStage((stage + 3) % 4)} aria-label="Previous stage">←</button><span>0{stage + 1} / 04</span><button type="button" onClick={() => setStage((stage + 1) % 4)} aria-label="Next stage">→</button></div></div><p className="rita-action-close"><strong>ATIS doesn&apos;t just find information.</strong><br />RITA connects, validates, and transforms it into intelligence you can act on.</p></section>
+}
+
+function LegacyRITARedesign() {
   const [storyIndex, setStoryIndex] = useState(0)
   const nodes = [
     ['Government', 'node-government'], ['Regulation', 'node-regulation'], ['Mining company', 'node-company'],
