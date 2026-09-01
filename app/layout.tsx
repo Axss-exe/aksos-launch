@@ -9,7 +9,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'AKSOS — Intelligence infrastructure for Africa',
   description: 'AKSOS is building the systems and relationships needed to understand how information connects across Africa.',
-  generator: 'v0.app',
+  generator: 'AKSOS',
   icons: {
     icon: [
       {
