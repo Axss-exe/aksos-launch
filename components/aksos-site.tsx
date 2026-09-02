@@ -121,14 +121,14 @@ export function AksosSite() {
       <header className="site-header">
         <a href="#top" className="wordmark"><Mark small /><span>AKSOS</span></a>
         <nav className={menuOpen ? 'nav-open' : ''} aria-label="Main navigation">
-          <a href="#why" onClick={() => setMenuOpen(false)}>Why we&apos;re building</a><a href="#atis" onClick={() => setMenuOpen(false)}>ATIS</a><a href="/batana" onClick={() => setMenuOpen(false)}>Batana</a><a href="#rita-redesign" onClick={() => setMenuOpen(false)}>RITA</a><a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#journey" onClick={() => setMenuOpen(false)}>The journey</a>
+          <a href="#why" onClick={() => setMenuOpen(false)}>Why we&apos;re building</a><a href="https://atis.aksos.net" onClick={() => setMenuOpen(false)}>ATIS</a><a href="/batana" onClick={() => setMenuOpen(false)}>Batana</a><a href="#rita-redesign" onClick={() => setMenuOpen(false)}>RITA</a><a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#journey" onClick={() => setMenuOpen(false)}>The journey</a>
           <a className="nav-cta" href="#connect" onClick={() => setMenuOpen(false)}>Start a conversation <ArrowUpRight /></a>
         </nav>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>{menuOpen ? <X /> : <Menu />}</button>
       </header>
 
       <section className="hero" id="top">
-        <div className="hero-copy"><h1>Building intelligence infrastructure <em>for Africa.</em></h1><p className="hero-lede">Africa already produces enormous amounts of information. The harder problem is understanding how it connects.</p><p className="hero-lede muted">AKSOS is building the technology, intelligence systems, and relationships needed to turn fragmented evidence into clearer understanding.</p><div className="hero-actions"><a className="button button-solid" href="#connect">Start a conversation <ArrowUpRight /></a><a className="button button-quiet" href="#atis">Explore ATIS <ArrowDown /></a></div></div>
+        <div className="hero-copy"><h1>Building intelligence infrastructure <em>for Africa.</em></h1><p className="hero-lede">Africa already produces enormous amounts of information. The harder problem is understanding how it connects.</p><p className="hero-lede muted">AKSOS is building the technology, intelligence systems, and relationships needed to turn fragmented evidence into clearer understanding.</p><div className="hero-actions"><a className="button button-solid" href="#connect">Start a conversation <ArrowUpRight /></a><a className="button button-quiet" href="https://atis.aksos.net">Explore ATIS <ArrowDown /></a></div></div>
         
       </section>
 
