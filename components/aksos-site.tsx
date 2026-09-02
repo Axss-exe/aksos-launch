@@ -121,7 +121,7 @@ export function AksosSite() {
       <header className="site-header">
         <a href="#top" className="wordmark"><Mark small /><span>AKSOS</span></a>
         <nav className={menuOpen ? 'nav-open' : ''} aria-label="Main navigation">
-          <a href="#why" onClick={() => setMenuOpen(false)}>Why we&apos;re building</a><a href="https://atis.aksos.net" onClick={() => setMenuOpen(false)}>ATIS</a><a href="/batana" onClick={() => setMenuOpen(false)}>Batana</a><a href="#rita-redesign" onClick={() => setMenuOpen(false)}>RITA</a><a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#journey" onClick={() => setMenuOpen(false)}>The journey</a>
+          <a href="#why" onClick={() => setMenuOpen(false)}>Why we&apos;re building</a><a href="#atis" onClick={() => setMenuOpen(false)}>ATIS</a><a href="/batana" onClick={() => setMenuOpen(false)}>Batana</a><a href="#rita-redesign" onClick={() => setMenuOpen(false)}>RITA</a><a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#journey" onClick={() => setMenuOpen(false)}>The journey</a>
           <a className="nav-cta" href="#connect" onClick={() => setMenuOpen(false)}>Start a conversation <ArrowUpRight /></a>
         </nav>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>{menuOpen ? <X /> : <Menu />}</button>
