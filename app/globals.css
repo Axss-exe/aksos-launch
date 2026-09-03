@@ -3,7 +3,6 @@
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import './new-styles.css';
 
 @theme inline {
   --font-sans: var(--font-inter), 'Inter', Arial, sans-serif;
