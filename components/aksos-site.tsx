@@ -49,6 +49,11 @@ function GraphVisual() {
   )
 }
 
+function HeroSystemMap() {
+  const nodes = ['POLICY', 'MINISTRY', 'COMPANY', 'PROGRAM', 'MARKET', 'RESEARCH', 'PEOPLE', 'EVENT']
+  return <div className="hero-system-map" role="img" aria-label="Connected information objects becoming intelligence"><div className="hero-map-lines" aria-hidden="true"><i /><i /><i /><i /><i /><i /></div><div className="hero-map-core"><span>AKSOS</span><b>CONNECTED<br />UNDERSTANDING</b></div>{nodes.map((node, index) => <span className={`hero-map-node hero-map-node-${index + 1}`} key={node}>{node}</span>)}<small>FIELD / 001 — RELATIONSHIPS IN VIEW</small></div>
+}
+
 function InformationFlow() {
   const steps = ['Signals from the world', 'Source checking', 'Evidence + context', 'RITA finds relationships', 'ATIS builds the picture']
   return <div className="information-flow" role="img" aria-label="Information flows from signals through source checking, evidence and RITA relationships into ATIS understanding"><div className="flow-intro"><span>VALUE ADDED</span><p>More information is not automatically better information. Each step adds structure, context and traceability.</p></div><div className="flow-steps">{steps.map((step, index) => <div className={index === steps.length - 1 ? 'flow-step final' : 'flow-step'} key={step}><span className="flow-index">0{index + 1}</span><b>{step}</b>{index < steps.length - 1 && <ArrowDown />}</div>)}</div></div>
@@ -128,8 +133,7 @@ export function AksosSite() {
       </header>
 
       <section className="hero" id="top">
-        <div className="hero-copy"><h1>Building intelligence infrastructure <em>for Africa.</em></h1><p className="hero-lede">Africa already produces enormous amounts of information. The harder problem is understanding how it connects.</p><p className="hero-lede muted">AKSOS is building the technology, intelligence systems, and relationships needed to turn fragmented evidence into clearer understanding.</p><div className="hero-actions"><a className="button button-solid" href="#connect">Start a conversation <ArrowUpRight /></a><a className="button button-quiet" href="https://atis.aksos.net">Explore ATIS <ArrowDown /></a></div></div>
-        
+        <div className="hero-copy"><p className="eyebrow">AKSOS / INTELLIGENCE INFRASTRUCTURE</p><h1>Building intelligence infrastructure <em>for Africa.</em></h1><p className="hero-lede">Africa already produces enormous amounts of information. The harder problem is understanding how it connects.</p><p className="hero-lede muted">AKSOS is building the technology, intelligence systems, and relationships needed to turn fragmented evidence into clearer understanding.</p><div className="hero-actions"><a className="button button-solid" href="#connect">Start a conversation <ArrowUpRight /></a><a className="button button-quiet" href="https://atis.aksos.net">Explore ATIS <ArrowDown /></a></div></div><HeroSystemMap />
       </section>
 
       <section className="statement-strip"><span>INFORMATION</span><ArrowRightLine /><span>UNDERSTANDING</span></section>

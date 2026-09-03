@@ -1,0 +1,13 @@
+/* Construction guide overrides */
+.hero-system-map { min-height:430px; border-left:1px solid var(--line); position:relative; overflow:hidden; color:var(--gray); font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; }
+.hero-map-core { position:absolute; inset:38% auto auto 38%; width:150px; height:150px; border:1px solid var(--signal); display:flex; flex-direction:column; justify-content:center; gap:10px; padding:20px; color:var(--signal); }
+.hero-map-core b { color:var(--ink); font-size:9px; font-weight:400; line-height:1.5; }
+.hero-map-node { position:absolute; border-bottom:1px solid var(--line); padding:7px 0; }
+.hero-map-node-1 { left:10%; top:12%; }.hero-map-node-2 { right:8%; top:18%; }.hero-map-node-3 { left:18%; bottom:23%; }.hero-map-node-4 { right:12%; bottom:15%; }.hero-map-node-5 { left:48%; top:5%; }.hero-map-node-6 { left:4%; top:52%; }.hero-map-node-7 { right:3%; top:54%; }.hero-map-node-8 { left:49%; bottom:4%; }
+.hero-map-lines i { position:absolute; height:1px; width:42%; background:var(--line); transform-origin:left; }.hero-map-lines i:nth-child(1){left:21%;top:17%;transform:rotate(24deg)}.hero-map-lines i:nth-child(2){left:55%;top:18%;transform:rotate(145deg)}.hero-map-lines i:nth-child(3){left:23%;top:58%;transform:rotate(-17deg)}.hero-map-lines i:nth-child(4){left:55%;top:57%;transform:rotate(15deg)}.hero-map-lines i:nth-child(5){left:55%;top:42%;transform:rotate(-35deg)}.hero-map-lines i:nth-child(6){left:43%;top:74%;transform:rotate(-72deg)}
+.hero-system-map small { position:absolute; bottom:18px; left:0; color:var(--gray); font-size:9px; }
+.section { padding-top:clamp(120px,12vw,180px); padding-bottom:clamp(120px,12vw,180px); }
+.site-header { background:rgba(242,240,233,.96) !important; }.site-header .wordmark, .site-header nav a { color:var(--ink) !important; }.site-header .nav-cta { color:var(--ink) !important; }.batana-page .site-header, .batana-page .site-header .wordmark, .batana-page .site-header nav a, .batana-page .site-header .nav-cta { color:var(--paper) !important; }.button-quiet { color:var(--ink) !important; }.batana-page .button-quiet { color:var(--paper) !important; }
+.atis, .provenance, .batana-dark-v2 { color:var(--paper); }
+@media (max-width:800px) { .hero-system-map { display:none; } .hero { display:flex; } .site-header nav a:hover { color:var(--ink); } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } *, *::before, *::after { transition-duration:.01ms !important; animation-duration:.01ms !important; } }
