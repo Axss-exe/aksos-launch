@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BatanaPage } from '@/components/batana-page'
+import { BatanaNewSite } from '@/components/BatanaNewSite'
 
 export const metadata: Metadata = {
   title: 'Project Batana — Better routes for serious objectives | AKSOS',
@@ -8,4 +8,4 @@ export const metadata: Metadata = {
   openGraph: { title: 'Project Batana — Better routes for serious objectives', description: 'An early pilot by AKSOS for people trying to do serious things in Zimbabwe.', type: 'website', url: '/batana' },
 }
 
-export default function BatanaRoute() { return <BatanaPage /> }
+export default function BatanaRoute() { return <BatanaNewSite /> }
