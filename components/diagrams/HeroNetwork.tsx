@@ -1,142 +1,206 @@
 'use client';
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { tokens } from '@/lib/design-tokens';
 
-// Africa outline - simplified abstract representation
+// Golden ratio constants
+const PHI = 1.618;
+const center = { x: 50, y: 50 };
+
+// Africa outline - simplified abstract representation using golden ratio proportions
 const africaOutline = [
-  { x: 50, y: 10 }, { x: 55, y: 8 }, { x: 60, y: 10 }, { x: 65, y: 8 },
-  { x: 70, y: 12 }, { x: 72, y: 18 }, { x: 70, y: 25 }, { x: 65, y: 30 },
-  { x: 65, y: 40 }, { x: 60, y: 50 }, { x: 55, y: 55 }, { x: 50, y: 58 },
-  { x: 45, y: 55 }, { x: 40, y: 50 }, { x: 35, y: 45 }, { x: 30, y: 40 },
-  { x: 25, y: 35 }, { x: 28, y: 25 }, { x: 35, y: 20 }, { x: 45, y: 15 },
-  { x: 50, y: 10 },
+  { x: 50, y: 10 }, { x: 58, y: 8 }, { x: 65, y: 10 }, { x: 72, y: 8 },
+  { x: 78, y: 12 }, { x: 80, y: 20 }, { x: 78, y: 28 }, { x: 75, y: 35 },
+  { x: 75, y: 45 }, { x: 70, y: 55 }, { x: 65, y: 62 }, { x: 60, y: 65 },
+  { x: 50, y: 68 }, { x: 40, y: 65 }, { x: 35, y: 62 }, { x: 30, y: 55 },
+  { x: 25, y: 45 }, { x: 25, y: 35 }, { x: 28, y: 28 }, { x: 35, y: 20 },
+  { x: 42, y: 15 }, { x: 50, y: 10 },
 ];
 
+// Concentric circles representing information depth
+const circles = [
+  { r: 12, label: 'PUBLIC', color: tokens.color.line, delay: 0.1 },
+  { r: 25, label: 'CONTEXT', color: tokens.color.line, delay: 0.2 },
+  { r: 38, label: 'PEOPLE', color: tokens.color.line, delay: 0.3 },
+  { r: 50, label: 'INSTITUTIONS', color: tokens.color.line, delay: 0.4 },
+];
+
+// Connection nodes positioned on circles
 const nodes = [
-  { id: 1, label: 'GOVERNMENT', x: 35, y: 20, delay: 0.1 },
-  { id: 2, label: 'INSTITUTION', x: 65, y: 18, delay: 0.2 },
-  { id: 3, label: 'COMPANY', x: 25, y: 40, delay: 0.3 },
-  { id: 4, label: 'RESEARCHER', x: 20, y: 50, delay: 0.4 },
-  { id: 5, label: 'MARKET', x: 75, y: 35, delay: 0.5 },
-  { id: 6, label: 'PERSON', x: 80, y: 50, delay: 0.6 },
-  { id: 7, label: 'INFORMATION', x: 40, y: 65, delay: 0.7 },
-  { id: 8, label: 'EVIDENCE', x: 60, y: 65, delay: 0.8 },
-];
-
-const aksosNode = { id: 'aksos', label: 'AKSOS', x: 50, y: 40, delay: 0.0 };
-
-const relationships = [
-  { from: 'aksos', to: 1 }, { from: 'aksos', to: 2 }, { from: 'aksos', to: 3 },
-  { from: 'aksos', to: 4 }, { from: 'aksos', to: 5 }, { from: 'aksos', to: 6 },
-  { from: 'aksos', to: 7 }, { from: 'aksos', to: 8 },
-  { from: 1, to: 2 }, { from: 3, to: 7 }, { from: 4, to: 8 },
-  { from: 5, to: 6 }, { from: 2, to: 5 }, { from: 1, to: 3 },
+  // Public layer
+  { id: 1, label: 'GOVERNMENT', r: 12, angle: 45, circleIndex: 0, delay: 0.5 },
+  { id: 2, label: 'COMPANIES', r: 12, angle: 135, circleIndex: 0, delay: 0.55 },
+  { id: 3, label: 'RESEARCH', r: 12, angle: 225, circleIndex: 0, delay: 0.6 },
+  { id: 4, label: 'MARKETS', r: 12, angle: 315, circleIndex: 0, delay: 0.65 },
+  
+  // Context layer
+  { id: 5, label: 'POLICIES', r: 25, angle: 0, circleIndex: 1, delay: 0.7 },
+  { id: 6, label: 'PROGRAMS', r: 25, angle: 90, circleIndex: 1, delay: 0.75 },
+  { id: 7, label: 'EVENTS', r: 25, angle: 180, circleIndex: 1, delay: 0.8 },
+  { id: 8, label: 'REPORTS', r: 25, angle: 270, circleIndex: 1, delay: 0.85 },
+  
+  // People layer
+  { id: 9, label: 'EXPERTS', r: 38, angle: 30, circleIndex: 2, delay: 0.9 },
+  { id: 10, label: 'LEADERS', r: 38, angle: 150, circleIndex: 2, delay: 0.95 },
+  { id: 11, label: 'ANALYSTS', r: 38, angle: 210, circleIndex: 2, delay: 1.0 },
+  { id: 12, label: 'SOURCES', r: 38, angle: 330, circleIndex: 2, delay: 1.05 },
 ];
 
 export function HeroNetwork() {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Subtle pulsing for AKSOS node
-  const aksosScale = useSpring(isHovered ? 1.1 : 1, { damping: 10, stiffness: 200 });
-  const lineOpacity = useSpring(isHovered ? 1 : 0.5, { damping: 10, stiffness: 100 });
-
-  const getNode = (id: number | string) => {
-    if (id === 'aksos') return aksosNode;
-    return nodes.find(n => n.id === id);
-  };
+  const getPosition = (r: number, angle: number) => ({
+    x: center.x + r * Math.cos((angle - 90) * Math.PI / 180),
+    y: center.y + r * Math.sin((angle - 90) * Math.PI / 180)
+  });
 
   return (
     <motion.div
       className="hero-network"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slower }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <svg viewBox="0 0 100 80" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '400px' }}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '400px' }}>
         
-        {/* Africa outline - subtle, always visible */}
+        {/* Africa outline - subtle, using golden ratio for proportions */}
         <motion.path
           d={generatePath(africaOutline)}
           fill="none"
           stroke={tokens.color.line}
-          strokeWidth="0.3"
+          strokeWidth="0.2"
+          opacity={0.3}
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
+          whileInView={{ pathLength: 1, opacity: 0.3 }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: tokens.animation.duration.slower, ease: tokens.animation.easing.easeInOut }}
         />
 
-        {/* Central AKSOS node */}
-        <motion.g style={{ scale: aksosScale }}>
-          <circle cx={aksosNode.x} cy={aksosNode.y} r={3} fill={tokens.color.ink} stroke={tokens.color.signal} strokeWidth="0.5" />
+        {/* Concentric circles - information depth layers */}
+        {circles.map((circle, index) => (
+          <motion.circle
+            key={`circle-${index}`}
+            cx={center.x}
+            cy={center.y}
+            r={circle.r}
+            fill="none"
+            stroke={circle.color}
+            strokeWidth="0.3"
+            initial={{ pathLength: 0, opacity: 0 }}
+            whileInView={{ pathLength: 1, opacity: 1 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.normal, delay: circle.delay }}
+            animate={isHovered ? { strokeWidth: [0.3, 0.5, 0.3] } : {}}
+            transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 } : {}}
+          />
+        ))}
+
+        {/* AKSOS center node with signal color */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal }}
+          animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
+          transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : {}}
+        >
+          <circle cx={center.x} cy={center.y} r={3} fill="none" stroke={tokens.color.signal} strokeWidth="0.5" />
+          <circle cx={center.x} cy={center.y} r={1.5} fill={tokens.color.signal} />
           <text
-            x={aksosNode.x} y={aksosNode.y} textAnchor="middle" dy="14"
-            fontSize="7" fontFamily={tokens.font.mono} fill={tokens.color.signal} letterSpacing="0.1em"
+            x={center.x} y={center.y} textAnchor="middle" dy="-18"
+            fontSize="8" fontFamily={tokens.font.mono} fill={tokens.color.signal} letterSpacing="0.15em"
           >
-            {aksosNode.label}
+            AKSOS
+          </text>
+          <text
+            x={center.x} y={center.y} textAnchor="middle" dy="-8"
+            fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em"
+          >
+            INTELLIGENCE
+          </text>
+          <text
+            x={center.x} y={center.y} textAnchor="middle" dy="4"
+            fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em"
+          >
+            INFRASTRUCTURE
           </text>
         </motion.g>
 
-        {/* Nodes */}
+        {/* Nodes positioned on concentric circles */}
         {nodes.map((node) => {
+          const pos = getPosition(node.r, node.angle);
           const nodeDelay = node.delay;
-          const springScale = useSpring(isHovered ? 1.1 : 1, { damping: 10, stiffness: 200 });
           
           return (
             <motion.g
               key={`node-${node.id}`}
               initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: tokens.animation.duration.normal, delay: nodeDelay }}
-              style={{ scale: isHovered ? springScale : 1 }}
+              whileHover={{ scale: 1.2, cursor: 'default' }}
+              animate={isHovered ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
+              transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: nodeDelay } : {}}
             >
-              <circle cx={node.x} cy={node.y} r={2} fill={tokens.color.ink} stroke={tokens.color.line} strokeWidth="0.3" />
-              <motion.text
-                x={node.x} y={node.y} textAnchor="middle" dy="12"
-                fontSize="6" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: nodeDelay + 0.1 }}
+              <circle cx={pos.x} cy={pos.y} r={1.5} fill={tokens.color.ink} stroke={tokens.color.line} strokeWidth="0.2" />
+              <text
+                x={pos.x} y={pos.y} textAnchor="middle" 
+                dy={node.label.length > 6 ? '12' : '10'}
+                fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em"
               >
                 {node.label}
-              </motion.text>
+              </text>
             </motion.g>
           );
         })}
 
-        {/* Relationships with pulsing opacity */}
-        {relationships.map((rel, index) => {
-          const fromNode = getNode(rel.from);
-          const toNode = getNode(rel.to);
-          if (!fromNode || !toNode) return null;
-
+        {/* Connection lines from AKSOS to nodes */}
+        {nodes.map((node, index) => {
+          const pos = getPosition(node.r, node.angle);
           return (
             <motion.line
-              key={`rel-${rel.from}-${rel.to}`}
-              x1={fromNode.x} y1={fromNode.y} x2={toNode.x} y2={toNode.y}
-              stroke={tokens.color.line} strokeWidth="0.2"
+              key={`line-${node.id}`}
+              x1={center.x} y1={center.y} x2={pos.x} y2={pos.y}
+              stroke={tokens.color.line}
+              strokeWidth="0.15"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: 1, 
-                opacity: isHovered ? lineOpacity : 0.5 
-              }}
-              transition={{
-                duration: tokens.animation.duration.normal,
-                delay: 0.5 + (index * 0.05)
-              }}
-              style={{ opacity: isHovered ? 1 : 0.5 }}
+              whileInView={{ pathLength: 1, opacity: 0.5 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: 0.6 + (index * 0.02) }}
+              animate={isHovered ? { opacity: [0.5, 1, 0.5], strokeWidth: [0.15, 0.3, 0.15] } : {}}
+              transition={isHovered ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.05 } : {}}
             />
+          );
+        })}
+
+        {/* Depth labels */}
+        {circles.map((circle, index) => {
+          const labelAngle = index * 90 + 45;
+          const labelPos = getPosition(circle.r + 3, labelAngle);
+          return (
+            <motion.text
+              key={`label-${index}`}
+              x={labelPos.x} y={labelPos.y} textAnchor="middle"
+              fontSize="4" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: circle.delay + 0.2 }}
+            >
+              {circle.label}
+            </motion.text>
           );
         })}
 
         {/* Hover indicator */}
         {isHovered && (
           <motion.text
-            x={50} y={75} textAnchor="middle"
-            fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted}
+            x={center.x} y={92} textAnchor="middle"
+            fontSize="4" fontFamily={tokens.font.mono} fill={tokens.color.muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -8,6 +8,8 @@ import { InformationDepthDiagram } from './diagrams/InformationDepthDiagram';
 import { ConvergenceDiagram } from './diagrams/ConvergenceDiagram';
 import { IntelligenceCycle } from './diagrams/IntelligenceCycle';
 import { GrowingNetwork } from './diagrams/GrowingNetwork';
+import { PipelineDiagram } from './diagrams/PipelineDiagram';
+import { RitaDiagram } from './diagrams/RitaDiagram';
 import { Section, SectionLabel, AnimatedSection } from './layout/Section';
 import { tokens } from '@/lib/design-tokens';
 
@@ -257,28 +259,9 @@ function PipelineSection() {
       >
         Each stage adds structure, context and traceability.
       </motion.p>
-      <motion.div 
-        className="pipeline-diagram"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <div className="pipeline-flow">
-          {['SIGNALS', 'SOURCE', 'EVIDENCE', 'CONTEXT', 'RELATIONSHIPS', 'RITA', 'STORY', 'ACTION'].map((stage, index) => (
-            <motion.div 
-              key={stage}
-              className="pipeline-stage"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (index * 0.05) }}
-            >
-              <span>{stage}</span>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      <PipelineDiagram />
+
+
     </Section>
   );
 }
@@ -339,22 +322,7 @@ function RitaSection() {
       >
         RITA reveals which relationships around an event are meaningful enough to change what it means.
       </motion.p>
-      <motion.div 
-        className="investigation"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <div>
-          <span>SOURCE</span>
-          <b>EVENT</b>
-          <b>ENTITY</b>
-          <b>RELATIONSHIP</b>
-          <b>CONTEXT</b>
-          <strong>STORY → INTELLIGENCE</strong>
-        </div>
-      </motion.div>
+      <RitaDiagram />
     </Section>
   );
 }

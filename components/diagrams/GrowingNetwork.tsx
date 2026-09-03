@@ -1,35 +1,68 @@
 'use client';
 
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { tokens } from '@/lib/design-tokens';
 
+// Growing Network diagram for Section 10
+// Shows AKSOS node growing with relationship types as different line styles
+
 export function GrowingNetwork() {
   const [isHovered, setIsHovered] = useState(false);
+  const [highlightedType, setHighlightedType] = useState<string | null>(null);
+
   const center = { x: 50, y: 40 };
 
-  const nodes = [
-    { id: 1, label: 'PERSON', x: 20, y: 20, delay: 0.1 },
-    { id: 2, label: 'ORGANIZATION', x: 20, y: 50, delay: 0.2 },
-    { id: 3, label: 'INSTITUTION', x: 20, y: 80, delay: 0.3 },
-    { id: 4, label: 'RESEARCH', x: 80, y: 20, delay: 0.4 },
-    { id: 5, label: 'MARKET', x: 80, y: 50, delay: 0.5 },
-    { id: 6, label: 'LOCAL', x: 80, y: 80, delay: 0.6 },
+  // Node types with different relationship styles
+  const nodeTypes = [
+    { 
+      type: 'PERSON', 
+      nodes: [{ x: 20, y: 20 }, { x: 20, y: 60 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.1
+    },
+    { 
+      type: 'ORGANIZATION', 
+      nodes: [{ x: 80, y: 20 }, { x: 80, y: 60 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.2
+    },
+    { 
+      type: 'INSTITUTION', 
+      nodes: [{ x: 20, y: 80 }, { x: 80, y: 80 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.3
+    },
+    { 
+      type: 'RESEARCH', 
+      nodes: [{ x: 50, y: 20 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.4
+    },
+    { 
+      type: 'MARKET', 
+      nodes: [{ x: 50, y: 80 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.5
+    },
+    { 
+      type: 'LOCAL', 
+      nodes: [{ x: 80, y: 40 }],
+      color: tokens.color.ink,
+      lineStyle: '0.2',
+      delay: 0.6
+    },
   ];
 
-  const aksosNode = { id: 'aksos', label: 'AKSOS', x: center.x, y: center.y, delay: 0.0 };
+  const aksosNode = { label: 'AKSOS', x: center.x, y: center.y, delay: 0.0 };
 
-  const relationships = [
-    { from: 'aksos', to: 1 }, { from: 'aksos', to: 2 }, { from: 'aksos', to: 3 },
-    { from: 'aksos', to: 4 }, { from: 'aksos', to: 5 }, { from: 'aksos', to: 6 },
-    { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 4, to: 5 }, { from: 5, to: 6 },
-    { from: 1, to: 4 }, { from: 2, to: 5 }, { from: 3, to: 6 },
-  ];
-
-  const getNode = (id: number | string) => {
-    if (id === 'aksos') return aksosNode;
-    return nodes.find(n => n.id === id);
-  };
+  // Flatten all nodes for connections
+  const allNodes = nodeTypes.flatMap(type => type.nodes.map(n => ({ ...n, type: type.type })));
 
   return (
     <motion.div
@@ -39,7 +72,10 @@ export function GrowingNetwork() {
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
       onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onHoverEnd={() => {
+        setIsHovered(false);
+        setHighlightedType(null);
+      }}
     >
       <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '400px' }}>
         
@@ -56,43 +92,46 @@ export function GrowingNetwork() {
           <text x={aksosNode.x} y={aksosNode.y} textAnchor="middle" dy="15" fontSize="8" fontFamily={tokens.font.mono} fill={tokens.color.signal} letterSpacing="0.15em">{aksosNode.label}</text>
         </motion.g>
 
-        {/* Peripheral nodes */}
-        {nodes.map((node) => (
-          <motion.g
-            key={`node-${node.id}`}
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-            animate={isHovered ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
-            transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: node.delay } : {}}
-          >
-            <circle cx={node.x} cy={node.y} r={2} fill={tokens.color.ink} stroke={tokens.color.line} strokeWidth="0.3" />
-            <text x={node.x} y={node.y} textAnchor="middle" dy="12" fontSize="6" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.1em">{node.label}</text>
-          </motion.g>
-        ))}
+        {/* Peripheral nodes by type */}
+        {nodeTypes.map((type, typeIndex) => {
+          const isHighlighted = highlightedType === type.type || isHovered;
+          return type.nodes.map((node, nodeIndex) => (
+            <motion.g
+              key={`node-${type.type}-${nodeIndex}`}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: type.delay + (nodeIndex * 0.05) }}
+              whileHover={{ scale: 1.15 }}
+              onHoverStart={() => setHighlightedType(type.type)}
+              onHoverEnd={() => setHighlightedType(null)}
+              animate={isHovered ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
+              transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: type.delay } : {}}
+            >
+              <circle cx={node.x} cy={node.y} r={2} fill={tokens.color.ink} stroke={isHighlighted ? tokens.color.signal : tokens.color.line} strokeWidth={isHighlighted ? 0.5 : 0.3} />
+              <text x={node.x} y={node.y} textAnchor="middle" dy="12" fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.1em">{type.type}</text>
+            </motion.g>
+          ));
+        })}
 
-        {/* Relationship lines with pulsing opacity */}
-        {relationships.map((rel, index) => {
-          const fromNode = getNode(rel.from);
-          const toNode = getNode(rel.to);
-          if (!fromNode || !toNode) return null;
-
+        {/* Relationship lines with different styles */}
+        {allNodes.map((node, index) => {
+          const isHighlighted = highlightedType === node.type || isHovered;
           return (
             <motion.line
-              key={`rel-${rel.from}-${rel.to}`}
-              x1={fromNode.x} y1={fromNode.y} x2={toNode.x} y2={toNode.y}
-              stroke={tokens.color.line}
-              strokeWidth="0.2"
+              key={`rel-${index}`}
+              x1={aksosNode.x} y1={aksosNode.y} x2={node.x} y2={node.y}
+              stroke={isHighlighted ? tokens.color.signal : tokens.color.line}
+              strokeWidth={isHighlighted ? 0.4 : 0.2}
               initial={{ pathLength: 0, opacity: 0 }}
               whileInView={{ pathLength: 1, opacity: 0.5 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{
                 duration: tokens.animation.duration.normal,
-                delay: 0.5 + (index * 0.05)
+                delay: 0.5 + (index * 0.03)
               }}
               animate={isHovered ? { opacity: [0.5, 1, 0.5], strokeWidth: [0.2, 0.4, 0.2] } : {}}
-              transition={isHovered ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 } : {}}
+              transition={isHovered ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.05 } : {}}
             />
           );
         })}
@@ -105,15 +144,15 @@ export function GrowingNetwork() {
           transition={{ duration: tokens.animation.duration.normal, delay: 0.8 }}
           animate={isHovered ? { fill: tokens.color.signal } : {}}
         >
-          <text x={50} y={90} textAnchor="middle" fontSize="7" fontFamily={tokens.font.mono} fill={isHovered ? tokens.color.signal : tokens.color.muted} letterSpacing="0.1em">NETWORK VALUE INCREASES</text>
-          <text x={50} y={97} textAnchor="middle" fontSize="7" fontFamily={tokens.font.mono} fill={isHovered ? tokens.color.signal : tokens.color.muted} letterSpacing="0.1em">WITH RELATIONSHIPS</text>
+          <text x={50} y={90} textAnchor="middle" fontSize="6" fontFamily={tokens.font.mono} fill={isHovered ? tokens.color.signal : tokens.color.muted} letterSpacing="0.1em">NETWORK VALUE INCREASES</text>
+          <text x={50} y={96} textAnchor="middle" fontSize="6" fontFamily={tokens.font.mono} fill={isHovered ? tokens.color.signal : tokens.color.muted} letterSpacing="0.1em">WITH RELATIONSHIPS</text>
         </motion.g>
 
         {/* Hover indicator */}
         {isHovered && (
           <motion.text
             x={50} y={80} textAnchor="middle"
-            fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted}
+            fontSize="4" fontFamily={tokens.font.mono} fill={tokens.color.muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
