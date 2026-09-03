@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import './architecture.css';
+@import './depth.css';
 
 @theme inline {
   --font-sans: var(--font-inter), 'Inter', Arial, sans-serif;
