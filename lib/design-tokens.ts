@@ -87,6 +87,11 @@ export const tokens = {
     textWidth: '680px',
     gridGap: 'clamp(20px, 2.5vw, 40px)',
   },
+  
+  // Typography
+  typography: {
+    textWidth: '680px',
+  },
 } as const;
 
 export type Tokens = typeof tokens;
