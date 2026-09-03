@@ -129,8 +129,8 @@ export function HeroNetwork() {
           fill="none"
           stroke={tokens.color.line}
           strokeWidth="0.5"
-          initial={{ strokeDasharray: '1000', strokeDashoffset: '1000' }}
-          animate={{ strokeDashoffset: 0 }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ 
             duration: tokens.animation.duration.slower,
             ease: tokens.animation.easing.easeInOut 

@@ -76,9 +76,9 @@ const additionalRelationships = [
   { from: 'node10', to: 'node14' },
 ];
 
-const getCategoryById = (id: string) => {
+const getCategoryById = (id: string, nodeIndex: number) => {
   if (id === 'aksos') return categories[0];
-  const index = Math.floor(Math.random() * (categories.length - 1)) + 1;
+  const index = (nodeIndex % (categories.length - 1)) + 1;
   return categories[index];
 };
 
@@ -101,7 +101,7 @@ export function GrowingNetwork() {
       >
         {/* Initial nodes */}
         {initialNodes.map((node, index) => {
-          const category = getCategoryById(node.category);
+          const category = getCategoryById(node.category, index);
           return (
             <motion.g
               key={`node-${node.id}`}
@@ -172,7 +172,7 @@ export function GrowingNetwork() {
 
         {/* Additional nodes with staggered animation */}
         {additionalNodes.map((node, index) => {
-          const category = getCategoryById(node.category);
+          const category = getCategoryById(node.category, index);
           return (
             <motion.g
               key={`node-${node.id}`}

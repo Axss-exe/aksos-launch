@@ -43,7 +43,7 @@ function Hero() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: tokens.animation.duration.slow }}
+            transition={{ duration: tokens.animation.duration.slow, ease: tokens.animation.easing.easeOut }}
           >
             Building intelligence infrastructure <em>for Africa.</em>
           </motion.h1>
@@ -56,7 +56,7 @@ function Hero() {
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2, ease: tokens.animation.easing.easeOut }}
         >
           <HeroNetwork />
         </motion.div>
@@ -399,13 +399,13 @@ function StatusSection() {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
       >
-        {[['ATIS','EXPERIMENTAL'],['RITA','DEVELOPING'],['NETWORK','BUILDING'],['INTELLIGENCE MODEL','EVOLVING']].map(([a,b]) => (
+        {[['ATIS','EXPERIMENTAL'],['RITA','DEVELOPING'],['NETWORK','BUILDING'],['INTELLIGENCE MODEL','EVOLVING']].map(([a,b], index) => (
           <motion.div 
             key={a}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (Math.random() * 0.1) }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (index * 0.05) }}
           >
             <span>{a}</span>
             <strong>{b}</strong>
@@ -504,13 +504,13 @@ function JourneySection() {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
       >
-        {journey.map(([when, what]) => (
+        {journey.map(([when, what], index) => (
           <motion.div 
             key={when}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (Math.random() * 0.1) }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (index * 0.05) }}
           >
             <span>{when}</span>
             <strong>{what}</strong>

@@ -140,13 +140,14 @@ export function IntelligenceCycle() {
           stroke={tokens.color.line}
           strokeWidth="0.3"
           strokeDasharray="220"
-          initial={{ strokeDashoffset: 220 }}
-          animate={{ strokeDashoffset: 0 }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ 
             duration: tokens.animation.duration.slower,
             ease: tokens.animation.easing.easeInOut,
             delay: 0.1
           }}
+          style={{ pathLength: 0 }}
         />
 
         {/* Stage nodes */}

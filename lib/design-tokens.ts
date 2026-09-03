@@ -66,15 +66,15 @@ export const tokens = {
   // Animation
   animation: {
     duration: {
-      fast: '200ms',
-      normal: '400ms',
-      slow: '800ms',
-      slower: '1200ms',
+      fast: 0.2,
+      normal: 0.4,
+      slow: 0.8,
+      slower: 1.2,
     },
     easing: {
-      linear: 'linear',
-      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+      linear: [0, 0, 1, 1],
+      easeInOut: [0.4, 0, 0.2, 1],
+      easeOut: [0, 0, 0.2, 1],
     },
   },
   

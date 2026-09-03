@@ -85,6 +85,7 @@ export function InformationDepthDiagram() {
             duration: tokens.animation.duration.slow,
             ease: tokens.animation.easing.easeInOut 
           }}
+          style={{ pathLength: 0 }}
         />
 
         {/* Depth indicator arrows */}
