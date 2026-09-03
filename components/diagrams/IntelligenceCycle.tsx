@@ -3,111 +3,165 @@
 import { motion } from 'framer-motion';
 import { tokens } from '@/lib/design-tokens';
 
-// Text-based intelligence cycle diagram matching aksos.net aesthetic
-// Circular flow: QUESTION -> FIND PEOPLE -> CONNECT -> LEARN -> ADD CONTEXT -> DISCOVER NEW QUESTIONS
+// Section 04A: Intelligence Cycle Diagram
+// Circular flow showing the Batana network cycle
+// QUESTION -> FIND PEOPLE -> CONNECT -> LEARN -> ADD CONTEXT -> DISCOVER NEW QUESTIONS
 
 export function IntelligenceCycle() {
+  const center = { x: 50, y: 50 };
+  const radius = 35;
+
   const stages = [
-    'QUESTION',
-    'FIND PEOPLE',
-    'CONNECT',
-    'LEARN',
-    'ADD CONTEXT',
-    'DISCOVER NEW QUESTIONS',
+    { label: 'QUESTION', angle: 0, delay: 0.1 },
+    { label: 'FIND PEOPLE', angle: 60, delay: 0.2 },
+    { label: 'CONNECT', angle: 120, delay: 0.3 },
+    { label: 'LEARN', angle: 180, delay: 0.4 },
+    { label: 'ADD CONTEXT', angle: 240, delay: 0.5 },
+    { label: 'DISCOVER NEW QUESTIONS', angle: 300, delay: 0.6 },
   ];
 
   return (
     <motion.div 
-      className="pipeline-diagram"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className="intelligence-cycle"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      {/* Center label */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.normal }}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '40px',
-        }}
+      <svg 
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: '100%', height: '400px' }}
       >
-        <span 
-          style={{
-            fontSize: '10px',
-            fontFamily: tokens.font.mono,
-            letterSpacing: '0.1em',
-            color: tokens.color.muted,
-          }}
+        {/* Center label */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal }}
         >
-          RELATIONSHIP
-        </span>
-        <span 
-          style={{
-            fontSize: '10px',
-            fontFamily: tokens.font.mono,
-            letterSpacing: '0.1em',
-            color: tokens.color.muted,
-            marginLeft: '20px',
-          }}
-        >
-          INTELLIGENCE
-        </span>
-      </motion.div>
+          <text
+            x={center.x}
+            y={center.y}
+            textAnchor="middle"
+            fontSize="8"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            RELATIONSHIP
+          </text>
+          <text
+            x={center.x}
+            y={center.y + 8}
+            textAnchor="middle"
+            fontSize="8"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            INTELLIGENCE
+          </text>
+        </motion.g>
 
-      {/* Cycle stages */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
-        {stages.map((stage, index) => {
-          const delay = 0.1 + (index * 0.05);
+        {/* Circle path */}
+        <motion.circle
+          cx={center.x}
+          cy={center.y}
+          r={radius}
+          fill="none"
+          stroke={tokens.color.line}
+          strokeWidth="0.3"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{
+            duration: tokens.animation.duration.slower,
+            ease: tokens.animation.easing.easeInOut,
+            delay: 0.1
+          }}
+        />
+
+        {/* Stage nodes */}
+        {stages.map((stage) => {
+          const x = center.x + radius * Math.cos((stage.angle - 90) * Math.PI / 180);
+          const y = center.y + radius * Math.sin((stage.angle - 90) * Math.PI / 180);
           
           return (
-            <motion.span
-              key={stage}
-              className="pipeline-stage"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            <motion.g
+              key={stage.label}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay }}
-              style={{
-                fontSize: '11px',
-                fontFamily: tokens.font.mono,
-                letterSpacing: '0.1em',
-                color: tokens.color.ink,
-              }}
+              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
             >
-              {stage}
-              {index < stages.length - 1 && (
-                <span style={{ marginLeft: '15px', color: tokens.color.muted }}>
-                  
-                </span>
-              )}
-            </motion.span>
+              <circle 
+                cx={x} 
+                cy={y} 
+                r={2} 
+                fill={tokens.color.ink}
+                stroke={tokens.color.line}
+                strokeWidth="0.3"
+              />
+              <line
+                x1={x}
+                y1={y}
+                x2={center.x}
+                y2={center.y}
+                stroke={tokens.color.line}
+                strokeWidth="0.2"
+                strokeDasharray="1,1"
+              />
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dy={stage.label.length > 12 ? '16' : '12'}
+                fontSize="6"
+                fontFamily={tokens.font.mono}
+                fill={tokens.color.ink}
+                letterSpacing="0.05em"
+              >
+                {stage.label}
+              </text>
+            </motion.g>
           );
         })}
-      </div>
 
-      {/* Repeat first stage to complete cycle */}
-      <motion.span
-        className="pipeline-stage"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.normal, delay: 0.1 + (stages.length * 0.05) }}
-        style={{
-          fontSize: '11px',
-          fontFamily: tokens.font.mono,
-          letterSpacing: '0.1em',
-          color: tokens.color.ink,
-          marginLeft: '20px',
-        }}
-      >
-        {stages[0]}
-      </motion.span>
+        {/* Arrow indicators between stages */}
+        {stages.map((stage, index) => {
+          const nextIndex = (index + 1) % stages.length;
+          const fromAngle = stages[index].angle;
+          const toAngle = stages[nextIndex].angle;
+          
+          const fromX = center.x + radius * Math.cos((fromAngle - 90) * Math.PI / 180);
+          const fromY = center.y + radius * Math.sin((fromAngle - 90) * Math.PI / 180);
+          const toX = center.x + radius * Math.cos((toAngle - 90) * Math.PI / 180);
+          const toY = center.y + radius * Math.sin((toAngle - 90) * Math.PI / 180);
+          
+          const midX = (fromX + toX) / 2;
+          const midY = (fromY + toY) / 2;
+          
+          return (
+            <motion.text
+              key={`arrow-${index}`}
+              x={midX}
+              y={midY}
+              textAnchor="middle"
+              fontSize="6"
+              fontFamily={tokens.font.mono}
+              fill={tokens.color.muted}
+              letterSpacing="0.2em"
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.1 }}
+            >
+              
+            </motion.text>
+          );
+        })}
+      </svg>
     </motion.div>
   );
 }

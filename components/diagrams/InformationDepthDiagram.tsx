@@ -3,109 +3,275 @@
 import { motion } from 'framer-motion';
 import { tokens } from '@/lib/design-tokens';
 
-// Text-based diagram matching aksos.net aesthetic
-// DEPTH INCREASING with layers from PUBLIC WEB to FIRST-SOURCE KNOWLEDGE
+// Section 02: Information Depth Diagram
+// Visualizes the layers from PUBLIC WEB to FIRST-SOURCE KNOWLEDGE
+// Shows decreasing information availability and increasing difficulty of access
 
 export function InformationDepthDiagram() {
+  // Vertical layers with decreasing width and opacity
   const layers = [
-    { label: 'PUBLIC WEB', desc: 'lots of information easy to discover', access: 'EASY ACCESS' },
-    { label: 'CONTEXT', desc: 'fewer signals more interpretation', access: 'EASY ACCESS' },
-    { label: 'PEOPLE', desc: 'limited visibility relationship required', access: 'DIFFICULT ACCESS' },
-    { label: 'INSTITUTIONS', desc: 'difficult access institutional knowledge', access: 'DIFFICULT ACCESS' },
-    { label: 'FIRST-SOURCE KNOWLEDGE', desc: 'deepest intelligence hardest to reach', access: 'DIFFICULT ACCESS' },
+    { 
+      label: 'PUBLIC WEB', 
+      desc: 'lots of information', 
+      access: 'easy to discover',
+      width: 100,
+      y: 0,
+      delay: 0.1
+    },
+    { 
+      label: 'CONTEXT', 
+      desc: 'fewer signals', 
+      access: 'more interpretation',
+      width: 85,
+      y: 25,
+      delay: 0.2
+    },
+    { 
+      label: 'PEOPLE', 
+      desc: 'limited visibility', 
+      access: 'relationship required',
+      width: 70,
+      y: 50,
+      delay: 0.3
+    },
+    { 
+      label: 'INSTITUTIONS', 
+      desc: 'difficult access', 
+      access: 'institutional knowledge',
+      width: 55,
+      y: 75,
+      delay: 0.4
+    },
+    { 
+      label: 'FIRST-SOURCE KNOWLEDGE', 
+      desc: 'deepest intelligence', 
+      access: 'hardest to reach',
+      width: 40,
+      y: 100,
+      delay: 0.5
+    },
   ];
+
+  const centerX = 50;
 
   return (
     <motion.div 
-      className="pipeline-diagram"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className="information-depth-diagram"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      {/* Depth indicator */}
-      <motion.div 
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.normal }}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '20px',
-          marginBottom: '40px',
-          fontFamily: tokens.font.mono,
-          fontSize: '10px',
-          letterSpacing: '0.1em',
-          color: tokens.color.muted,
-        }}
+      <svg 
+        viewBox="0 0 100 140"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: '100%', height: '400px' }}
       >
-        <span>DEPTH</span>
-        <span style={{ fontSize: '8px', letterSpacing: '0.2em' }}>INCREASING</span>
-        <span style={{ marginLeft: 'auto' }}>MORE INFORMATION</span>
-        <span style={{ marginLeft: '20px' }}>LESS INFORMATION</span>
-      </motion.div>
+        {/* Depth indicator */}
+        <motion.g
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal }}
+        >
+          <text
+            x={centerX}
+            y={10}
+            textAnchor="middle"
+            fontSize="8"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            DEPTH
+          </text>
+          <text
+            x={centerX}
+            y={18}
+            textAnchor="middle"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.2em"
+          >
+            INCREASING
+          </text>
+        </motion.g>
 
-      {/* Layers */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Information availability scale */}
+        <motion.g
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal, delay: 0.1 }}
+          style={{ pointerEvents: 'none' }}
+        >
+          <text
+            x={10}
+            y={15}
+            textAnchor="start"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            MORE
+          </text>
+          <text
+            x={10}
+            y={22}
+            textAnchor="start"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            INFORMATION
+          </text>
+          <text
+            x={90}
+            y={15}
+            textAnchor="end"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            LESS
+          </text>
+          <text
+            x={90}
+            y={22}
+            textAnchor="end"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            INFORMATION
+          </text>
+        </motion.g>
+
+        {/* Layers */}
         {layers.map((layer, index) => {
-          const delay = 0.1 + (index * 0.05);
-          const opacity = 1 - (index * 0.15); // Decreasing opacity for deeper layers
+          const x = centerX - (layer.width / 2);
+          const opacity = 0.4 + (index * 0.15); // Increasing opacity for deeper layers
           
           return (
-            <motion.div
+            <motion.g
               key={layer.label}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '30px',
-                opacity,
-              }}
+              transition={{ duration: tokens.animation.duration.normal, delay: layer.delay }}
             >
-              <span 
-                className="pipeline-stage" 
-                style={{
-                  minWidth: '200px',
-                  fontSize: '11px',
-                  fontFamily: tokens.font.mono,
-                  letterSpacing: '0.1em',
-                  color: tokens.color.ink,
-                  borderBottom: `1px solid ${tokens.color.line}`,
-                  paddingBottom: '8px',
-                }}
+              {/* Layer rectangle */}
+              <rect
+                x={x}
+                y={layer.y + 5}
+                width={layer.width}
+                height={18}
+                fill="none"
+                stroke={tokens.color.line}
+                strokeWidth="0.3"
+                opacity={opacity}
+              />
+              
+              {/* Layer label */}
+              <text
+                x={centerX}
+                y={layer.y + 12}
+                textAnchor="middle"
+                fontSize="7"
+                fontFamily={tokens.font.mono}
+                fill={tokens.color.ink}
+                letterSpacing="0.1em"
               >
                 {layer.label}
-              </span>
-              <span 
-                style={{
-                  fontSize: '11px',
-                  fontFamily: tokens.font.mono,
-                  color: tokens.color.muted,
-                  letterSpacing: '0.05em',
-                  flex: 1,
-                }}
+              </text>
+              
+              {/* Layer description */}
+              <text
+                x={centerX}
+                y={layer.y + 22}
+                textAnchor="middle"
+                fontSize="6"
+                fontFamily={tokens.font.mono}
+                fill={tokens.color.muted}
+                letterSpacing="0.05em"
               >
                 {layer.desc}
-              </span>
-              <span 
-                style={{
-                  fontSize: '10px',
-                  fontFamily: tokens.font.mono,
-                  color: tokens.color.muted,
-                  letterSpacing: '0.1em',
-                  whiteSpace: 'nowrap',
-                }}
+              </text>
+              
+              {/* Access difficulty */}
+              <text
+                x={centerX}
+                y={layer.y + 32}
+                textAnchor="middle"
+                fontSize="5"
+                fontFamily={tokens.font.mono}
+                fill={tokens.color.muted}
+                letterSpacing="0.1em"
               >
-                {layer.access}
-              </span>
-            </motion.div>
+                {layer.access.toUpperCase()}
+              </text>
+            </motion.g>
           );
         })}
-      </div>
+
+        {/* Access scale */}
+        <motion.g
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal, delay: 0.6 }}
+        >
+          <text
+            x={10}
+            y={135}
+            textAnchor="start"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            EASY
+          </text>
+          <text
+            x={10}
+            y={142}
+            textAnchor="start"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            ACCESS
+          </text>
+          <text
+            x={90}
+            y={135}
+            textAnchor="end"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            DIFFICULT
+          </text>
+          <text
+            x={90}
+            y={142}
+            textAnchor="end"
+            fontSize="6"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+          >
+            ACCESS
+          </text>
+        </motion.g>
+      </svg>
     </motion.div>
   );
 }
