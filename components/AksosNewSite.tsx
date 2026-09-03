@@ -44,6 +44,7 @@ function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: tokens.animation.duration.slow, ease: tokens.animation.easing.easeOut }}
+            style={{ marginBottom: '34px' }}
           >
             Building intelligence infrastructure <em>for Africa.</em>
           </motion.h1>
@@ -142,20 +143,30 @@ function ApproachSection() {
 function AtisSection() {
   return (
     <Section id="atis" label="04 / THE SYSTEM" tone="dark">
-      <motion.h2 
+      <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: tokens.animation.duration.slow }}
+        style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '28px' }}
       >
-        ATIS
-      </motion.h2>
+        <img src="/atis-symbol-traced.svg" alt="ATIS" style={{ width: '40px', height: 'auto' }} />
+        <motion.h2 
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          style={{ margin: 0 }}
+        >
+          ATIS
+        </motion.h2>
+      </motion.div>
       <motion.p 
         className="section-lede"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
       >
         An intelligence platform we're building to connect evidence, relationships and emerging information.
       </motion.p>

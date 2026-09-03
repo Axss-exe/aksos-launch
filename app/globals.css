@@ -169,7 +169,7 @@ img {
    ======================================== */
 .sys-hero {
   min-height: calc(100vh - 78px);
-  padding: clamp(110px, 13vw, 190px) var(--page-padding) var(--section-spacing);
+  padding: clamp(60px, 8vw, 120px) var(--page-padding) clamp(80px, 10vw, 140px);
   border-bottom: var(--border-thin) solid var(--line);
   display: grid;
   grid-template-columns: 1fr 1fr;

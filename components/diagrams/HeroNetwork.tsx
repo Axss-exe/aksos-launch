@@ -122,6 +122,7 @@ export function HeroNetwork() {
         viewBox="0 0 100 100" 
         preserveAspectRatio="xMidYMid meet"
         className="hero-network-svg"
+        style={{ width: '100%', height: '400px' }}
       >
         {/* Africa outline - very subtle */}
         <motion.path
@@ -131,9 +132,9 @@ export function HeroNetwork() {
           strokeWidth="0.5"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ 
+          transition={{
             duration: tokens.animation.duration.slower,
-            ease: tokens.animation.easing.easeInOut 
+            ease: tokens.animation.easing.easeInOut
           }}
         />
 
@@ -141,9 +142,9 @@ export function HeroNetwork() {
         <motion.g
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ 
+          transition={{
             duration: tokens.animation.duration.normal,
-            delay: aksosNode.delay 
+            delay: aksosNode.delay
           }}
         >
           <circle 
@@ -174,9 +175,9 @@ export function HeroNetwork() {
             key={`node-${node.id}`}
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
+            transition={{
               duration: tokens.animation.duration.normal,
-              delay: node.delay 
+              delay: node.delay
             }}
           >
             <circle 
@@ -227,9 +228,9 @@ export function HeroNetwork() {
                 pathLength: 1, 
                 opacity: 1 
               }}
-              transition={{ 
+              transition={{
                 duration: tokens.animation.duration.normal,
-                delay: rel.delay 
+                delay: rel.delay
               }}
             />
           );
@@ -254,9 +255,9 @@ export function HeroNetwork() {
               pathLength: 1, 
               opacity: 0.5 
             }}
-            transition={{ 
+            transition={{
               duration: tokens.animation.duration.normal,
-              delay: node.delay + 0.3 
+              delay: node.delay + 0.3
             }}
           />
         ))}
