@@ -3,266 +3,111 @@
 import { motion } from 'framer-motion';
 import { tokens } from '@/lib/design-tokens';
 
-// Cycle stages
-const stages = [
-  { 
-    id: 1, 
-    label: 'QUESTION', 
-    angle: 0,
-    radius: 30,
-    delay: 0.1
-  },
-  { 
-    id: 2, 
-    label: 'FIND PEOPLE', 
-    angle: 45,
-    radius: 30,
-    delay: 0.2
-  },
-  { 
-    id: 3, 
-    label: 'CONNECT', 
-    angle: 90,
-    radius: 30,
-    delay: 0.3
-  },
-  { 
-    id: 4, 
-    label: 'LEARN', 
-    angle: 135,
-    radius: 30,
-    delay: 0.4
-  },
-  { 
-    id: 5, 
-    label: 'ADD CONTEXT', 
-    angle: 180,
-    radius: 30,
-    delay: 0.5
-  },
-  { 
-    id: 6, 
-    label: 'DISCOVER NEW QUESTIONS', 
-    angle: 225,
-    radius: 30,
-    delay: 0.6
-  },
-  { 
-    id: 7, 
-    label: 'QUESTION', 
-    angle: 270,
-    radius: 30,
-    delay: 0.7,
-    isRepeat: true
-  },
-  { 
-    id: 8, 
-    label: 'FIND PEOPLE', 
-    angle: 315,
-    radius: 30,
-    delay: 0.8,
-    isRepeat: true
-  }
-];
-
-// Central node
-const center = {
-  label: 'RELATIONSHIP\nINTELLIGENCE',
-  x: 50,
-  y: 50
-};
+// Text-based intelligence cycle diagram matching aksos.net aesthetic
+// Circular flow: QUESTION -> FIND PEOPLE -> CONNECT -> LEARN -> ADD CONTEXT -> DISCOVER NEW QUESTIONS
 
 export function IntelligenceCycle() {
+  const stages = [
+    'QUESTION',
+    'FIND PEOPLE',
+    'CONNECT',
+    'LEARN',
+    'ADD CONTEXT',
+    'DISCOVER NEW QUESTIONS',
+  ];
+
   return (
     <motion.div 
-      className="intelligence-cycle"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="pipeline-diagram"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      <svg 
-        viewBox="0 0 100 100" 
-        preserveAspectRatio="xMidYMid meet"
-        className="cycle-diagram-svg"
+      {/* Center label */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: tokens.animation.duration.normal }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '40px',
+        }}
       >
-        {/* Central circle */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ 
-            duration: tokens.animation.duration.normal,
-            delay: 0.0 
+        <span 
+          style={{
+            fontSize: '10px',
+            fontFamily: tokens.font.mono,
+            letterSpacing: '0.1em',
+            color: tokens.color.muted,
           }}
         >
-          <circle 
-            cx={center.x} 
-            cy={center.y} 
-            r={12} 
-            fill="none"
-            stroke={tokens.color.signal}
-            strokeWidth="0.5"
-          />
-          <text
-            x={center.x}
-            y={center.y}
-            textAnchor="middle"
-            dy="-3"
-            fontSize="6"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.signal}
-            letterSpacing="0.1em"
-            textAnchor="middle"
-          >
-            {center.label.split('\n')[0]}
-          </text>
-          <text
-            x={center.x}
-            y={center.y}
-            textAnchor="middle"
-            dy="7"
-            fontSize="6"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.signal}
-            letterSpacing="0.1em"
-            textAnchor="middle"
-          >
-            {center.label.split('\n')[1]}
-          </text>
-        </motion.g>
-
-        {/* Cycle path */}
-        <motion.circle
-          cx={center.x}
-          cy={center.y}
-          r={35}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth="0.3"
-          strokeDasharray="220"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ 
-            duration: tokens.animation.duration.slower,
-            ease: tokens.animation.easing.easeInOut,
-            delay: 0.1
+          RELATIONSHIP
+        </span>
+        <span 
+          style={{
+            fontSize: '10px',
+            fontFamily: tokens.font.mono,
+            letterSpacing: '0.1em',
+            color: tokens.color.muted,
+            marginLeft: '20px',
           }}
-          style={{ pathLength: 0 }}
-        />
+        >
+          INTELLIGENCE
+        </span>
+      </motion.div>
 
-        {/* Stage nodes */}
-        {stages.map((stage) => {
-          const x = center.x + stage.radius * Math.cos((stage.angle - 90) * Math.PI / 180);
-          const y = center.y + stage.radius * Math.sin((stage.angle - 90) * Math.PI / 180);
+      {/* Cycle stages */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+        {stages.map((stage, index) => {
+          const delay = 0.1 + (index * 0.05);
           
           return (
-            <motion.g
-              key={`stage-${stage.id}`}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: tokens.animation.duration.normal,
-                delay: stage.delay 
+            <motion.span
+              key={stage}
+              className="pipeline-stage"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay }}
+              style={{
+                fontSize: '11px',
+                fontFamily: tokens.font.mono,
+                letterSpacing: '0.1em',
+                color: tokens.color.ink,
               }}
             >
-              <circle 
-                cx={x} 
-                cy={y} 
-                r={2} 
-                fill={stage.isRepeat ? tokens.color.signal : tokens.color.ink}
-                stroke={tokens.color.line}
-                strokeWidth="0.3"
-                opacity={stage.isRepeat ? 0.7 : 1}
-              />
-              <text
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dy={stage.label.includes(' ') ? '10' : '8'}
-                fontSize="5"
-                fontFamily={tokens.font.mono}
-                fill={stage.isRepeat ? tokens.color.signal : tokens.color.ink}
-                letterSpacing="0.05em"
-              >
-                {stage.label}
-              </text>
-
-              {/* Connection line to center */}
-              <motion.line
-                x1={x}
-                y1={y}
-                x2={center.x}
-                y2={center.y}
-                stroke={tokens.color.line}
-                strokeWidth="0.2"
-                initial={{ 
-                  pathLength: 0, 
-                  opacity: 0 
-                }}
-                animate={{ 
-                  pathLength: 1, 
-                  opacity: 1 
-                }}
-                transition={{ 
-                  duration: tokens.animation.duration.normal,
-                  delay: stage.delay + 0.1 
-                }}
-              />
-            </motion.g>
+              {stage}
+              {index < stages.length - 1 && (
+                <span style={{ marginLeft: '15px', color: tokens.color.muted }}>
+                  
+                </span>
+              )}
+            </motion.span>
           );
         })}
+      </div>
 
-        {/* Cycle arrows */}
-        {stages.slice(0, -2).map((stage, index) => {
-          const nextStage = stages[index + 1];
-          if (!nextStage) return null;
-          
-          const startX = center.x + stage.radius * Math.cos((stage.angle - 90) * Math.PI / 180);
-          const startY = center.y + stage.radius * Math.sin((stage.angle - 90) * Math.PI / 180);
-          const endX = center.x + nextStage.radius * Math.cos((nextStage.angle - 90) * Math.PI / 180);
-          const endY = center.y + nextStage.radius * Math.sin((nextStage.angle - 90) * Math.PI / 180);
-          
-          const midX = (startX + endX) / 2;
-          const midY = (startY + endY) / 2;
-          
-          // Calculate angle for arrow
-          const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
-          
-          return (
-            <motion.text
-              key={`arrow-${stage.id}`}
-              x={midX}
-              y={midY}
-              textAnchor="middle"
-              fontSize="6"
-              fontFamily={tokens.font.mono}
-              fill={tokens.color.muted}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: stage.delay + 0.2 }}
-              style={{ transform: `rotate(${angle}deg)` }}
-            >
-              →
-            </motion.text>
-          );
-        })}
-
-        {/* Outer circle for emphasis */}
-        <motion.circle
-          cx={center.x}
-          cy={center.y}
-          r={45}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth="0.2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ 
-            duration: tokens.animation.duration.normal,
-            delay: 0.3
-          }}
-        />
-      </svg>
+      {/* Repeat first stage to complete cycle */}
+      <motion.span
+        className="pipeline-stage"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: tokens.animation.duration.normal, delay: 0.1 + (stages.length * 0.05) }}
+        style={{
+          fontSize: '11px',
+          fontFamily: tokens.font.mono,
+          letterSpacing: '0.1em',
+          color: tokens.color.ink,
+          marginLeft: '20px',
+        }}
+      >
+        {stages[0]}
+      </motion.span>
     </motion.div>
   );
 }
