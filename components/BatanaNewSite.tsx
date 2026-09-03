@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { ArrowDown, ArrowUpRight, Check, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { tokens } from '@/lib/design-tokens';
-import { Section, SectionLabel } from './layout/Section';
 
 const needs = [
   'Investment opportunities', 'Funding opportunities', 'Local partners', 
@@ -12,233 +11,109 @@ const needs = [
   'Specialists / expertise', 'Projects', 'Market information', 'Regulatory information', 'Other'
 ];
 
-const stages = [ 
-  ['01', 'VISION', 'What are you trying to accomplish?'],
-  ['02', 'CONTEXT', 'What are you trying to build, fund, invest in, research, or change?'],
-  ['03', 'REQUIREMENTS', 'What people, capabilities, information, resources, or relationships are missing?'],
-  ['04', 'DISCOVERY', 'Where might those capabilities or relationships exist?'],
-  ['05', 'VALIDATION', 'Does the potential match actually fit what you need?'],
-  ['06', 'CONNECTION', 'Where there is a genuine fit, we help create the introduction.'],
-];
-
 function Label({ children }: { children: React.ReactNode }) { 
   return <p className="sys-label"><span />{children}</p>; 
 }
 
-function PrimaryLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a className="primary-link" href={href}>
-      {children} <ArrowUpRight size={14} />
-    </a>
-  );
-}
-
-// Batana Network Cycle Diagram
+// Text-based diagrams matching aksos.net aesthetic
 function BatanaCycleDiagram() {
-  const cycleStages = [
-    { id: 1, label: 'OBJECTIVE', angle: 0, radius: 30, delay: 0.1 },
-    { id: 2, label: 'UNDERSTAND', angle: 60, radius: 30, delay: 0.2 },
-    { id: 3, label: 'IDENTIFY', angle: 120, radius: 30, delay: 0.3 },
-    { id: 4, label: 'INVESTIGATE', angle: 180, radius: 30, delay: 0.4 },
-    { id: 5, label: 'ASSESS', angle: 240, radius: 30, delay: 0.5 },
-    { id: 6, label: 'CONNECT', angle: 300, radius: 30, delay: 0.6 },
-  ];
-
-  const center = { label: 'BATANA', x: 50, y: 50 };
-
   return (
     <motion.div 
-      className="batana-cycle-diagram"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="pipeline-diagram"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '400px' }}>
-        {/* Central circle */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: tokens.animation.duration.normal }}
-        >
-          <circle cx={center.x} cy={center.y} r={12} fill="none" stroke={tokens.color.signal} strokeWidth="0.5" />
-          <text
-            x={center.x}
-            y={center.y}
-            textAnchor="middle"
-            dy="-3"
-            fontSize="8"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.signal}
-            letterSpacing="0.1em"
-          >
-            {center.label}
-          </text>
-        </motion.g>
-
-        {/* Cycle path */}
-        <motion.circle
-          cx={center.x}
-          cy={center.y}
-          r={35}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth="0.3"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: tokens.animation.duration.slower, ease: tokens.animation.easing.easeInOut, delay: 0.1 }}
-          style={{ pathLength: 0 }}
-        />
-
-        {/* Stage nodes */}
-        {cycleStages.map((stage) => {
-          const x = center.x + stage.radius * Math.cos((stage.angle - 90) * Math.PI / 180);
-          const y = center.y + stage.radius * Math.sin((stage.angle - 90) * Math.PI / 180);
-          
-          return (
-            <motion.g
-              key={`stage-${stage.id}`}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
-            >
-              <circle cx={x} cy={y} r={2} fill={tokens.color.ink} stroke={tokens.color.line} strokeWidth="0.3" />
-              <text
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dy={stage.label.length > 6 ? '12' : '10'}
-                fontSize="6"
-                fontFamily={tokens.font.mono}
-                fill={tokens.color.ink}
-                letterSpacing="0.05em"
-              >
-                {stage.label}
-              </text>
-              <motion.line
-                x1={x}
-                y1={y}
-                x2={center.x}
-                y2={center.y}
-                stroke={tokens.color.line}
-                strokeWidth="0.2"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.1 }}
-              />
-            </motion.g>
-          );
-        })}
-      </svg>
+      <div className="pipeline-flow">
+        <span className="pipeline-stage">OBJECTIVE</span>
+        <span className="pipeline-stage">UNDERSTAND</span>
+        <span className="pipeline-stage">IDENTIFY</span>
+        <span className="pipeline-stage">INVESTIGATE</span>
+        <span className="pipeline-stage">ASSESS</span>
+        <span className="pipeline-stage">CONNECT</span>
+      </div>
+      <p style={{ padding: '20px 0', fontSize: '11px', color: tokens.color.muted, letterSpacing: '0.05em', margin: 0 }}>
+        BATANA
+      </p>
     </motion.div>
   );
 }
 
-// Connection Flow Diagram
 function ConnectionFlowDiagram() {
-  const leftSide = [
-    { label: 'Your objective', delay: 0.1 },
-    { label: 'Google', delay: 0.2 },
-    { label: 'Reports', delay: 0.3 },
-    { label: 'Websites', delay: 0.4 },
-    { label: 'Emails', delay: 0.5 },
-    { label: 'Cold introductions', delay: 0.6 },
-    { label: 'Unknown information', delay: 0.7 },
-  ];
-
-  const rightSide = [
-    { label: 'Your objective', delay: 0.1 },
-    { label: 'Understand what you need', delay: 0.2 },
-    { label: 'Identify relevant people', delay: 0.3 },
-    { label: 'Investigate potential matches', delay: 0.4 },
-    { label: 'Assess relevance', delay: 0.5 },
-    { label: 'Find the right connection', delay: 0.6 },
-  ];
-
   return (
     <motion.div 
-      className="connection-flow-diagram"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="pipeline-diagram"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '300px' }}>
-        {/* Left side - Searching Alone */}
-        <motion.g initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: tokens.animation.duration.normal }}>
-          <text x={25} y={10} textAnchor="middle" fontSize="8" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.1em">SEARCHING ALONE</text>
-          {leftSide.map((item, index) => (
-            <motion.g key={`left-${index}`} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: tokens.animation.duration.normal, delay: item.delay }}>
-              <circle cx={25} cy={20 + (index * 12)} r={1.5} fill={tokens.color.ink} />
-              <text x={25} y={20 + (index * 12)} textAnchor="middle" dy="8" fontSize="6" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.05em">{item.label}</text>
-            </motion.g>
-          ))}
-          <text x={25} y={100} textAnchor="middle" fontSize="7" fontFamily={tokens.font.mono} fill={tokens.color.signal} letterSpacing="0.05em">"Who actually knows?"</text>
-        </motion.g>
-
-        {/* OR divider */}
-        <motion.text x={50} y={50} textAnchor="middle" fontSize="8" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.1em" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>OR</motion.text>
-
-        {/* Right side - Project Batana */}
-        <motion.g initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: tokens.animation.duration.normal }}>
-          <text x={75} y={10} textAnchor="middle" fontSize="8" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.1em">PROJECT BATANA</text>
-          {rightSide.map((item, index) => (
-            <motion.g key={`right-${index}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: tokens.animation.duration.normal, delay: item.delay }}>
-              <circle cx={75} cy={20 + (index * 12)} r={1.5} fill={tokens.color.signal} />
-              <text x={75} y={20 + (index * 12)} textAnchor="middle" dy="8" fontSize="6" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.05em">{item.label}</text>
-            </motion.g>
-          ))}
-          <text x={75} y={100} textAnchor="middle" fontSize="7" fontFamily={tokens.font.mono} fill={tokens.color.signal} letterSpacing="0.05em">Conversation</text>
-        </motion.g>
-      </svg>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
+        <div>
+          <h4 style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', marginBottom: '15px', color: tokens.color.muted }}>SEARCHING ALONE</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span className="pipeline-stage">Your objective</span>
+            <span className="pipeline-stage">Google</span>
+            <span className="pipeline-stage">Reports</span>
+            <span className="pipeline-stage">Websites</span>
+            <span className="pipeline-stage">Emails</span>
+            <span className="pipeline-stage">Cold introductions</span>
+            <span className="pipeline-stage">Unknown information</span>
+          </div>
+          <p style={{ marginTop: '20px', fontSize: '12px', color: tokens.color.signal, fontFamily: tokens.font.mono }}>
+            &quot;Who actually knows?&quot;
+          </p>
+        </div>
+        <div>
+          <h4 style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', marginBottom: '15px', color: tokens.color.muted }}>PROJECT BATANA</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Your objective</span>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Understand what you need</span>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Identify relevant people</span>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Investigate potential matches</span>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Assess relevance</span>
+            <span className="pipeline-stage" style={{ color: tokens.color.signal, borderBottomColor: tokens.color.signal }}>Find the right connection</span>
+          </div>
+          <p style={{ marginTop: '20px', fontSize: '12px', color: tokens.color.signal, fontFamily: tokens.font.mono }}>
+            Conversation
+          </p>
+        </div>
+      </div>
+      <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '10px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>
+        OR
+      </p>
     </motion.div>
   );
 }
 
-// Match Diagram
 function MatchDiagram() {
-  const steps = [
-    { label: 'YOUR OBJECTIVE', desc: 'What you want to accomplish' },
-    { label: 'WHAT YOU NEED', desc: 'Capital · Expertise · Local knowledge · Implementation · Relationships' },
-    { label: 'FIT', desc: 'Relevant? Credible? Capable? Aligned?' },
-    { label: 'CONNECTION', desc: 'A relevant conversation' },
-  ];
-
   return (
     <motion.div 
-      className="match-diagram"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="pipeline-diagram"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
     >
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '200px' }}>
-        {steps.map((step, index) => (
-          <motion.g
-            key={step.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: tokens.animation.duration.normal, delay: index * 0.1 }}
-          >
-            <rect x={50 - 25} y={15 + (index * 25)} width={50} height={18} fill="none" stroke={tokens.color.line} strokeWidth="0.3" />
-            <text x={50} y={20 + (index * 25)} textAnchor="middle" fontSize="7" fontFamily={tokens.font.mono} fill={tokens.color.ink} letterSpacing="0.1em">{step.label}</text>
-            <text x={50} y={32 + (index * 25)} textAnchor="middle" fontSize="5" fontFamily={tokens.font.mono} fill={tokens.color.muted} letterSpacing="0.05em">{step.desc}</text>
-            {index < steps.length - 1 && (
-              <motion.line
-                x1={50}
-                y1={38 + (index * 25)}
-                x2={50}
-                y2={48 + (index * 25)}
-                stroke={tokens.color.line}
-                strokeWidth="0.2"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: tokens.animation.duration.normal, delay: index * 0.1 + 0.1 }}
-              />
-            )}
-          </motion.g>
-        ))}
-      </svg>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span className="pipeline-stage" style={{ minWidth: '140px' }}>YOUR OBJECTIVE</span>
+          <span style={{ color: tokens.color.muted, fontSize: '11px', fontFamily: tokens.font.mono }}>What you want to accomplish</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span className="pipeline-stage" style={{ minWidth: '140px' }}>WHAT YOU NEED</span>
+          <span style={{ color: tokens.color.muted, fontSize: '11px', fontFamily: tokens.font.mono }}>Capital  Expertise  Local knowledge  Implementation  Relationships</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span className="pipeline-stage" style={{ minWidth: '140px' }}>FIT</span>
+          <span style={{ color: tokens.color.muted, fontSize: '11px', fontFamily: tokens.font.mono }}>Relevant? Credible? Capable? Aligned?</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span className="pipeline-stage" style={{ minWidth: '140px' }}>CONNECTION</span>
+          <span style={{ color: tokens.color.muted, fontSize: '11px', fontFamily: tokens.font.mono }}>A relevant conversation</span>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -265,246 +140,8 @@ function BatanaHeader() {
   );
 }
 
-function BatanaHero() {
-  return (
-    <section className="batana-hero">
-      <div className="batana-hero-overlay" />
-      <div className="batana-hero-copy">
-        <motion.p 
-          className="eyebrow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: tokens.animation.duration.normal }}
-        >
-          PROJECT BATANA
-        </motion.p>
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: tokens.animation.duration.slow }}
-        >
-          You know what you want to do in Zimbabwe.<br />
-          <em>But you may not know who can help you do it.</em>
-        </motion.h1>
-        <motion.div 
-          className="batana-hero-body"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-        >
-          <p>You can spend weeks searching Google, reading reports, sending emails, and asking people you already know. And still not find the person, organization, company, or institution you actually need.</p>
-          <p>But you don&apos;t need to know who to talk to before you start.</p>
-          <p>Tell us what you&apos;re trying to accomplish. We&apos;ll work to understand your objective and connect you with viable people and partners who match what you want to achieve.</p>
-        </motion.div>
-        <motion.div 
-          className="hero-actions"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
-        >
-          <a className="button button-solid" href="#apply">Apply for a pilot slot <ArrowDown /></a>
-          <a className="button button-quiet" href="#how">See how it works</a>
-        </motion.div>
-      </div>
-      <motion.div 
-        className="batana-hero-index"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.6 }}
-      >
-        EARLY PILOT<br />
-        <span>OBJECTIVE → CONNECTION</span>
-      </motion.div>
-    </section>
-  );
-}
 
-function ProblemSection() {
-  return (
-    <Section label="01 / THE PROBLEM" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        The information you need may not be online.
-      </motion.h2>
-      <motion.div 
-        className="section-content"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        <p>You can find thousands of pages about Zimbabwe. But that doesn&apos;t mean you&apos;ll find the person who can actually help you.</p>
-        <p>The information you need may be spread across ministries, companies, local organizations, professional networks, reports, websites, or people who simply aren&apos;t visible through a normal search.</p>
-        <p>Sometimes the problem isn&apos;t that the information doesn&apos;t exist. It&apos;s that you don&apos;t know where it lives — or who holds it.</p>
-      </motion.div>
-      <motion.p 
-        className="section-callout"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        But you don&apos;t need to map Zimbabwe before you can start.<br />
-        <em>You need to tell us what you&apos;re trying to accomplish.</em>
-      </motion.p>
-    </Section>
-  );
-}
-
-function SearchingSection() {
-  return (
-    <Section label="02 / SEARCHING VS FINDING" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        The visitor starts with an objective,<br />
-        <em>not with a contact list.</em>
-      </motion.h2>
-      <ConnectionFlowDiagram />
-    </Section>
-  );
-}
-
-function ObjectiveSection() {
-  return (
-    <Section label="03 / YOUR OBJECTIVE" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Start with your vision.<br />
-        <em>Not your search history.</em>
-      </motion.h2>
-      <motion.div 
-        className="section-content"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        <p>You might already know exactly what you want to do. You may want to invest. Fund a project. Build a company. Find a local partner. Expand an organization. Research a market. Or turn an idea into something real.</p>
-        <p>The difficult part may be everything you don&apos;t know yet: who has the expertise, relationships, local capacity, or relevant information.</p>
-      </motion.div>
-    </Section>
-  );
-}
-
-function HowBatanaWorksSection() {
-  return (
-    <Section label="04 / HOW BATANA WORKS" tone="dark">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We do not start by searching for random people.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        We start by understanding what you are trying to accomplish. Then we move through context, requirements, discovery, validation, and connection.
-      </motion.p>
-      <BatanaCycleDiagram />
-      <motion.p 
-        className="section-outcome"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
-      >
-        The outcome may be a conversation, a partnership, a project, an investment, or a new relationship. We do not promise the final outcome.
-      </motion.p>
-    </Section>
-  );
-}
-
-function DifferenceSection() {
-  return (
-    <Section label="05 / THE DIFFERENCE" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We don&apos;t just give you a list of names.
-      </motion.h2>
-      <motion.div 
-        className="section-content"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        <p>Finding a name on Google is easy. Finding someone who actually fits your objective is harder.</p>
-        <p>A useful connection isn&apos;t simply someone who works in your sector. It is someone whose capabilities, position, experience, resources, location, or relationships make sense for what you are actually trying to accomplish.</p>
-      </motion.div>
-      <MatchDiagram />
-      <motion.p 
-        className="section-callout"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
-      >
-        The objective isn&apos;t to give you more names.<br />
-        <em>It&apos;s to help you find the right people to talk to.</em>
-      </motion.p>
-    </Section>
-  );
-}
-
-function PilotSection() {
-  return (
-    <Section label="06 / PROJECT BATANA" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We don&apos;t want everyone.
-      </motion.h2>
-      <motion.div 
-        className="section-content"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        <p>Project Batana is not for people who are simply curious about Zimbabwe. This pilot is for people who want to do something.</p>
-        <div className="verb-list">Invest · Fund · Build · Expand · Partner · Research · Create · Solve</div>
-      </motion.div>
-      <motion.div 
-        className="pilot-note"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <strong>We need this to work.</strong>
-        <p>The pilot only proves its value if people move from an idea to a conversation, from a conversation to a relationship, and from a relationship to something real.</p>
-      </motion.div>
-    </Section>
-  );
-}
-
-function ApplySection() {
-  const [menuOpen] = useState(false);
+export function BatanaNewSite() {
   const [selectedNeeds, setSelectedNeeds] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -544,140 +181,442 @@ function ApplySection() {
   } 
 
   return (
-    <Section label="07 / APPLY" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Tell us what you&apos;re trying to accomplish.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        You don&apos;t need to know who you need to talk to. You just need to know what you want to make happen.
-      </motion.p>
-      
-      <motion.form 
-        className="batana-form"
-        onSubmit={submit}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <div className="form-grid">
-          <label>FULL NAME<input required name="name" /></label>
-          <label>ORGANIZATION<input name="organization" /></label>
-          <label>EMAIL<input required type="email" name="email" /></label>
-          <label>COUNTRY<input name="country" /></label>
-        </div>
-        <label>WHAT ARE YOU TRYING TO ACCOMPLISH IN ZIMBABWE?<textarea required rows={4} name="objective" /></label>
-        <label>WHAT IS YOUR VISION?<textarea required rows={4} name="vision" /></label>
-        <label>HOW DO YOU INTEND TO ACCOMPLISH IT?<textarea rows={4} name="approach" /></label>
-        <fieldset>
-          <legend>WHAT DO YOU NEED HELP FINDING?</legend>
-          <div className="batana-checks">
-            {needs.map((need) => 
-              <label key={need}>
-                <input type="checkbox" checked={selectedNeeds.includes(need)} onChange={() => toggle(need)} />
-                <span>{selectedNeeds.includes(need) && <Check />}</span>
-                {need}
-              </label>
-            )}
-          </div>
-        </fieldset>
-        <label>WHAT KIND OF PARTNER ARE YOU LOOKING FOR?<input name="partner" /></label>
-        <div className="form-grid">
-          <label>SECTOR<input name="sector" /></label>
-          <label>TIMELINE
-            <select name="timeline" defaultValue="">
-              <option value="" disabled>Select one</option>
-              <option>Exploring</option>
-              <option>Within 3 months</option>
-              <option>3-6 months</option>
-              <option>6-12 months</option>
-              <option>12+ months</option>
-            </select>
-          </label>
-        </div>
-        <label>APPROXIMATE INVESTMENT OR FUNDING RANGE <small>(OPTIONAL)</small><input name="funding" /></label>
-        <label>WHAT WOULD NEED TO HAPPEN FOR YOU TO SERIOUSLY MOVE FORWARD?<textarea rows={4} name="move" /></label>
-        <fieldset>
-          <legend>IF WE IDENTIFY A STRONG MATCH, WOULD YOU BE OPEN TO AN INTRODUCTION?</legend>
-          <div className="radio-row">
-            <label><input required type="radio" name="introduction" value="yes" /> Yes</label>
-            <label><input type="radio" name="introduction" value="no" /> No</label>
-          </div>
-        </fieldset>
-        {error && <p className="form-error">{error}</p>}
-        {submitted ? 
-          <div className="form-success"><Check />Application received. We&apos;ll review your objective carefully.</div> : 
-          <button className="button button-solid" type="submit">Apply for a pilot slot <ArrowUpRight /></button>
-        }
-        <p className="form-note">We review applications based on seriousness of intent, clarity of objective, and potential for a meaningful match.</p>
-        <button className="button button-solid" type="submit" disabled={sending}>
-          {sending ? 'Sending application...' : 'Submit pilot application'} <ArrowUpRight />
-        </button>
-      </motion.form>
-    </Section>
-  );
-}
-
-function FinalSection() {
-  return (
-    <Section label="" tone="paper">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Your idea is only the beginning.
-      </motion.h2>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        You may already know exactly what you want to do. But the right people may still be missing.
-      </motion.p>
-      <motion.p 
-        className="final-motto"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        Real intentions. Real relationships. Real possibilities.
-      </motion.p>
-    </Section>
-  );
-}
-
-export function BatanaNewSite() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
     <main className="batana-page" id="top">
       <BatanaHeader />
       
-      <BatanaHero />
+      {/* Hero Section */}
+      <section className="sys-hero batana-hero">
+        <div className="sys-grid">
+          <div className="hero-copy" style={{ gridColumn: '1 / -1' }}>
+            <motion.p 
+              className="sys-label"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.normal }}
+            >
+              <span />PROJECT BATANA
+            </motion.p>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow }}
+              style={{ fontSize: 'clamp(40px, 6vw, 72px)', lineHeight: 1.1 }}
+            >
+              You know what you want to do in Zimbabwe.<br />
+              <em>But you may not know who can help you do it.</em>
+            </motion.h1>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+            >
+              <p style={{ maxWidth: '680px', color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+                You can spend weeks searching Google, reading reports, sending emails, and asking people you already know. And still not find the person, organization, company, or institution you actually need.
+              </p>
+              <p style={{ maxWidth: '680px', color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+                But you don&apos;t need to know who to talk to before you start.
+              </p>
+              <p style={{ maxWidth: '680px', color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65 }}>
+                Tell us what you&apos;re trying to accomplish. We&apos;ll work to understand your objective and connect you with viable people and partners who match what you want to achieve.
+              </p>
+            </motion.div>
+            <motion.div 
+              className="link-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+            >
+              <a className="primary-link" href="#apply">Apply for a pilot slot <ArrowDown size={14} /></a>
+              <a href="#how">See how it works <ArrowUpRight size={14} /></a>
+            </motion.div>
+          </div>
+        </div>
+        <div style={{ textAlign: 'right', padding: '40px var(--page-padding)', fontSize: '10px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>
+          EARLY PILOT<br />
+          <span style={{ color: tokens.color.ink }}>OBJECTIVE  CONNECTION</span>
+        </div>
+      </section>
       
-      <ProblemSection />
-      <SearchingSection />
-      <ObjectiveSection />
-      <HowBatanaWorksSection />
-      <DifferenceSection />
-      <PilotSection />
-      <ApplySection id="apply" />
-      <FinalSection />
+      {/* Section 01 - Problem */}
+      <section className="sys-section tone-paper">
+        <div className="sys-grid">
+          <Label>01 / THE PROBLEM</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            The information you need may not be online.
+          </motion.h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+            style={{ gridColumn: '1 / span 6' }}
+          >
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+              You can find thousands of pages about Zimbabwe. But that doesn&apos;t mean you&apos;ll find the person who can actually help you.
+            </p>
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+              The information you need may be spread across ministries, companies, local organizations, professional networks, reports, websites, or people who simply aren&apos;t visible through a normal search.
+            </p>
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65 }}>
+              Sometimes the problem isn&apos;t that the information doesn&apos;t exist. It&apos;s that you don&apos;t know where it lives  or who holds it.
+            </p>
+          </motion.div>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+            style={{ gridColumn: '1 / span 6', marginTop: '40px', fontSize: '18px', lineHeight: 1.65 }}
+          >
+            But you don&apos;t need to map Zimbabwe before you can start.<br />
+            <em>You need to tell us what you&apos;re trying to accomplish.</em>
+          </motion.p>
+        </div>
+      </section>
+      
+      {/* Section 02 - Searching vs Finding */}
+      <section className="sys-section tone-paper">
+        <div className="sys-grid">
+          <Label>02 / SEARCHING VS FINDING</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            The visitor starts with an objective,<br />
+            <em>not with a contact list.</em>
+          </motion.h2>
+          <ConnectionFlowDiagram />
+        </div>
+      </section>
+      
+      {/* Section 03 - Your Objective */}
+      <section className="sys-section tone-paper">
+        <div className="sys-grid">
+          <Label>03 / YOUR OBJECTIVE</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            Start with your vision.<br />
+            <em>Not your search history.</em>
+          </motion.h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+            style={{ gridColumn: '1 / span 6' }}
+          >
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+              You might already know exactly what you want to do. You may want to invest. Fund a project. Build a company. Find a local partner. Expand an organization. Research a market. Or turn an idea into something real.
+            </p>
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65 }}>
+              The difficult part may be everything you don&apos;t know yet: who has the expertise, relationships, local capacity, or relevant information.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Section 04 - How Batana Works */}
+      <section className="sys-section tone-dark">
+        <div className="sys-grid">
+          <Label>04 / HOW BATANA WORKS</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+            style={{ color: tokens.color.paper }}
+          >
+            We do not start by searching for random people.
+          </motion.h2>
+          <motion.p 
+            className="section-lede"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+            style={{ color: '#a8aba2', gridColumn: '1 / span 6' }}
+          >
+            We start by understanding what you are trying to accomplish. Then we move through context, requirements, discovery, validation, and connection.
+          </motion.p>
+          <BatanaCycleDiagram />
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+            style={{ gridColumn: '1 / -1', color: '#a8aba2', fontSize: '18px', lineHeight: 1.65, marginTop: '40px' }}
+          >
+            The outcome may be a conversation, a partnership, a project, an investment, or a new relationship. We do not promise the final outcome.
+          </motion.p>
+        </div>
+      </section>
+      
+      {/* Section 05 - The Difference */}
+      <section className="sys-section tone-paper">
+        <div className="sys-grid">
+          <Label>05 / THE DIFFERENCE</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            We don&apos;t just give you a list of names.
+          </motion.h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+            style={{ gridColumn: '1 / span 6' }}
+          >
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+              Finding a name on Google is easy. Finding someone who actually fits your objective is harder.
+            </p>
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65 }}>
+              A useful connection isn&apos;t simply someone who works in your sector. It is someone whose capabilities, position, experience, resources, location, or relationships make sense for what you are actually trying to accomplish.
+            </p>
+          </motion.div>
+          <MatchDiagram />
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+            style={{ gridColumn: '1 / span 6', marginTop: '40px', fontSize: '18px', lineHeight: 1.65 }}
+          >
+            The objective isn&apos;t to give you more names.<br />
+            <em>It&apos;s to help you find the right people to talk to.</em>
+          </motion.p>
+        </div>
+      </section>
+      
+      {/* Section 06 - Project Batana */}
+      <section className="sys-section tone-paper">
+        <div className="sys-grid">
+          <Label>06 / PROJECT BATANA</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            We don&apos;t want everyone.
+          </motion.h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+            style={{ gridColumn: '1 / span 6' }}
+          >
+            <p style={{ maxWidth: tokens.typography.textWidth, color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, marginBottom: '24px' }}>
+              Project Batana is not for people who are simply curious about Zimbabwe. This pilot is for people who want to do something.
+            </p>
+            <p style={{ fontSize: '16px', color: tokens.color.signal, letterSpacing: '0.05em', marginBottom: '24px' }}>
+              Invest  Fund  Build  Expand  Partner  Research  Create  Solve
+            </p>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+            style={{ gridColumn: '1 / span 6' }}
+          >
+            <strong style={{ fontWeight: 400, fontSize: '18px', display: 'block', marginBottom: '16px' }}>We need this to work.</strong>
+            <p style={{ color: tokens.color.muted, fontSize: '18px', lineHeight: 1.65, margin: 0 }}>
+              The pilot only proves its value if people move from an idea to a conversation, from a conversation to a relationship, and from a relationship to something real.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Section 07 - Apply */}
+      <section className="sys-section tone-paper" id="apply">
+        <div className="sys-grid">
+          <Label>07 / APPLY</Label>
+          <motion.h2 
+            className="section-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow }}
+          >
+            Tell us what you&apos;re trying to accomplish.
+          </motion.h2>
+          <motion.p 
+            className="section-lede"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          >
+            You don&apos;t need to know who you need to talk to. You just need to know what you want to make happen.
+          </motion.p>
+          
+          <motion.form 
+            onSubmit={submit}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+            style={{ gridColumn: '1 / -1' }}
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '30px', marginBottom: '30px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>FULL NAME</span>
+                <input required name="name" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>ORGANIZATION</span>
+                <input name="organization" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>EMAIL</span>
+                <input required type="email" name="email" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>COUNTRY</span>
+                <input name="country" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+              </label>
+            </div>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>WHAT ARE YOU TRYING TO ACCOMPLISH IN ZIMBABWE?</span>
+              <textarea required rows={4} name="objective" style={{ padding: '12px', background: 'transparent', border: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>WHAT IS YOUR VISION?</span>
+              <textarea required rows={4} name="vision" style={{ padding: '12px', background: 'transparent', border: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>HOW DO YOU INTEND TO ACCOMPLISH IT?</span>
+              <textarea rows={4} name="approach" style={{ padding: '12px', background: 'transparent', border: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <fieldset style={{ border: 'none', padding: 0, marginBottom: '24px' }}>
+              <legend style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted, marginBottom: '12px' }}>WHAT DO YOU NEED HELP FINDING?</legend>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                {needs.map((need) => (
+                  <label key={need} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={selectedNeeds.includes(need)} onChange={() => toggle(need)} style={{ width: '16px', height: '16px' }} />
+                    {selectedNeeds.includes(need) && <Check size={16} style={{ color: tokens.color.signal }} />}
+                    <span>{need}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>WHAT KIND OF PARTNER ARE YOU LOOKING FOR?</span>
+              <input name="partner" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '30px', marginBottom: '24px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>SECTOR</span>
+                <input name="sector" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>TIMELINE</span>
+                <select name="timeline" defaultValue="" style={{ padding: '12px', background: 'transparent', border: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }}>
+                  <option value="" disabled>Select one</option>
+                  <option>Exploring</option>
+                  <option>Within 3 months</option>
+                  <option>3-6 months</option>
+                  <option>6-12 months</option>
+                  <option>12+ months</option>
+                </select>
+              </label>
+            </div>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>APPROXIMATE INVESTMENT OR FUNDING RANGE <small>(OPTIONAL)</small></span>
+              <input name="funding" style={{ padding: '12px', background: 'transparent', border: 'none', borderBottom: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted }}>WHAT WOULD NEED TO HAPPEN FOR YOU TO SERIOUSLY MOVE FORWARD?</span>
+              <textarea rows={4} name="move" style={{ padding: '12px', background: 'transparent', border: `1px solid ${tokens.color.line}`, fontSize: '16px', width: '100%' }} />
+            </label>
+            
+            <fieldset style={{ border: 'none', padding: 0, marginBottom: '30px' }}>
+              <legend style={{ fontSize: '11px', fontFamily: tokens.font.mono, letterSpacing: '0.1em', color: tokens.color.muted, marginBottom: '12px' }}>IF WE IDENTIFY A STRONG MATCH, WOULD YOU BE OPEN TO AN INTRODUCTION?</legend>
+              <div style={{ display: 'flex', gap: '20px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input required type="radio" name="introduction" value="yes" /> Yes
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input type="radio" name="introduction" value="no" /> No
+                </label>
+              </div>
+            </fieldset>
+            
+            {error && <p style={{ color: tokens.color.signal, marginBottom: '20px' }}>{error}</p>}
+            {submitted ? 
+              <p style={{ display: 'flex', alignItems: 'center', gap: '10px', color: tokens.color.signal, marginBottom: '20px' }}>
+                <Check /> Application received. We&apos;ll review your objective carefully.
+              </p> : 
+              null
+            }
+            <p style={{ fontSize: '14px', color: tokens.color.muted, marginBottom: '24px' }}>
+              We review applications based on seriousness of intent, clarity of objective, and potential for a meaningful match.
+            </p>
+            <button className="button button-solid" type="submit" disabled={sending} style={{ fontFamily: tokens.font.mono, fontSize: '11px', letterSpacing: '0.1em' }}>
+              {sending ? 'Sending application...' : 'Submit pilot application'} <ArrowUpRight size={14} />
+            </button>
+          </motion.form>
+        </div>
+      </section>
+      
+      {/* Final Section */}
+      <section className="final-statement">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          Your idea is only the beginning.
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          You may already know exactly what you want to do. But the right people may still be missing.
+        </motion.p>
+        <motion.p 
+          className="final-motto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          Real intentions. Real relationships. Real possibilities.
+        </motion.p>
+      </section>
       
       <footer>
         <a href="/#top" className="wordmark">
@@ -687,7 +626,7 @@ export function BatanaNewSite() {
         <p>The information is already there.<br />
           <em>We&apos;re building the systems and relationships needed to understand how it connects.</em>
         </p>
-        <span className="footer-meta">Harare · Zimbabwe / 2026</span>
+        <span className="footer-meta">Harare  Zimbabwe / 2026</span>
       </footer>
     </main>
   );
