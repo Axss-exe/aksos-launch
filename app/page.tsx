@@ -1,5 +1,5 @@
-import { AksosSite } from '@/components/aksos-site'
+import { AksosNewSite } from '@/components/AksosNewSite'
 
 export default function Page() {
-  return <AksosSite />
+  return <AksosNewSite />
 }
