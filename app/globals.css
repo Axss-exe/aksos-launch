@@ -1,7 +1,16 @@
 /* =============================================================================
-   GLOBAL STYLES
+   GLOBAL STYLES - GOLDEN RATIO DESIGN SYSTEM
    AKSOS Launch Site - Minimal, Editorial Design System
+   
+   Based on NN/g Golden Ratio UI Design:
+   https://www.nngroup.com/articles/golden-ratio-ui-design/
+   
+   φ (Golden Ratio) = 1.618033988749895
+   - 61.8% / 38.2% splits
+   - Fibonacci sequence proportions
+   - Rule of thirds approximations
    =============================================================================
+   
    Color Palette:
    - Background: #efeee8 (warm off-white)
    - Paper: #f8f7f2 (clean white)
@@ -9,6 +18,7 @@
    - Muted: #686b64 (soft gray)
    - Line: #c7c9c0 (subtle gray)
    - Signal: #a94b35 (accent rust)
+   - Green: #567d61
    
    Typography:
    - Sans: Inter
@@ -26,20 +36,36 @@
   --color-muted: #686b64;
   --color-line: #c7c9c0;
   --color-signal: #a94b35;
+  --color-green: #567d61;
+  --color-white: #ffffff;
+  --color-black: #000000;
   
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
   --font-serif: Georgia, 'Times New Roman', serif;
   
-  /* Spacing */
+  /* Golden Ratio Constants */
+  --phi: 1.618033988749895;
+  --inv-phi: 0.6180339887498949;
+  --major: 0.6180339887498949;
+  --minor: 0.3819660112501051;
+  
+  /* Spacing - Golden Ratio Based */
   --spacing-xs: 8px;
   --spacing-sm: 12px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  --spacing-3xl: 64px;
+  --spacing-md: 20px;
+  --spacing-lg: 32px;
+  --spacing-xl: 52px;
+  --spacing-2xl: 84px;
+  --spacing-3xl: 136px;
+  
+  /* Golden Ratio Spacing Multipliers */
+  --spacing-mult-xs: 1;
+  --spacing-mult-sm: 1.5;
+  --spacing-mult-md: calc(var(--phi) * 1);
+  --spacing-mult-lg: calc(var(--phi) * var(--phi));
+  --spacing-mult-xl: calc(var(--phi) * var(--phi) * var(--phi));
   
   /* Layout */
   --page-width: 1440px;
@@ -58,9 +84,28 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
+  
+  /* Typography Scale - Golden Ratio Based */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 26px;
+  --text-2xl: 42px;
+  --text-3xl: 68px;
+  --text-4xl: 110px;
+  --text-5xl: 178px;
+  
+  /* Line Heights - Golden Ratio */
+  --line-height-text: 1.618;
+  --line-height-heading: 1.2;
 }
 
-/* Reset and Base Styles */
+/* =============================================================================
+   RESET AND BASE STYLES
+   =============================================================================
+*/
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -79,14 +124,18 @@ body {
   background-color: var(--color-background);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  line-height: 1.5;
+  line-height: var(--line-height-text);
   overflow-x: hidden;
 }
 
-/* Typography */
+/* =============================================================================
+   TYPOGRAPHY
+   =============================================================================
+*/
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
   letter-spacing: -0.02em;
 }
 
@@ -107,7 +156,7 @@ h3 {
 
 p {
   font-size: clamp(1rem, 1.8vw, 1.125rem);
-  line-height: 1.7;
+  line-height: var(--line-height-text);
   color: var(--color-ink);
 }
 
@@ -134,6 +183,363 @@ svg {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+/* =============================================================================
+   GOLDEN RATIO LAYOUT SYSTEM
+   8 Different Layout Patterns
+   =============================================================================
+*/
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 1: HERO
+   Full-width centered layout for maximum impact
+   ==------------------------------------------------------*/
+
+.golden-section.layout-hero {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-hero .golden-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  align-items: center;
+  justify-items: center;
+}
+
+.golden-section.layout-hero .golden-label-cell {
+  grid-column: 1;
+  justify-self: start;
+  padding-left: calc(var(--page-padding) * 0.5);
+}
+
+.golden-section.layout-hero .golden-content {
+  grid-column: 1;
+  max-width: var(--text-width);
+  text-align: center;
+  width: 100%;
+}
+
+.golden-section.layout-hero .golden-diagram {
+  grid-column: 1;
+  width: 100%;
+  margin-top: var(--spacing-xl);
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 2: ASYMMETRICAL
+   61.8% / 38.2% split - Golden Ratio
+   ==------------------------------------------------------*/
+
+.golden-section.layout-asymmetrical {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-asymmetrical .golden-grid {
+  display: grid;
+  grid-template-columns: calc(var(--major) * 100%) calc(var(--minor) * 100%);
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+.golden-section.layout-asymmetrical .golden-label-cell {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.golden-section.layout-asymmetrical .golden-content {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.golden-section.layout-asymmetrical .golden-diagram {
+  grid-column: 2;
+  width: 100%;
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 3: GOLDEN RECTANGLE
+   Content area follows 1:1.618 proportion
+   ==------------------------------------------------------*/
+
+.golden-section.layout-golden-rectangle {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-golden-rectangle .golden-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  align-items: center;
+  justify-items: center;
+}
+
+.golden-section.layout-golden-rectangle .golden-label-cell {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.golden-section.layout-golden-rectangle .golden-content {
+  grid-column: 1;
+  max-width: calc(var(--inv-phi) * 100%);
+  text-align: center;
+  width: 100%;
+}
+
+.golden-section.layout-golden-rectangle .golden-diagram {
+  grid-column: 1;
+  width: 100%;
+  max-width: calc(var(--inv-phi) * 100%);
+  margin-top: var(--spacing-lg);
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 4: FIBONACCI
+   Progressive sizing based on Fibonacci sequence
+   ==------------------------------------------------------*/
+
+.golden-section.layout-fibonacci {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-fibonacci .golden-grid {
+  display: grid;
+  grid-template-columns: calc(var(--major) * 100%) 1fr;
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+.golden-section.layout-fibonacci .golden-label-cell {
+  grid-column: 1 / span 2;
+  justify-self: start;
+}
+
+.golden-section.layout-fibonacci .golden-content {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.golden-section.layout-fibonacci .golden-diagram {
+  grid-column: 2;
+  width: 100%;
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 5: RULE OF THIRDS
+   Thirds-based layout for visual interest
+   ==------------------------------------------------------*/
+
+.golden-section.layout-rule-of-thirds {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-rule-of-thirds .golden-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+.golden-section.layout-rule-of-thirds .golden-label-cell {
+  grid-column: 1 / span 3;
+  justify-self: start;
+}
+
+.golden-section.layout-rule-of-thirds .golden-content {
+  grid-column: 2;
+  max-width: 100%;
+  justify-self: center;
+}
+
+.golden-section.layout-rule-of-thirds .golden-diagram {
+  grid-column: 3;
+  width: 100%;
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 6: CENTERED
+   Traditional centered layout with balanced margins
+   ==------------------------------------------------------*/
+
+.golden-section.layout-centered {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-centered .golden-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  align-items: center;
+  justify-items: center;
+}
+
+.golden-section.layout-centered .golden-label-cell {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.golden-section.layout-centered .golden-content {
+  grid-column: 1;
+  max-width: calc(var(--major) * 100%);
+  text-align: center;
+  width: 100%;
+}
+
+.golden-section.layout-centered .golden-diagram {
+  grid-column: 1;
+  width: 100%;
+  max-width: calc(var(--major) * 100%);
+  margin-top: var(--spacing-lg);
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 7: FULL BLEED
+   Diagram spans full width, text constrained
+   ==------------------------------------------------------*/
+
+.golden-section.layout-full-bleed {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-full-bleed .golden-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  align-items: center;
+  justify-items: center;
+}
+
+.golden-section.layout-full-bleed .golden-label-cell {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.golden-section.layout-full-bleed .golden-content {
+  grid-column: 1;
+  max-width: 50%;
+  text-align: center;
+  width: 100%;
+}
+
+.golden-section.layout-full-bleed .golden-diagram {
+  grid-column: 1;
+  width: 100%;
+  margin-top: var(--spacing-lg);
+}
+
+/* ==------------------------------------------------------
+   LAYOUT PATTERN 8: SPLIT SCREEN
+   Equal 50/50 split for balanced composition
+   ==------------------------------------------------------*/
+
+.golden-section.layout-split-screen {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.golden-section.layout-split-screen .golden-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+.golden-section.layout-split-screen .golden-label-cell {
+  grid-column: 1 / span 2;
+  justify-self: start;
+}
+
+.golden-section.layout-split-screen .golden-content {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.golden-section.layout-split-screen .golden-diagram {
+  grid-column: 2;
+  width: 100%;
+}
+
+/* =============================================================================
+   TONE VARIANTS
+   =============================================================================
+*/
+
+/* Paper tone - Default light background */
+.golden-section.tone-paper {
+  background-color: var(--color-paper);
+}
+
+/* Dark tone - Dark background */
+.golden-section.tone-dark {
+  background-color: var(--color-ink);
+}
+
+.golden-section.tone-dark,
+.golden-section.tone-dark p,
+.golden-section.tone-dark a,
+.golden-section.tone-dark span,
+.golden-section.tone-dark strong {
+  color: var(--color-paper);
+}
+
+.golden-section.tone-dark .sys-label {
+  color: var(--color-muted);
+}
+
+/* Quiet tone - Subtle, muted */
+.golden-section.tone-quiet {
+  background-color: transparent;
+}
+
+.golden-section.tone-quiet p {
+  color: var(--color-muted);
+}
+
+/* =============================================================================
+   SECTION LABEL STYLES
+   =============================================================================
+*/
+
+.sys-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.15em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.sys-label .label-rule {
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background-color: var(--color-line);
 }
 
 /* =============================================================================
@@ -172,61 +578,6 @@ svg {
 }
 
 /* =============================================================================
-   LAYOUT COMPONENTS
-   =============================================================================
-*/
-
-/* Section */
-.section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--grid-gap);
-  padding: var(--section-spacing) var(--page-padding);
-  max-width: var(--page-width);
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* Section Label */
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--color-muted);
-  text-transform: uppercase;
-  grid-column: 1;
-  align-self: start;
-  padding-top: var(--spacing-sm);
-}
-
-/* Section Content */
-.section-content {
-  grid-column: 2;
-}
-
-/* Full-width sections */
-.section.full {
-  grid-template-columns: 1fr;
-}
-
-.section.full .section-label {
-  grid-column: 1;
-}
-
-.section.full .section-content {
-  grid-column: 1;
-}
-
-/* Animated Section */
-.animated-section {
-  opacity: 0;
-}
-
-.animated-section.visible {
-  opacity: 1;
-}
-
-/* =============================================================================
    TEXT STYLES
    =============================================================================
 */
@@ -243,22 +594,35 @@ svg {
   color: var(--color-signal);
 }
 
+.text-green {
+  color: var(--color-green);
+}
+
 /* Large text */
 .text-xl {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.4;
+  font-size: var(--text-xl);
+  line-height: var(--line-height-text);
 }
 
 .text-lg {
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-  line-height: 1.5;
+  font-size: var(--text-lg);
+  line-height: var(--line-height-text);
 }
 
 /* Monospace text */
 .text-mono {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   letter-spacing: 0.05em;
+}
+
+/* Section lede text */
+.section-lede {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: var(--line-height-text);
+  color: var(--color-muted);
+  max-width: var(--text-width);
+  margin-top: var(--spacing-md);
 }
 
 /* =============================================================================
@@ -293,6 +657,7 @@ svg {
 .gap-sm { gap: var(--spacing-sm); }
 .gap-md { gap: var(--spacing-md); }
 .gap-lg { gap: var(--spacing-lg); }
+.gap-xl { gap: var(--spacing-xl); }
 
 .mt-xs { margin-top: var(--spacing-xs); }
 .mt-sm { margin-top: var(--spacing-sm); }
@@ -311,6 +676,478 @@ svg {
 .text-right { text-align: right; }
 
 /* =============================================================================
+   SITE HEADER
+   =============================================================================
+*/
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--page-padding);
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.site-header .wordmark {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.site-header .wordmark img {
+  width: 24px;
+  height: 24px;
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.site-header nav a {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  transition: color var(--duration-fast) ease-in-out;
+}
+
+.site-header nav a:hover {
+  color: var(--color-signal);
+}
+
+.site-header .menu-button {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+}
+
+.site-header .menu-button svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--color-ink);
+}
+
+/* =============================================================================
+   HERO SECTION
+   =============================================================================
+*/
+
+.sys-hero {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sys-hero .sys-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+  align-items: center;
+}
+
+.sys-hero .hero-copy {
+  grid-column: 1;
+}
+
+.sys-hero .hero-copy h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: var(--spacing-md);
+}
+
+.sys-hero .hero-copy h1 em {
+  font-style: italic;
+  color: var(--color-muted);
+}
+
+.sys-hero .hero-copy p {
+  font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+.sys-hero .link-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) ease-in-out;
+}
+
+.primary-link:hover {
+  color: var(--color-signal);
+  border-color: var(--color-signal);
+  background-color: rgba(169, 75, 53, 0.05);
+}
+
+.primary-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sys-hero > div:last-child {
+  grid-column: 2;
+}
+
+/* =============================================================================
+   SYS SECTION (Legacy - for backward compatibility)
+   =============================================================================
+*/
+
+.sys-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sys-section.tone-paper {
+  background-color: var(--color-paper);
+}
+
+.sys-section.tone-dark {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.sys-section.tone-dark p,
+.sys-section.tone-dark a,
+.sys-section.tone-dark span,
+.sys-section.tone-dark strong {
+  color: var(--color-paper);
+}
+
+.sys-section.tone-dark .sys-label {
+  color: var(--color-muted);
+}
+
+.sys-section.tone-quiet {
+  background-color: transparent;
+}
+
+.sys-section.tone-quiet p {
+  color: var(--color-muted);
+}
+
+.sys-section.full {
+  grid-template-columns: 1fr;
+}
+
+.sys-section.full .section-label {
+  grid-column: 1;
+}
+
+.sys-section.full .section-content {
+  grid-column: 1;
+}
+
+.sys-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+}
+
+.section-label {
+  grid-column: 1;
+  align-self: start;
+  padding-top: var(--spacing-sm);
+}
+
+.section-content {
+  grid-column: 2;
+}
+
+/* =============================================================================
+   SPECIAL SECTIONS
+   =============================================================================
+*/
+
+.final-statement {
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+.final-statement h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: var(--spacing-md);
+}
+
+.final-statement h2 em {
+  font-style: italic;
+  color: var(--color-muted);
+}
+
+.final-statement p {
+  font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+  color: var(--color-muted);
+  margin: var(--spacing-md) 0 var(--spacing-xl);
+}
+
+/* ATIS Section Styles */
+.atis-reveal {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+}
+
+.atis-reveal > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.atis-reveal span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.atis-reveal strong {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+}
+
+/* Capability Index */
+.capability-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--grid-gap);
+  margin-top: var(--spacing-xl);
+}
+
+.capability-index > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.capability-index span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+.capability-index h3 {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+.capability-index p {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  line-height: var(--line-height-text);
+}
+
+/* Audience Index */
+.audience-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--grid-gap);
+  margin-top: var(--spacing-xl);
+}
+
+.audience-index > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.audience-index span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+.audience-index strong {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+.audience-index p {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  line-height: var(--line-height-text);
+}
+
+/* Journey Line */
+.journey-line {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap);
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.journey-line > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) 0;
+}
+
+.journey-line span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.journey-line strong {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+/* Status List */
+.status-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap);
+  margin-top: var(--spacing-xl);
+}
+
+.status-list > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.status-list span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.status-list strong {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+/* =============================================================================
+   FOOTER
+   =============================================================================
+*/
+
+footer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  padding: var(--section-spacing) var(--page-padding);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid var(--color-line);
+}
+
+footer span {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+footer p {
+  font-size: var(--text-lg);
+  color: var(--color-muted);
+  max-width: var(--text-width);
+  margin: 0 auto;
+}
+
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  margin-top: var(--spacing-md);
+}
+
+/* =============================================================================
+   ANIMATION UTILITIES
+   =============================================================================
+*/
+
+.fade-in {
+  animation: fadeIn var(--duration-normal) ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp var(--duration-normal) ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================================================
    RESPONSIVE BREAKPOINTS
    Mobile: < 768px
    Tablet: 768px - 1024px
@@ -320,10 +1157,72 @@ svg {
 
 @media (max-width: 767px) {
   /* Mobile adjustments */
-  .section {
+  
+  /* Hero Section Mobile */
+  .sys-hero .sys-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .sys-hero .hero-copy {
+    grid-column: 1;
+    text-align: center;
+  }
+
+  .sys-hero .hero-copy h1 {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+  }
+
+  .sys-hero .link-row {
+    justify-content: center;
+  }
+
+  .sys-hero > div:last-child {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  /* Site Header Mobile */
+  .site-header nav {
+    display: none;
+  }
+
+  .site-header .menu-button {
+    display: block;
+  }
+
+  .site-header .menu-button svg {
+    stroke: var(--color-ink);
+  }
+
+  .site-header.nav-open nav {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-paper);
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* Section Grid Mobile */
+  .sys-section,
+  .golden-section {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
     padding: var(--spacing-xl) var(--page-padding);
+  }
+
+  .sys-section.full {
+    padding: var(--spacing-lg) var(--page-padding);
+  }
+
+  .sys-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
   }
 
   .section-label {
@@ -335,8 +1234,43 @@ svg {
     grid-column: 1;
   }
 
-  .section.full {
-    padding: var(--spacing-lg) var(--page-padding);
+  /* Golden Section Layouts - Mobile */
+  .golden-section.layout-hero .golden-grid,
+  .golden-section.layout-golden-rectangle .golden-grid,
+  .golden-section.layout-centered .golden-grid,
+  .golden-section.layout-full-bleed .golden-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .golden-section.layout-asymmetrical .golden-grid,
+  .golden-section.layout-fibonacci .golden-grid,
+  .golden-section.layout-split-screen .golden-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .golden-section.layout-rule-of-thirds .golden-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  /* All layouts stack vertically on mobile */
+  .golden-section .golden-label-cell {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .golden-section .golden-content {
+    grid-column: 1;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .golden-section .golden-diagram {
+    grid-column: 1;
+    width: 100%;
+    margin-top: var(--spacing-lg);
   }
 
   /* Mobile diagram aspect ratios */
@@ -393,11 +1327,39 @@ svg {
   .text-mono {
     font-size: 0.75rem;
   }
+
+  /* Special sections mobile */
+  .final-statement {
+    padding: var(--spacing-xl) var(--page-padding);
+  }
+
+  .atis-reveal {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .capability-index,
+  .audience-index {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .journey-line {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .status-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   /* Tablet adjustments */
-  .section {
+  
+  .sys-section,
+  .golden-section {
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-lg);
   }
@@ -430,10 +1392,136 @@ svg {
   .hero-network-diagram {
     aspect-ratio: 1 / 1.1;
   }
+
+  /* Golden Section Layouts - Tablet */
+  .golden-section.layout-asymmetrical .golden-grid {
+    grid-template-columns: calc(var(--major) * 100%) calc(var(--minor) * 100%);
+  }
+
+  .golden-section.layout-fibonacci .golden-grid {
+    grid-template-columns: calc(var(--major) * 100%) 1fr;
+  }
+
+  .golden-section.layout-rule-of-thirds .golden-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .golden-section.layout-split-screen .golden-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .golden-section.layout-centered .golden-grid,
+  .golden-section.layout-golden-rectangle .golden-grid,
+  .golden-section.layout-hero .golden-grid,
+  .golden-section.layout-full-bleed .golden-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .golden-section.layout-centered .golden-content,
+  .golden-section.layout-golden-rectangle .golden-content {
+    max-width: calc(var(--major) * 100%);
+    text-align: center;
+  }
+
+  .golden-section.layout-centered .golden-diagram,
+  .golden-section.layout-golden-rectangle .golden-diagram {
+    width: 100%;
+    max-width: calc(var(--major) * 100%);
+  }
+
+  .golden-section.layout-asymmetrical .golden-content {
+    grid-column: 1;
+  }
+
+  .golden-section.layout-asymmetrical .golden-diagram {
+    grid-column: 2;
+  }
+
+  .golden-section.layout-fibonacci .golden-label-cell {
+    grid-column: 1 / span 2;
+  }
+
+  .golden-section.layout-fibonacci .golden-content {
+    grid-column: 1;
+  }
+
+  .golden-section.layout-fibonacci .golden-diagram {
+    grid-column: 2;
+  }
+
+  .golden-section.layout-rule-of-thirds .golden-label-cell {
+    grid-column: 1 / span 3;
+  }
+
+  .golden-section.layout-rule-of-thirds .golden-content {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .golden-section.layout-rule-of-thirds .golden-diagram {
+    grid-column: 3;
+  }
+
+  .golden-section.layout-split-screen .golden-label-cell {
+    grid-column: 1 / span 2;
+  }
+
+  .golden-section.layout-split-screen .golden-content {
+    grid-column: 1;
+  }
+
+  .golden-section.layout-split-screen .golden-diagram {
+    grid-column: 2;
+  }
+
+  .golden-section.layout-hero .golden-label-cell {
+    justify-self: start;
+  }
+
+  .golden-section.layout-hero .golden-content {
+    text-align: center;
+  }
+
+  .golden-section.layout-hero .golden-diagram {
+    margin-top: var(--spacing-xl);
+  }
+
+  .golden-section.layout-full-bleed .golden-content {
+    max-width: 50%;
+    text-align: center;
+  }
+
+  .golden-section.layout-full-bleed .golden-diagram {
+    width: 100%;
+  }
+
+  /* Special sections tablet */
+  .atis-reveal {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .capability-index,
+  .audience-index {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .journey-line {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .status-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
 }
 
 @media (min-width: 1024px) {
   /* Desktop - default styles already apply */
+  
+  /* Desktop diagram aspect ratios */
   .information-depth-diagram {
     aspect-ratio: 1 / 1.38;
   }
@@ -461,38 +1549,43 @@ svg {
   .hero-network-diagram {
     aspect-ratio: 1 / 1;
   }
-}
 
-/* =============================================================================
-   ANIMATION UTILITIES
-   =============================================================================
-*/
-
-.fade-in {
-  animation: fadeIn var(--duration-normal) ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+  /* Golden Section Layouts - Desktop */
+  .golden-section.layout-asymmetrical .golden-grid {
+    grid-template-columns: calc(var(--major) * 100%) calc(var(--minor) * 100%);
   }
-  to {
-    opacity: 1;
-  }
-}
 
-.slide-up {
-  animation: slideUp var(--duration-normal) ease-out forwards;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  .golden-section.layout-fibonacci .golden-grid {
+    grid-template-columns: calc(var(--major) * 100%) 1fr;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .golden-section.layout-rule-of-thirds .golden-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .golden-section.layout-split-screen .golden-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Special sections desktop */
+  .atis-reveal {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .capability-index {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .audience-index {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .journey-line {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .status-list {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -507,13 +1600,19 @@ svg {
     color: black;
   }
 
-  .section {
+  .golden-section,
+  .sys-section {
     page-break-inside: avoid;
   }
 
   svg {
     max-width: 100%;
     height: auto;
+  }
+
+  .site-header {
+    position: static;
+    border-bottom: none;
   }
 }
 
