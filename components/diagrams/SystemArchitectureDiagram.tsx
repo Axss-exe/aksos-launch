@@ -81,11 +81,11 @@ export function SystemArchitectureDiagram({ breakpoint = 'desktop' }: SystemArch
   // Transformation labels (for horizontal layout)
   const transformationLabels = isMobile ? [] : [
     { x: 20, y: 50, text: 'SIGNAL', position: 'bottom' as const, size: 'sm' as const, delay: 0.3 },
-    { x: 40, y: 50, text: '\u2192', position: 'bottom' as const, size: 'sm' as const, delay: 0.35 },
+    { x: 40, y: 50, text: '2192', position: 'bottom' as const, size: 'sm' as const, delay: 0.35 },
     { x: 60, y: 50, text: 'RELATIONSHIP', position: 'bottom' as const, size: 'sm' as const, delay: 0.5 },
-    { x: 80, y: 50, text: '\u2192', position: 'bottom' as const, size: 'sm' as const, delay: 0.55 },
+    { x: 80, y: 50, text: '2192', position: 'bottom' as const, size: 'sm' as const, delay: 0.55 },
     { x: 50, y: 78, text: 'CONTEXT', position: 'top' as const, size: 'sm' as const, delay: 0.7 },
-    { x: 50, y: 88, text: '\u2192', position: 'top' as const, size: 'sm' as const, delay: 0.75 },
+    { x: 50, y: 88, text: '2192', position: 'top' as const, size: 'sm' as const, delay: 0.75 },
   ];
 
   return (
@@ -148,7 +148,7 @@ export function SystemArchitectureDiagram({ breakpoint = 'desktop' }: SystemArch
       <SystemLabel
         x={50}
         y={isMobile ? 97 : 95}
-        text="SIGNAL \u2192 RELATIONSHIP \u2192 CONTEXT \u2192 UNDERSTANDING \u2192 OPPORTUNITY \u2192 ACTION"
+        text="SIGNAL 2192 RELATIONSHIP 2192 CONTEXT 2192 UNDERSTANDING 2192 OPPORTUNITY 2192 ACTION"
         position="bottom"
         size="sm"
         delay={1.2}

@@ -97,7 +97,7 @@ export function PerspectiveDiagram({ breakpoint = 'desktop' }: PerspectiveDiagra
               fontFamily={tokens.font.serif}
               fill={tokens.color.lineStrong}
             >
-              {\u2192}
+              {String.fromCharCode(8594)}
             </text>
             
             {/* Meaning */}

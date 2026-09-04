@@ -1,6 +1,7 @@
 'use client';
 
 import { DiagramContainer, NetworkNode, ConnectionLine, SystemLabel } from '../primitives';
+import { tokens } from '@/lib/tokens';
 
 // =============================================================================
 // PROBLEM DIAGRAM: BLIND SPOTS

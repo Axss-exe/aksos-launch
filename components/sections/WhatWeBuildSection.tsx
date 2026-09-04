@@ -296,7 +296,7 @@ export function WhatWeBuildSection({ breakpoint = 'desktop' }: WhatWeBuildSectio
               color: tokens.color.lineStrong,
             }}
           >
-            {\u2192}
+            {String.fromCharCode(8594)}
           </span>
           <span 
             style={{
@@ -315,7 +315,7 @@ export function WhatWeBuildSection({ breakpoint = 'desktop' }: WhatWeBuildSectio
               color: tokens.color.lineStrong,
             }}
           >
-            {\u2193}
+            {String.fromCharCode(8595)}
           </span>
           <span 
             style={{
@@ -334,7 +334,7 @@ export function WhatWeBuildSection({ breakpoint = 'desktop' }: WhatWeBuildSectio
               color: tokens.color.lineStrong,
             }}
           >
-            {\u2193}
+            {String.fromCharCode(8595)}
           </span>
           <span 
             style={{
@@ -353,7 +353,7 @@ export function WhatWeBuildSection({ breakpoint = 'desktop' }: WhatWeBuildSectio
               color: tokens.color.lineStrong,
             }}
           >
-            {\u2193}
+            {String.fromCharCode(8595)}
           </span>
           <span 
             style={{
@@ -372,7 +372,7 @@ export function WhatWeBuildSection({ breakpoint = 'desktop' }: WhatWeBuildSectio
               color: tokens.color.lineStrong,
             }}
           >
-            {\u2193}
+            {String.fromCharCode(8595)}
           </span>
           <span 
             style={{
