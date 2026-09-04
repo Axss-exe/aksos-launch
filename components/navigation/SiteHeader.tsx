@@ -42,7 +42,7 @@ export function SiteHeader({
       className={`site-header ${isScrolled ? 'scrolled' : ''}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: tokens.animation.duration.normal, ease: tokens.animation.easing.easeOut }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       <a href="/#top" className="wordmark">
         <img src="/aksos-symbol-traced.svg" alt="AKSOS" />
@@ -84,21 +84,25 @@ export function SiteHeader({
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.X
+            <motion.div
               key="close"
-              initial={{ opacity: 0, rotate: -90 }}
+              initial={{ rotate: -90 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: 90 }}
-              transition={{ duration: tokens.animation.duration.fast }}
-            />
+              transition={{ duration: 0.2 }}
+            >
+              <X />
+            </motion.div>
           ) : (
-            <motion.Menu
+            <motion.div
               key="menu"
-              initial={{ opacity: 0, rotate: 90 }}
+              initial={{ rotate: 90 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: -90 }}
-              transition={{ duration: tokens.animation.duration.fast }}
-            />
+              transition={{ duration: 0.2 }}
+            >
+              <Menu />
+            </motion.div>
           )}
         </AnimatePresence>
       </button>
@@ -107,7 +111,7 @@ export function SiteHeader({
         {isOpen && (
           <motion.div
             className="mobile-nav-backdrop"
-            initial={{ opacity: 0 }}
+            initial={{ }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}

@@ -61,7 +61,7 @@ export function BatanaNewSite() {
         className="site-header"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: tokens.animation.duration.normal }}
+        transition={{ duration: 0.4 }}
       >
         <a href="/#top" className="wordmark">
           <img src="/aksos-symbol-traced.svg" alt="AKSOS" />
@@ -86,7 +86,7 @@ export function BatanaNewSite() {
         {menuOpen && (
           <motion.div
             className="mobile-nav-backdrop"
-            initial={{ opacity: 0 }}
+            initial={{ }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setMenuOpen(false)}
@@ -99,32 +99,32 @@ export function BatanaNewSite() {
         <div className="hero-grid">
           <motion.div 
             className="hero-copy"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: tokens.animation.duration.slow }}
+            transition={{ duration: 0.6 }}
             style={{ gridColumn: '1 / -1' }}
           >
             <motion.p 
               className="section-label"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.normal }}
+              transition={{ duration: 0.4 }}
             >
               <span />PROJECT BATANA
             </motion.p>
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow }}
+              transition={{ duration: 0.6 }}
               style={{ fontSize: 'clamp(40px, 6vw, 72px)', lineHeight: 1.1 }}
             >
               You know what you want to do in Zimbabwe.<br />
               <em>But you may not know who can help you do it.</em>
             </motion.h1>
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
               <p className="text-lg text-muted max-w-content mt-6">
                 You can spend weeks searching Google, reading reports, sending emails, and asking people you already know. And still not find the person, organization, company, or institution you actually need.
@@ -138,9 +138,9 @@ export function BatanaNewSite() {
             </motion.div>
             <motion.div 
               className="flex items-center gap-6 mt-10 flex-wrap"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
               <a className="btn btn-primary" href="#apply">
                 Apply for a pilot slot <ArrowDown size={14} />
@@ -161,19 +161,19 @@ export function BatanaNewSite() {
       <Section label="01 / THE PROBLEM" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           The information you need may not be online.
         </motion.h2>
         <motion.div 
           className="max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p className="text-lg text-muted mt-6">
             You can find thousands of pages about Zimbabwe. But that doesn't mean you'll find the person who can actually help you.
@@ -187,10 +187,10 @@ export function BatanaNewSite() {
         </motion.div>
         <motion.p 
           className="text-lg text-muted max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           But you don't need to map Zimbabwe before you can start.<br />
           <em>You need to tell us what you're trying to accomplish.</em>
@@ -201,29 +201,29 @@ export function BatanaNewSite() {
       <Section label="02 / SEARCHING VS FINDING" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           The visitor starts with an objective,
         </motion.h2>
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <em>not with a contact list.</em>
         </motion.h2>
 
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -266,28 +266,28 @@ export function BatanaNewSite() {
       <Section label="03 / YOUR OBJECTIVE" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           Start with your vision.
         </motion.h2>
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <em>Not your search history.</em>
         </motion.h2>
         <motion.div 
           className="max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <p className="text-lg text-muted">
             You might already know exactly what you want to do. You may want to invest. Fund a project. Build a company. Find a local partner. Expand an organization. Research a market. Or turn an idea into something real.
@@ -302,29 +302,29 @@ export function BatanaNewSite() {
       <Section id="how" label="04 / HOW BATANA WORKS" tone="dark">
         <motion.h2 
           className="section-heading text-paper"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We do not start by searching for random people.
         </motion.h2>
         <motion.p 
           className="section-lede text-muted-soft"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           We start by understanding what you are trying to accomplish. Then we move through context, requirements, discovery, validation, and connection.
         </motion.p>
 
         <motion.div 
           className="mt-16 p-8 bg-ink border border-line-strong"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="flex items-center justify-center gap-8 flex-wrap text-sm font-mono text-muted-soft">
             <span className="border border-muted-soft px-4 py-2">OBJECTIVE</span>
@@ -346,10 +346,10 @@ export function BatanaNewSite() {
 
         <motion.p 
           className="text-lg text-muted-soft max-w-content mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           The outcome may be a conversation, a partnership, a project, an investment, or a new relationship. We do not promise the final outcome.
         </motion.p>
@@ -359,19 +359,19 @@ export function BatanaNewSite() {
       <Section label="05 / THE DIFFERENCE" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We don't just give you a list of names.
         </motion.h2>
         <motion.div 
           className="max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p className="text-lg text-muted">
             Finding a name on Google is easy. Finding someone who actually fits your objective is harder.
@@ -383,10 +383,10 @@ export function BatanaNewSite() {
 
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -410,10 +410,10 @@ export function BatanaNewSite() {
 
         <motion.p 
           className="text-lg text-muted max-w-content mt-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           The objective isn't to give you more names.<br />
           <em>It's to help you find the right people to talk to.</em>
@@ -424,19 +424,19 @@ export function BatanaNewSite() {
       <Section label="06 / PROJECT BATANA" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We don't want everyone.
         </motion.h2>
         <motion.div 
           className="max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p className="text-lg text-muted">
             Project Batana is not for people who are simply curious about Zimbabwe. This pilot is for people who want to do something.
@@ -447,10 +447,10 @@ export function BatanaNewSite() {
         </motion.div>
         <motion.div 
           className="max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <strong className="text-lg text-ink block mb-4">We need this to work.</strong>
           <p className="text-lg text-muted">
@@ -463,19 +463,19 @@ export function BatanaNewSite() {
       <Section id="apply" label="07 / APPLY" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           Tell us what you're trying to accomplish.
         </motion.h2>
         <motion.p 
           className="section-lede"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           You don't need to know who you need to talk to. You just need to know what you want to make happen.
         </motion.p>
@@ -483,10 +483,10 @@ export function BatanaNewSite() {
         <motion.form 
           onSubmit={submit}
           className="mt-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <label className="form-group">
@@ -662,28 +662,28 @@ export function BatanaNewSite() {
       <section className="section section-paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           Your idea is only the beginning.
         </motion.h2>
         <motion.p 
           className="text-lg text-muted max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           You may already know exactly what you want to do. But the right people may still be missing.
         </motion.p>
         <motion.p 
           className="text-xl font-serif text-ink mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           Real intentions. Real relationships. Real possibilities.
         </motion.p>

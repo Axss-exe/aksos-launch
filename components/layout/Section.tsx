@@ -27,19 +27,19 @@ export function Section({
   return (
     <motion.section
       className={`section ${toneClasses[tone]} ${fullWidth ? 'w-full' : ''}`}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.6 }}
       {...props}
     >
       {label && (
         <motion.p
           className="section-label"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           {label}
         </motion.p>

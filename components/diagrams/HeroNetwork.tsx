@@ -223,11 +223,11 @@ function DiagramNode({
 
   return (
     <motion.g
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ scale: 0.5 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ 
-        duration: tokens.animation.duration.normal, 
+        duration: 0.4, 
         delay: delay + (isCenter ? 0.1 : 0.2)
       }}
       whileHover={{ scale: 1.2 }}
@@ -251,11 +251,11 @@ function DiagramNode({
         fontFamily={tokens.font.mono}
         fill={isCenter ? tokens.color.signal : tokens.color.muted}
         letterSpacing="0.05em"
-        initial={{ opacity: 0, y: labelPosition === 'top' ? -10 : 10 }}
+        initial={{ y: labelPosition === 'top' ? -10 : 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ 
-          duration: tokens.animation.duration.normal, 
+          duration: 0.4, 
           delay: delay + (isCenter ? 0.2 : 0.3)
         }}
       >
@@ -290,11 +290,11 @@ function DiagramConnection({
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        initial={{ pathLength: 0, opacity: 0 }}
+        initial={{ pathLength: 0 }}
         whileInView={{ pathLength: 1, opacity: 1 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ 
-          duration: tokens.animation.duration.normal, 
+          duration: 0.4, 
           delay: delay + 0.3
         }}
       />
@@ -313,7 +313,7 @@ function DiagramConnection({
       whileInView={{ pathLength: 1, opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ 
-        duration: tokens.animation.duration.normal, 
+        duration: 0.4, 
         delay: delay + 0.3
       }}
     />
@@ -497,10 +497,10 @@ export function HeroNetworkDiagram() {
       ref={containerRef}
       className="diagram-container"
       style={{ aspectRatio }}
-      initial={{ opacity: 0 }}
+      initial={{ }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.6 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
@@ -541,10 +541,10 @@ export function HeroNetworkDiagram() {
           fontFamily={tokens.font.mono}
           fill={tokens.color.muted}
           letterSpacing="0.1em"
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
         >
           OPERATOR-CENTRIC INTELLIGENCE SYSTEM
         </motion.text>
@@ -559,7 +559,7 @@ export function HeroNetworkDiagram() {
             fontFamily={tokens.font.mono}
             fill={tokens.color.signal}
             letterSpacing="0.1em"
-            initial={{ opacity: 0 }}
+            initial={{ }}
             animate={{ opacity: 1 }}
           >
             HOVER TO EXPLORE

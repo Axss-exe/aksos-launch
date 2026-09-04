@@ -16,7 +16,7 @@ export function AksosNewSite() {
         <div className="hero-grid">
           <motion.div 
             className="hero-copy"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
@@ -25,7 +25,7 @@ export function AksosNewSite() {
             </p>
             
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
               style={{ marginBottom: '32px' }}
@@ -36,7 +36,7 @@ export function AksosNewSite() {
 
             <motion.div 
               className="space-y-4"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
             >
@@ -60,7 +60,7 @@ export function AksosNewSite() {
 
             <motion.div 
               className="flex items-center gap-6 mt-10 flex-wrap"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
             >
@@ -75,7 +75,7 @@ export function AksosNewSite() {
 
           <motion.div 
             className="hero-visual"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
           >
@@ -88,7 +88,7 @@ export function AksosNewSite() {
       <Section label="THE PROBLEM" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -98,7 +98,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -119,7 +119,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -137,7 +137,7 @@ export function AksosNewSite() {
       <Section label="THE ALLY" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -147,7 +147,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -168,7 +168,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -188,7 +188,7 @@ export function AksosNewSite() {
       <Section id="what-we-build" label="WHAT WE BUILD" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -198,13 +198,13 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.4, delay: 0.2 }}
@@ -219,7 +219,7 @@ export function AksosNewSite() {
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.4, delay: 0.3 }}
@@ -234,7 +234,7 @@ export function AksosNewSite() {
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.4, delay: 0.4 }}
@@ -253,7 +253,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -277,7 +277,7 @@ export function AksosNewSite() {
       <Section id="atis" label="ATIS" tone="paper">
         <motion.div 
           className="flex items-center gap-4 mb-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -291,7 +291,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-4 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -305,7 +305,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-xl font-serif text-ink mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -315,7 +315,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12 space-y-4"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -344,7 +344,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -368,7 +368,7 @@ export function AksosNewSite() {
       <Section id="rita" label="RITA" tone="quiet">
         <motion.div 
           className="flex items-center gap-4 mb-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -382,7 +382,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-4 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -396,7 +396,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-xl font-serif text-ink mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -406,7 +406,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -427,7 +427,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-xl font-serif text-ink mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -439,7 +439,7 @@ export function AksosNewSite() {
       <Section label="PERSPECTIVE" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -449,7 +449,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -491,7 +491,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -508,7 +508,7 @@ export function AksosNewSite() {
       <Section label="STANDARD" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -518,7 +518,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -531,7 +531,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -550,7 +550,7 @@ export function AksosNewSite() {
       <Section label="ACCESS" tone="paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -560,7 +560,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -587,7 +587,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-lg text-muted max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -597,7 +597,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -611,7 +611,7 @@ export function AksosNewSite() {
       <Section label="BATANA" tone="dark">
         <motion.h2 
           className="section-heading text-paper"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -621,7 +621,7 @@ export function AksosNewSite() {
 
         <motion.h3 
           className="text-xl font-serif text-paper mb-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -631,7 +631,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted-soft max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -643,7 +643,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -658,7 +658,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-12 space-y-6 text-lg text-muted-soft max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -679,7 +679,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -691,7 +691,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-sm text-muted-soft mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -703,7 +703,7 @@ export function AksosNewSite() {
       <Section label="NETWORK" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -713,7 +713,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-6 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -724,7 +724,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -753,7 +753,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-sm text-muted mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -765,7 +765,7 @@ export function AksosNewSite() {
       <Section label="VISION" tone="quiet">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -775,7 +775,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-4 text-lg text-muted max-w-content"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -790,7 +790,7 @@ export function AksosNewSite() {
 
         <motion.h3 
           className="text-2xl font-serif text-ink mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -800,7 +800,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-xl text-muted mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -814,7 +814,7 @@ export function AksosNewSite() {
       <section className="section section-paper">
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
@@ -824,7 +824,7 @@ export function AksosNewSite() {
         
         <motion.h2 
           className="section-heading"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -834,7 +834,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="space-y-4 text-lg text-muted max-w-content mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -846,7 +846,7 @@ export function AksosNewSite() {
 
         <motion.p 
           className="text-xl font-serif text-ink mt-8"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -856,7 +856,7 @@ export function AksosNewSite() {
 
         <motion.div 
           className="flex items-center gap-6 mt-12 flex-wrap"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
