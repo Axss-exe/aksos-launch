@@ -1,5 +1,6 @@
 // AKSOS Diagram Components
 export { HeroDiagram } from './HeroDiagram';
+export { HeroGraph } from './HeroGraph';
 export { ProblemDiagram } from './ProblemDiagram';
 export { AllyDiagram } from './AllyDiagram';
 export { SystemArchitectureDiagram } from './SystemArchitectureDiagram';

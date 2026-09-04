@@ -6,21 +6,19 @@ import { SiteHeader } from './navigation/SiteHeader';
 import { SiteFooter } from './layout/SiteFooter';
 import { useBreakpoint } from '@/lib/hooks';
 import {
-  HeroSection,
-  ProblemSection,
-  AllySection,
-  WhatWeBuildSection,
-  ATISSection,
-  RITASection,
-  PerspectiveSection,
-  StandardSection,
-  AccessSection,
-  BatanaSection,
-  NetworkSection,
-  VisionSection,
-  FinalCTASection,
+  HeroSectionNew,
+  VisibilityGapSection,
+  WhyVisibilityMattersSection,
+  WhatCouldChangeSection,
+  AksosSection,
+  ATISSectionNew,
+  ATISUseCasesSection,
+  BatanaSectionNew,
+  SelectionSection,
+  NetworkSectionNew,
+  FutureSection,
+  FinalInvitationSection,
 } from './sections';
-import { HeroDiagram } from './diagrams';
 import { tokens } from '@/lib/tokens';
 
 // =============================================================================
@@ -63,52 +61,49 @@ export function AksosNewSite() {
       {/* Header */}
       <SiteHeader 
         navItems={[
-          { label: 'What We Build', href: '#what-we-build' },
+          { label: 'What We Build', href: '#aksos' },
           { label: 'ATIS', href: '#atis' },
-          { label: 'RITA', href: '#rita' },
           { label: 'Batana', href: '/batana' },
+          { label: 'About', href: '#about' },
         ]}
         cta={{ label: 'Enter Batana', href: '/batana' }}
       />
 
-      {/* HERO SECTION - Diagram-first introduction */}
-      <HeroSection breakpoint={breakpoint} />
+      {/* SECTION 01: HERO - THE WORLD */}
+      <HeroSectionNew breakpoint={breakpoint} />
 
-      {/* PROBLEM SECTION - Statement-first: define the problem */}
-      <ProblemSection breakpoint={breakpoint} />
+      {/* SECTION 02: THE VISIBILITY GAP */}
+      <VisibilityGapSection breakpoint={breakpoint} />
 
-      {/* ALLY SECTION - Asymmetric editorial: introduce AKSOS */}
-      <AllySection breakpoint={breakpoint} />
+      {/* SECTION 03: WHY VISIBILITY MATTERS */}
+      <WhyVisibilityMattersSection breakpoint={breakpoint} />
 
-      {/* WHAT WE BUILD SECTION - Diagram-first: show the system */}
-      <WhatWeBuildSection breakpoint={breakpoint} />
+      {/* SECTION 04: WHAT COULD CHANGE? */}
+      <WhatCouldChangeSection breakpoint={breakpoint} />
 
-      {/* ATIS SECTION - Full-width system scene: intelligence layer */}
-      <ATISSection breakpoint={breakpoint} />
+      {/* SECTION 05: AKSOS */}
+      <AksosSection breakpoint={breakpoint} />
 
-      {/* RITA SECTION - Full-width system scene: relationship layer */}
-      <RITASection breakpoint={breakpoint} />
+      {/* SECTION 06: ATIS */}
+      <ATISSectionNew breakpoint={breakpoint} />
 
-      {/* PERSPECTIVE SECTION - Full-width system scene: why perspectives matter */}
-      <PerspectiveSection breakpoint={breakpoint} />
+      {/* SECTION 07: ATIS USE CASES */}
+      <ATISUseCasesSection breakpoint={breakpoint} />
 
-      {/* STANDARD SECTION - Statement-first: the standard we're building toward */}
-      <StandardSection breakpoint={breakpoint} />
+      {/* SECTION 08: BATANA */}
+      <BatanaSectionNew breakpoint={breakpoint} />
 
-      {/* ACCESS SECTION - Statement-first: how to get access */}
-      <AccessSection breakpoint={breakpoint} />
+      {/* SECTION 09: SELECTION */}
+      <SelectionSection breakpoint={breakpoint} />
 
-      {/* BATANA SECTION - Full-width system scene: the community */}
-      <BatanaSection breakpoint={breakpoint} />
+      {/* SECTION 10: THE NETWORK */}
+      <NetworkSectionNew breakpoint={breakpoint} />
 
-      {/* NETWORK SECTION - Statement-first: network effects */}
-      <NetworkSection breakpoint={breakpoint} />
+      {/* SECTION 11: THE FUTURE */}
+      <FutureSection breakpoint={breakpoint} />
 
-      {/* VISION SECTION - Statement-first: the vision */}
-      <VisionSection breakpoint={breakpoint} />
-
-      {/* FINAL CTA SECTION - Statement-first: call to action */}
-      <FinalCTASection breakpoint={breakpoint} />
+      {/* FINAL SECTION: INVITATION */}
+      <FinalInvitationSection breakpoint={breakpoint} />
 
       {/* Footer */}
       <SiteFooter />

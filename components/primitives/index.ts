@@ -6,3 +6,4 @@ export { Signal } from './Signal';
 export { SystemLabel } from './SystemLabel';
 export { FlowStep } from './FlowStep';
 export { AnimatedWord } from './AnimatedWord';
+export { GraphicPlaceholder } from './GraphicPlaceholder';
