@@ -39,7 +39,7 @@ export function SiteHeader({
 
   return (
     <motion.header
-      className={`site-header ${isScrolled ? 'scrolled' : ''}`}
+      className={`site-header ${isScrolled ? 'scrolled' : ''} ${isOpen ? 'nav-open' : ''}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
