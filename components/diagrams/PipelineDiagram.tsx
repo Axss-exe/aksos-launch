@@ -132,7 +132,7 @@ export function PipelineDiagram() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       style={{
@@ -163,25 +163,25 @@ export function PipelineDiagram() {
               initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
+              transition={{ duration: 0.normal, delay: stage.delay }}
               whileHover={{ scale: 1.1 }}
             >
               <DiagramNode
                 x={stage.x}
                 y={stage.y}
                 r={NODE_R}
-                fill={tokens.color.ink}
-                stroke={tokens.color.line}
+                fill={"#ink}
+                stroke={"#line}
                 strokeWidth={0.3}
                 label={stage.label}
                 labelPosition={isMobile ? 'bottom' : 'top'}
                 labelOffset={8}
                 labelFontSize={5}
-                labelColor={tokens.color.muted}
+                labelColor={"#muted}
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
+                transition={{ duration: 0.normal, delay: stage.delay }}
               />
             </motion.g>
           );
@@ -203,18 +203,18 @@ export function PipelineDiagram() {
               initial={{ opacity: 0, pathLength: 0 }}
               whileInView={{ opacity: 1, pathLength: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.05 }}
+              transition={{ duration: 0.normal, delay: stage.delay + 0.05 }}
             >
               <DiagramConnection
                 from={isMobile ? mobileFrom : from}
                 to={isMobile ? mobileTo : to}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={CONNECTION_STROKE_WIDTH}
                 curved={false}
                 initial={{ opacity: 0, pathLength: 0 }}
                 whileInView={{ opacity: 1, pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.05 }}
+                transition={{ duration: 0.normal, delay: stage.delay + 0.05 }}
               />
               {/* Arrow at end of connection */}
               <DiagramArrow
@@ -222,12 +222,12 @@ export function PipelineDiagram() {
                 y={layout.stages[index + 1].y}
                 direction={isMobile ? 'down' : 'left'}
                 size={ARROW_SIZE}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={0.3}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.1 }}
+                transition={{ duration: 0.normal, delay: stage.delay + 0.1 }}
               />
             </motion.g>
           );
@@ -238,7 +238,7 @@ export function PipelineDiagram() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
+          transition={{ duration: 0.normal }}
         >
           <DiagramLabel
             x={CENTER_X}
@@ -246,7 +246,7 @@ export function PipelineDiagram() {
             text="INFORMATION TO INTELLIGENCE PIPELINE"
             textAnchor="middle"
             fontSize={6}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
         </motion.g>
@@ -258,8 +258,8 @@ export function PipelineDiagram() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -274,8 +274,8 @@ export function PipelineDiagram() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { tokens } from '@/lib/tokens';
 import { SiteHeader } from './navigation/SiteHeader';
 import { Section } from './layout/Section';
 import { HeroNetworkDiagram } from './diagrams/HeroNetwork';
@@ -19,7 +18,7 @@ export function AksosNewSite() {
             className="hero-copy"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: tokens.animation.duration.slow, ease: tokens.animation.easing.easeOut }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <p className="section-label">
               <span />AKSOS
@@ -28,8 +27,8 @@ export function AksosNewSite() {
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow, delay: 0.1, ease: tokens.animation.easing.easeOut }}
-              style={{ marginBottom: tokens.spacing['8'] }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+              style={{ marginBottom: '32px' }}
             >
               You already know your field.<br />
               <em>We help you become harder to beat in it.</em>
@@ -39,7 +38,7 @@ export function AksosNewSite() {
               className="space-y-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow, delay: 0.2, ease: tokens.animation.easing.easeOut }}
+              transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
             >
               <p className="text-lg text-muted max-w-content">
                 You have the relationships.<br />
@@ -63,7 +62,7 @@ export function AksosNewSite() {
               className="flex items-center gap-6 mt-10 flex-wrap"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: tokens.animation.duration.slow, delay: 0.3, ease: tokens.animation.easing.easeOut }}
+              transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
             >
               <a href="#what-we-build" className="btn btn-primary">
                 See what we're building
@@ -78,7 +77,7 @@ export function AksosNewSite() {
             className="hero-visual"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: tokens.animation.duration.slow, delay: 0.4, ease: tokens.animation.easing.easeOut }}
+            transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
           >
             <HeroNetworkDiagram />
           </motion.div>
@@ -92,7 +91,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           Good operators can still be held back by weak systems.
         </motion.h2>
@@ -102,7 +101,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>
             You can know your market and still miss a signal.
@@ -123,7 +122,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h3 className="text-2xl font-serif text-ink mb-2">
             The operator isn't always the problem.
@@ -141,7 +140,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           You don't need another company telling you what to do.
         </motion.h2>
@@ -151,7 +150,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>
             You need someone who can help you do it better.
@@ -172,7 +171,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h3 className="text-2xl font-serif text-ink mb-4">
             That's the relationship we're trying to build.
@@ -192,7 +191,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           So we build the things that should already exist.
         </motion.h2>
@@ -202,14 +201,13 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
-          {/* ATIS */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
           >
             <div className="flex items-center gap-4 mb-4">
               <img src="/atis-symbol-traced.svg" alt="ATIS" className="w-10 h-10" />
@@ -220,12 +218,11 @@ export function AksosNewSite() {
             </p>
           </motion.div>
 
-          {/* RITA */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
           >
             <div className="flex items-center gap-4 mb-4">
               <img src="/rita-symbol-traced.svg" alt="RITA" className="w-10 h-10" />
@@ -236,12 +233,11 @@ export function AksosNewSite() {
             </p>
           </motion.div>
 
-          {/* BATANA */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
           >
             <div className="flex items-center gap-4 mb-4">
               <div className="w-10 h-10 bg-signal rounded-sm flex items-center justify-center">
@@ -255,38 +251,36 @@ export function AksosNewSite() {
           </motion.div>
         </motion.div>
 
-        {/* Visual System */}
         <motion.div 
           className="mt-16 p-8 bg-paper border border-line"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <div className="flex items-center justify-center gap-8 flex-wrap">
             <span className="text-sm font-mono text-muted">PERSON / ORGANIZATION</span>
-            <span className="text-2xl text-line">→</span>
+            <span className="text-2xl text-line">\u2192</span>
             <span className="text-sm font-mono text-muted">BATANA</span>
-            <span className="text-2xl text-line">↓</span>
+            <span className="text-2xl text-line">\u2193</span>
             <span className="text-sm font-mono text-muted">UNDERSTANDING</span>
-            <span className="text-2xl text-line">↓</span>
+            <span className="text-2xl text-line">\u2193</span>
             <span className="text-sm font-mono text-muted">ATIS + RITA</span>
-            <span className="text-2xl text-line">↓</span>
+            <span className="text-2xl text-line">\u2193</span>
             <span className="text-sm font-mono text-muted">STRONGER SYSTEM</span>
-            <span className="text-2xl text-line">↓</span>
+            <span className="text-2xl text-line">\u2193</span>
             <span className="text-sm font-mono text-muted">STRONGER OPERATOR</span>
           </div>
         </motion.div>
       </Section>
 
-      {/* ATIS SECTION */}
       <Section id="atis" label="ATIS" tone="paper">
         <motion.div 
           className="flex items-center gap-4 mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           <img src="/atis-symbol-traced.svg" alt="ATIS" className="w-12 h-12" />
           <div>
@@ -300,7 +294,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>A company announces an expansion.</p>
           <p>A government changes a policy.</p>
@@ -314,7 +308,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           ATIS connects the signals.
         </motion.p>
@@ -324,7 +318,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <div className="flex items-center gap-4">
             <span className="text-sm font-mono text-muted">01</span>
@@ -353,7 +347,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <h3 className="text-2xl font-serif text-ink mb-4">
             We're still building it.
@@ -371,14 +365,13 @@ export function AksosNewSite() {
         </motion.div>
       </Section>
 
-      {/* RITA SECTION */}
       <Section id="rita" label="RITA" tone="quiet">
         <motion.div 
           className="flex items-center gap-4 mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           <img src="/rita-symbol-traced.svg" alt="RITA" className="w-12 h-12" />
           <div>
@@ -392,7 +385,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>One announcement can lead to a company.</p>
           <p>That company can lead to a person.</p>
@@ -406,7 +399,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           RITA helps follow the relationship.
         </motion.p>
@@ -416,7 +409,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <p className="text-center text-muted mb-4">
             Instead of stopping at:
@@ -437,20 +430,19 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           The design should make RITA feel like the intelligence layer that turns relationships into understanding.
         </motion.p>
       </Section>
 
-      {/* PERSPECTIVE SECTION */}
       <Section label="PERSPECTIVE" tone="paper">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           The same event means different things to different people.
         </motion.h2>
@@ -460,7 +452,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="text-center">
             <h3 className="text-2xl font-serif text-ink mb-8">
@@ -470,27 +462,27 @@ export function AksosNewSite() {
             <div className="space-y-6">
               <div className="flex items-center justify-center gap-4">
                 <span className="text-sm font-mono text-muted">INVESTOR</span>
-                <span className="text-2xl text-line">→</span>
+                <span className="text-2xl text-line">\u2192</span>
                 <span className="text-muted">capital opportunity</span>
               </div>
               <div className="flex items-center justify-center gap-4">
                 <span className="text-sm font-mono text-muted">SUPPLIER</span>
-                <span className="text-2xl text-line">→</span>
+                <span className="text-2xl text-line">\u2192</span>
                 <span className="text-muted">new demand</span>
               </div>
               <div className="flex items-center justify-center gap-4">
                 <span className="text-sm font-mono text-muted">COMPETITOR</span>
-                <span className="text-2xl text-line">→</span>
+                <span className="text-2xl text-line">\u2192</span>
                 <span className="text-muted">market pressure</span>
               </div>
               <div className="flex items-center justify-center gap-4">
                 <span className="text-sm font-mono text-muted">GOVERNMENT</span>
-                <span className="text-2xl text-line">→</span>
+                <span className="text-2xl text-line">\u2192</span>
                 <span className="text-muted">revenue / infrastructure / regulation</span>
               </div>
               <div className="flex items-center justify-center gap-4">
                 <span className="text-sm font-mono text-muted">ANOTHER COUNTRY</span>
-                <span className="text-2xl text-line">→</span>
+                <span className="text-2xl text-line">\u2192</span>
                 <span className="text-muted">strategic development</span>
               </div>
             </div>
@@ -502,7 +494,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h3 className="text-2xl font-serif text-ink">
             The event doesn't change.
@@ -513,14 +505,13 @@ export function AksosNewSite() {
         </motion.div>
       </Section>
 
-      {/* STANDARD/QUALITY SECTION */}
       <Section label="STANDARD" tone="quiet">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We don't want to give you something that's merely impressive.
         </motion.h2>
@@ -530,7 +521,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>We want to give you something you can lean on.</p>
           <p>Something that holds up when the work gets difficult.</p>
@@ -543,7 +534,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h3 className="text-2xl font-serif text-ink">
             Because respect is earned in the work.
@@ -556,14 +547,13 @@ export function AksosNewSite() {
         </motion.div>
       </Section>
 
-      {/* WHY ACCESS IS LIMITED */}
       <Section label="ACCESS" tone="paper">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We're building it with the people who will actually use it.
         </motion.h2>
@@ -573,7 +563,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>
             ATIS is not finished because we don't want to release an unfinished system and call it a product.
@@ -600,7 +590,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           This is a product philosophy, not a scarcity tactic.
         </motion.p>
@@ -610,7 +600,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <a href="/batana" className="btn btn-primary">
             Join Batana
@@ -618,14 +608,13 @@ export function AksosNewSite() {
         </motion.div>
       </Section>
 
-      {/* BATANA SECTION */}
       <Section label="BATANA" tone="dark">
         <motion.h2 
           className="section-heading text-paper"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           Start with a conversation.
         </motion.h2>
@@ -635,7 +624,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           Batana
         </motion.h3>
@@ -645,7 +634,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <p>Tell us about the work.</p>
           <p>Tell us what you're building.</p>
@@ -657,7 +646,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <p className="text-lg text-paper">
             We'll listen first.
@@ -672,7 +661,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <p>
             We're already speaking with people outside Africa who want to build relationships, invest, trade and do business across the continent.
@@ -693,7 +682,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <a href="/batana" className="btn btn-primary">
             Enter Batana
@@ -705,20 +694,19 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
         >
           The form route uses the existing form route. No backend changes.
         </motion.p>
       </Section>
 
-      {/* NETWORK SECTION */}
       <Section label="NETWORK" tone="quiet">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           One operator becomes a connection.
         </motion.h2>
@@ -728,7 +716,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>Every useful relationship makes the next one easier to find.</p>
           <p>Every new connection strengthens the network.</p>
@@ -739,22 +727,22 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-8 flex-wrap">
               <span className="bg-signal text-paper px-4 py-2 text-sm font-mono">YOU</span>
-              <span className="text-2xl text-line">↔</span>
+              <span className="text-2xl text-line">\u2194</span>
               <span className="border border-line px-4 py-2 text-sm font-mono text-muted">AFRICAN OPERATORS</span>
             </div>
             <div className="flex items-center justify-center gap-8 flex-wrap">
               <span className="border border-line px-4 py-2 text-sm font-mono text-muted">AKSOS</span>
-              <span className="text-2xl text-line">↔</span>
+              <span className="text-2xl text-line">\u2194</span>
               <span className="border border-line px-4 py-2 text-sm font-mono text-muted">INTERNATIONAL PARTNERS</span>
             </div>
             <div className="flex items-center justify-center gap-8 flex-wrap">
               <span className="border border-line px-4 py-2 text-sm font-mono text-muted">CAPITAL</span>
-              <span className="text-2xl text-line">↔</span>
+              <span className="text-2xl text-line">\u2194</span>
               <span className="border border-line px-4 py-2 text-sm font-mono text-muted">TRADE</span>
             </div>
             <div className="border border-line px-4 py-2 text-sm font-mono text-muted inline-block">
@@ -768,20 +756,19 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           Network visualization showing structural benefit of growing connections.
         </motion.p>
       </Section>
 
-      {/* BIGGER VISION SECTION */}
       <Section label="VISION" tone="quiet">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           We want to see African operators become impossible to overlook.
         </motion.h2>
@@ -791,7 +778,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <p>Not because someone gave them a platform.</p>
           <p>Because their work is strong.</p>
@@ -806,7 +793,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           We want to help build that strength.
         </motion.h3>
@@ -816,7 +803,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           One operator.<br />
           One system.<br />
@@ -824,14 +811,13 @@ export function AksosNewSite() {
         </motion.p>
       </Section>
 
-      {/* FINAL CTA SECTION */}
       <section className="section section-paper">
         <motion.h2 
           className="section-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow }}
+          transition={{ duration: 0.6 }}
         >
           If you're building something worth strengthening,
         </motion.h2>
@@ -841,7 +827,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           we'd like to understand it.
         </motion.h2>
@@ -851,7 +837,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <p>You don't need to buy anything.</p>
           <p>You don't need to prove anything.</p>
@@ -863,7 +849,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           We'll take it from there.
         </motion.p>
@@ -873,7 +859,7 @@ export function AksosNewSite() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <a href="/batana" className="btn btn-primary">
             Enter Batana
@@ -884,7 +870,6 @@ export function AksosNewSite() {
         </motion.div>
       </section>
 
-      {/* FOOTER */}
       <footer className="site-footer">
         <div className="footer-brand">
           <img src="/aksos-symbol-traced.svg" alt="AKSOS" className="w-8 h-8 mx-auto mb-4" />
@@ -894,7 +879,7 @@ export function AksosNewSite() {
           The information is already there. We're building the systems and relationships needed to understand how it connects.
         </p>
         <p className="footer-meta">
-          Harare · Zimbabwe / 2026
+          Harare \u00b7 Zimbabwe / 2026
         </p>
       </footer>
     </div>

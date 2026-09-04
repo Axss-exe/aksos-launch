@@ -35,35 +35,35 @@ const LAYER_DATA = [
     label: 'PUBLIC WEB',
     desc: 'lots of information',
     access: 'easy to discover',
-    color: tokens.color.ink,
+    color: "#ink,
     delay: 0.1,
   },
   {
     label: 'CONTEXT',
     desc: 'fewer signals',
     access: 'more interpretation',
-    color: tokens.color.ink,
+    color: "#ink,
     delay: 0.2,
   },
   {
     label: 'PEOPLE',
     desc: 'limited visibility',
     access: 'relationship required',
-    color: tokens.color.ink,
+    color: "#ink,
     delay: 0.3,
   },
   {
     label: 'INSTITUTIONS',
     desc: 'difficult access',
     access: 'institutional knowledge',
-    color: tokens.color.ink,
+    color: "#ink,
     delay: 0.4,
   },
   {
     label: 'FIRST-SOURCE',
     desc: 'deepest intelligence',
     access: 'hardest to reach',
-    color: tokens.color.ink,
+    color: "#ink,
     delay: 0.5,
   },
 ];
@@ -270,7 +270,7 @@ export function InformationDepthDiagram() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => {
         setIsHovered(false);
@@ -300,31 +300,31 @@ export function InformationDepthDiagram() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
+          transition={{ duration: 0.normal }}
         >
           <DiagramLabel
             x={layout.centerX}
             y={12}
             text="DEPTH"
             fontSize={7}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal }}
+            transition={{ duration: 0.normal }}
           />
           <DiagramLabel
             x={layout.centerX}
             y={18}
             text="INCREASING"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.2}
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.05 }}
+            transition={{ duration: 0.normal, delay: 0.05 }}
           />
         </motion.g>
 
@@ -333,7 +333,7 @@ export function InformationDepthDiagram() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.1 }}
+          transition={{ duration: 0.normal, delay: 0.1 }}
         >
           <DiagramLabel
             x={10}
@@ -341,7 +341,7 @@ export function InformationDepthDiagram() {
             text="MORE"
             textAnchor="start"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -350,7 +350,7 @@ export function InformationDepthDiagram() {
             text="INFORMATION"
             textAnchor="start"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -359,7 +359,7 @@ export function InformationDepthDiagram() {
             text="LESS"
             textAnchor="end"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -368,7 +368,7 @@ export function InformationDepthDiagram() {
             text="INFORMATION"
             textAnchor="end"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
         </motion.g>
@@ -377,8 +377,8 @@ export function InformationDepthDiagram() {
         {layout.layers.map((layer, index) => {
           const x = layout.centerX - (layer.width / 2);
           const isHighlighted = highlightedLayer === index || isHovered;
-          const fillColor = isHighlighted ? tokens.color.paper : 'none';
-          const strokeColor = isHighlighted ? tokens.color.signal : tokens.color.line;
+          const fillColor = isHighlighted ? "#paper : 'none';
+          const strokeColor = isHighlighted ? "#signal : "#line;
           const strokeWidth = isHighlighted ? 0.5 : 0.3;
           
           return (
@@ -387,7 +387,7 @@ export function InformationDepthDiagram() {
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: LAYER_DATA[index].delay }}
+              transition={{ duration: 0.normal, delay: LAYER_DATA[index].delay }}
               onHoverStart={() => setHighlightedLayer(index)}
               onHoverEnd={() => setHighlightedLayer(null)}
               whileHover={{ scale: 1.02 }}
@@ -404,7 +404,7 @@ export function InformationDepthDiagram() {
                 initial={{ width: 0 }}
                 whileInView={{ width: layer.width }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: LAYER_DATA[index].delay + 0.1 }}
+                transition={{ duration: 0.normal, delay: LAYER_DATA[index].delay + 0.1 }}
                 animate={isHovered ? { strokeWidth: [0.3, 0.5, 0.3] } : {}}
                 transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 } : {}}
               />
@@ -415,12 +415,12 @@ export function InformationDepthDiagram() {
                 y={layer.labelY}
                 text={layer.label}
                 fontSize={LABEL_FONT_SIZE}
-                fill={tokens.color.ink}
+                fill={"#ink}
                 letterSpacing={0.1}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: LAYER_DATA[index].delay + 0.15 }}
+                transition={{ duration: 0.normal, delay: LAYER_DATA[index].delay + 0.15 }}
               />
               
               {/* Description */}
@@ -429,12 +429,12 @@ export function InformationDepthDiagram() {
                 y={layer.descY}
                 text={layer.desc}
                 fontSize={DESC_FONT_SIZE}
-                fill={tokens.color.muted}
+                fill={"#muted}
                 letterSpacing={0.05}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: LAYER_DATA[index].delay + 0.2 }}
+                transition={{ duration: 0.normal, delay: LAYER_DATA[index].delay + 0.2 }}
               />
               
               {/* Access */}
@@ -443,12 +443,12 @@ export function InformationDepthDiagram() {
                 y={layer.accessY}
                 text={layer.access.toUpperCase()}
                 fontSize={ACCESS_FONT_SIZE}
-                fill={tokens.color.muted}
+                fill={"#muted}
                 letterSpacing={0.1}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: LAYER_DATA[index].delay + 0.25 }}
+                transition={{ duration: 0.normal, delay: LAYER_DATA[index].delay + 0.25 }}
               />
             </motion.g>
           );
@@ -459,7 +459,7 @@ export function InformationDepthDiagram() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.6 }}
+          transition={{ duration: 0.normal, delay: 0.6 }}
         >
           <DiagramLabel
             x={10}
@@ -467,7 +467,7 @@ export function InformationDepthDiagram() {
             text="EASY"
             textAnchor="start"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -476,7 +476,7 @@ export function InformationDepthDiagram() {
             text="ACCESS"
             textAnchor="start"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -485,7 +485,7 @@ export function InformationDepthDiagram() {
             text="DIFFICULT"
             textAnchor="end"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
           <DiagramLabel
@@ -494,7 +494,7 @@ export function InformationDepthDiagram() {
             text="ACCESS"
             textAnchor="end"
             fontSize={5}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
         </motion.g>
@@ -506,8 +506,8 @@ export function InformationDepthDiagram() {
             y={viewBoxHeight - 5}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

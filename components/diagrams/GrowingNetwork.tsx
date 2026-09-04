@@ -33,7 +33,7 @@ const CONNECTION_STROKE_WIDTH = 0.2;
 const CENTER_NODE = {
   label: 'AKSOS',
   r: 4,
-  stroke: tokens.color.signal,
+  stroke: "#signal,
   strokeWidth: 0.5,
 };
 
@@ -160,7 +160,7 @@ export function GrowingNetwork() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       style={{
@@ -186,25 +186,25 @@ export function GrowingNetwork() {
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.15 }}
+          transition={{ duration: 0.normal, delay: 0.15 }}
           whileHover={{ scale: 1.1 }}
         >
           <DiagramNode
             x={layout.centerX}
             y={layout.centerY}
             r={CENTER_NODE.r}
-            fill={tokens.color.ink}
+            fill={"#ink}
             stroke={CENTER_NODE.stroke}
             strokeWidth={CENTER_NODE.strokeWidth}
             label={CENTER_NODE.label}
             labelPosition="bottom"
             labelOffset={8}
             labelFontSize={7}
-            labelColor={tokens.color.ink}
+            labelColor={"#ink}
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.15 }}
+            transition={{ duration: 0.normal, delay: 0.15 }}
           />
         </motion.g>
 
@@ -218,25 +218,25 @@ export function GrowingNetwork() {
               initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+              transition={{ duration: 0.normal, delay: node.delay }}
               whileHover={{ scale: 1.15 }}
             >
               <DiagramNode
                 x={node.x}
                 y={node.y}
                 r={NODE_R}
-                fill={tokens.color.ink}
-                stroke={tokens.color.line}
+                fill={"#ink}
+                stroke={"#line}
                 strokeWidth={0.3}
                 label={node.label}
                 labelPosition={isMobile ? 'bottom' : 'top'}
                 labelOffset={7}
                 labelFontSize={5}
-                labelColor={tokens.color.muted}
+                labelColor={"#muted}
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                transition={{ duration: 0.normal, delay: node.delay }}
               />
             </motion.g>
           );
@@ -258,12 +258,12 @@ export function GrowingNetwork() {
               initial={{ opacity: 0, pathLength: 0 }}
               whileInView={{ opacity: 1, pathLength: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+              transition={{ duration: 0.normal, delay: node.delay + 0.05 }}
             >
               <DiagramConnection
                 from={isMobile ? mobileFrom : from}
                 to={isMobile ? mobileTo : to}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={CONNECTION_STROKE_WIDTH}
                 curved={!isMobile}
                 curvature={0.3}
@@ -271,7 +271,7 @@ export function GrowingNetwork() {
                 initial={{ opacity: 0, pathLength: 0 }}
                 whileInView={{ opacity: 1, pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                transition={{ duration: 0.normal, delay: node.delay + 0.05 }}
               />
             </motion.g>
           );
@@ -282,7 +282,7 @@ export function GrowingNetwork() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
+          transition={{ duration: 0.normal }}
         >
           <DiagramLabel
             x={CENTER_X}
@@ -290,7 +290,7 @@ export function GrowingNetwork() {
             text="GROWING NETWORK"
             textAnchor="middle"
             fontSize={6}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
         </motion.g>
@@ -302,8 +302,8 @@ export function GrowingNetwork() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -318,8 +318,8 @@ export function GrowingNetwork() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

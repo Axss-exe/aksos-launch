@@ -204,7 +204,7 @@ export function ConvergenceDiagram() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slow }}
+      transition={{ duration: 0.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       style={{
@@ -230,25 +230,25 @@ export function ConvergenceDiagram() {
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
+          transition={{ duration: 0.normal, delay: 0.25 }}
           whileHover={{ scale: 1.1 }}
         >
           <DiagramNode
             x={CENTER_X}
             y={50}
             r={4}
-            fill={tokens.color.ink}
-            stroke={tokens.color.signal}
+            fill={"#ink}
+            stroke={"#signal}
             strokeWidth={0.5}
             label="AKSOS"
             labelPosition="bottom"
             labelOffset={8}
             labelFontSize={7}
-            labelColor={tokens.color.ink}
+            labelColor={"#ink}
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
+            transition={{ duration: 0.normal, delay: 0.25 }}
           />
         </motion.g>
 
@@ -263,25 +263,25 @@ export function ConvergenceDiagram() {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: fragment.delay }}
+              transition={{ duration: 0.normal, delay: fragment.delay }}
               whileHover={{ scale: 1.1 }}
             >
               <DiagramNode
                 x={fragment.x}
                 y={fragment.y}
                 r={NODE_R}
-                fill={tokens.color.ink}
-                stroke={tokens.color.line}
+                fill={"#ink}
+                stroke={"#line}
                 strokeWidth={0.3}
                 label={fragment.label}
                 labelPosition={isMobile ? 'bottom' : 'right'}
                 labelOffset={8}
                 labelFontSize={5}
-                labelColor={tokens.color.muted}
+                labelColor={"#muted}
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: fragment.delay }}
+                transition={{ duration: 0.normal, delay: fragment.delay }}
               />
             </motion.g>
           );
@@ -297,25 +297,25 @@ export function ConvergenceDiagram() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: intel.delay }}
+              transition={{ duration: 0.normal, delay: intel.delay }}
               whileHover={{ scale: 1.1 }}
             >
               <DiagramNode
                 x={intel.x}
                 y={intel.y}
                 r={NODE_R}
-                fill={tokens.color.ink}
-                stroke={tokens.color.line}
+                fill={"#ink}
+                stroke={"#line}
                 strokeWidth={0.3}
                 label={intel.label}
                 labelPosition={isMobile ? 'bottom' : 'left'}
                 labelOffset={8}
                 labelFontSize={5}
-                labelColor={tokens.color.muted}
+                labelColor={"#muted}
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: intel.delay }}
+                transition={{ duration: 0.normal, delay: intel.delay }}
               />
             </motion.g>
           );
@@ -337,12 +337,12 @@ export function ConvergenceDiagram() {
               initial={{ opacity: 0, pathLength: 0 }}
               whileInView={{ opacity: 1, pathLength: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: fragment.delay + 0.05 }}
+              transition={{ duration: 0.normal, delay: fragment.delay + 0.05 }}
             >
               <DiagramConnection
                 from={isMobile ? mobileFrom : from}
                 to={isMobile ? mobileTo : to}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={CONNECTION_STROKE_WIDTH}
                 curved={!isMobile}
                 curvature={0.4}
@@ -350,7 +350,7 @@ export function ConvergenceDiagram() {
                 initial={{ opacity: 0, pathLength: 0 }}
                 whileInView={{ opacity: 1, pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: fragment.delay + 0.05 }}
+                transition={{ duration: 0.normal, delay: fragment.delay + 0.05 }}
               />
               {/* Arrow at AKSOS end */}
               <DiagramArrow
@@ -358,12 +358,12 @@ export function ConvergenceDiagram() {
                 y={50}
                 direction="left"
                 size={ARROW_SIZE}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={0.3}
                 initial={{ opacity: 0, x: isMobile ? layout.centerX - 5 : CENTER_X - 5 }}
                 whileInView={{ opacity: 1, x: isMobile ? layout.centerX : CENTER_X }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: fragment.delay + 0.1 }}
+                transition={{ duration: 0.normal, delay: fragment.delay + 0.1 }}
               />
             </motion.g>
           );
@@ -384,12 +384,12 @@ export function ConvergenceDiagram() {
               initial={{ opacity: 0, pathLength: 0 }}
               whileInView={{ opacity: 1, pathLength: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: intel.delay + 0.05 }}
+              transition={{ duration: 0.normal, delay: intel.delay + 0.05 }}
             >
               <DiagramConnection
                 from={isMobile ? mobileFrom : from}
                 to={isMobile ? mobileTo : to}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={CONNECTION_STROKE_WIDTH}
                 curved={!isMobile}
                 curvature={0.4}
@@ -397,7 +397,7 @@ export function ConvergenceDiagram() {
                 initial={{ opacity: 0, pathLength: 0 }}
                 whileInView={{ opacity: 1, pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: intel.delay + 0.05 }}
+                transition={{ duration: 0.normal, delay: intel.delay + 0.05 }}
               />
               {/* Arrow at Intelligence end */}
               <DiagramArrow
@@ -405,12 +405,12 @@ export function ConvergenceDiagram() {
                 y={intel.y}
                 direction="right"
                 size={ARROW_SIZE}
-                stroke={tokens.color.line}
+                stroke={"#line}
                 strokeWidth={0.3}
                 initial={{ opacity: 0, x: isMobile ? layout.centerX + 5 : intel.x + 5 }}
                 whileInView={{ opacity: 1, x: isMobile ? layout.centerX : intel.x }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: intel.delay + 0.1 }}
+                transition={{ duration: 0.normal, delay: intel.delay + 0.1 }}
               />
             </motion.g>
           );
@@ -422,7 +422,7 @@ export function ConvergenceDiagram() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.05 }}
+            transition={{ duration: 0.normal, delay: 0.05 }}
           >
             <DiagramLabel
               x={DESKTOP_COLUMNS.fragments.x}
@@ -430,7 +430,7 @@ export function ConvergenceDiagram() {
               text="FRAGMENTS"
               textAnchor="middle"
               fontSize={7}
-              fill={tokens.color.ink}
+              fill={"#ink}
               letterSpacing={0.1}
             />
             <DiagramLabel
@@ -439,7 +439,7 @@ export function ConvergenceDiagram() {
               text="AKSOS"
               textAnchor="middle"
               fontSize={7}
-              fill={tokens.color.ink}
+              fill={"#ink}
               letterSpacing={0.1}
             />
             <DiagramLabel
@@ -448,7 +448,7 @@ export function ConvergenceDiagram() {
               text="INTELLIGENCE"
               textAnchor="middle"
               fontSize={7}
-              fill={tokens.color.ink}
+              fill={"#ink}
               letterSpacing={0.1}
             />
           </motion.g>
@@ -460,14 +460,14 @@ export function ConvergenceDiagram() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.35 }}
+            transition={{ duration: 0.normal, delay: 0.35 }}
           >
             <DiagramArrow
               x={32}
               y={50}
               direction="right"
               size={12}
-              stroke={tokens.color.line}
+              stroke={"#line}
               strokeWidth={0.3}
             />
             <DiagramArrow
@@ -475,7 +475,7 @@ export function ConvergenceDiagram() {
               y={50}
               direction="right"
               size={12}
-              stroke={tokens.color.line}
+              stroke={"#line}
               strokeWidth={0.3}
             />
           </motion.g>
@@ -486,7 +486,7 @@ export function ConvergenceDiagram() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
+          transition={{ duration: 0.normal }}
         >
           <DiagramLabel
             x={CENTER_X}
@@ -494,7 +494,7 @@ export function ConvergenceDiagram() {
             text="CONVERGENCE"
             textAnchor="middle"
             fontSize={6}
-            fill={tokens.color.muted}
+            fill={"#muted}
             letterSpacing={0.1}
           />
         </motion.g>
@@ -506,8 +506,8 @@ export function ConvergenceDiagram() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -522,8 +522,8 @@ export function ConvergenceDiagram() {
             y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fontFamily={"var(--font-mono}
+            fill={"#muted}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

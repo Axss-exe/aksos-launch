@@ -64,7 +64,7 @@ function SectionLabel({ children, className = '' }: SectionLabelProps) {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ 
-        duration: tokens.animation.duration.slow,
+        duration: 0.slow,
         ease: tokens.animation.easing.easeOut 
       }}
     >
@@ -158,7 +158,7 @@ export function GoldenSection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ 
-        duration: tokens.animation.duration.slow,
+        duration: 0.slow,
         ease: tokens.animation.easing.easeOut 
       }}
     >
@@ -171,7 +171,7 @@ export function GoldenSection({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ 
-              duration: tokens.animation.duration.slow,
+              duration: 0.slow,
               ease: tokens.animation.easing.easeOut 
             }}
           >
@@ -186,7 +186,7 @@ export function GoldenSection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ 
-            duration: tokens.animation.duration.slow,
+            duration: 0.slow,
             delay: 0.1,
             ease: tokens.animation.easing.easeOut 
           }}
@@ -202,7 +202,7 @@ export function GoldenSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ 
-              duration: tokens.animation.duration.slow,
+              duration: 0.slow,
               delay: 0.2,
               ease: tokens.animation.easing.easeOut 
             }}

@@ -14,7 +14,7 @@ export function PageLayout({ children, header, footer }: PageLayoutProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: tokens.animation.duration.normal }}
+      transition={{ duration: 0.normal }}
     >
       {header}
       <main>{children}</main>
