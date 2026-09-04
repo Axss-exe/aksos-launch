@@ -1,76 +1,58 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { tokens } from '@/lib/design-tokens';
+import { motion, HTMLMotionProps } from 'framer-motion';
+import { tokens } from '@/lib/tokens';
 
-interface SectionProps {
-  id?: string;
-  label: string;
+interface SectionProps extends HTMLMotionProps<'section'> {
+  label?: string;
+  tone?: 'paper' | 'dark' | 'quiet' | 'transparent';
+  fullWidth?: boolean;
   children: React.ReactNode;
-  tone?: 'paper' | 'dark' | 'quiet';
-  className?: string;
 }
 
-interface SectionLabelProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function SectionLabel({ children, className = '' }: SectionLabelProps) {
-  return (
-    <p className={`sys-label ${className}`}>
-      <span className="label-rule" />
-      {children}
-    </p>
-  );
-}
-
-export function Section({ 
-  id, 
-  label, 
-  children, 
-  tone = 'paper',
-  className = '' 
-}: SectionProps) {
-  return (
-    <section 
-      id={id} 
-      className={`sys-section tone-${tone} ${className}`}
-    >
-      <div className="sys-grid">
-        <SectionLabel>{label}</SectionLabel>
-        {children}
-      </div>
-    </section>
-  );
-}
-
-// Animated section that reveals on scroll
-export function AnimatedSection({
-  id,
+export function Section({
   label,
+  tone = 'transparent',
+  fullWidth = false,
   children,
-  tone = 'paper',
-  className = '',
-  delay = 0,
-}: SectionProps & { delay?: number }) {
+  ...props
+}: SectionProps) {
+  const toneClasses = {
+    paper: 'section-paper',
+    dark: 'section-dark',
+    quiet: 'section-quiet',
+    transparent: '',
+  };
+
   return (
     <motion.section
-      id={id}
-      className={`sys-section tone-${tone} ${className}`}
+      className={`section ${toneClasses[tone]} ${fullWidth ? 'w-full' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ 
-        duration: tokens.animation.duration.slow,
-        delay: delay,
-        ease: tokens.animation.easing.easeOut 
-      }}
+      transition={{ duration: tokens.animation.duration.slow }}
+      {...props}
     >
-      <div className="sys-grid">
-        <SectionLabel>{label}</SectionLabel>
-        {children}
-      </div>
+      {label && (
+        <motion.p
+          className="section-label"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          {label}
+        </motion.p>
+      )}
+      {children}
     </motion.section>
   );
+}
+
+export function SectionGrid({ children }: { children: React.ReactNode }) {
+  return <div className="grid">{children}</div>;
+}
+
+export function SectionContent({ children }: { children: React.ReactNode }) {
+  return <div className="max-w-content">{children}</div>;
 }

@@ -8,7 +8,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'AKSOS — Intelligence infrastructure for Africa',
-  description: 'AKSOS is building the systems and relationships needed to understand how information connects across Africa.',
+  description: 'AKSOS is building the systems and relationships needed to understand how information connects across Africa. We help capable operators become harder to beat in their field.',
   generator: 'AKSOS',
   icons: {
     icon: '/aksos-symbol-traced.svg',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#f2f0e9',
+  themeColor: '#f5f4f0',
 }
 
 export default function RootLayout({

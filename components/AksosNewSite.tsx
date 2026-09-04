@@ -1,586 +1,903 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { HeroNetwork } from './diagrams/HeroNetwork';
-import { InformationDepthDiagram } from './diagrams/InformationDepthDiagram';
-import { ConvergenceDiagram } from './diagrams/ConvergenceDiagram';
-import { IntelligenceCycle } from './diagrams/IntelligenceCycle';
-import { GrowingNetwork } from './diagrams/GrowingNetwork';
-import { PipelineDiagram } from './diagrams/PipelineDiagram';
-import { RitaDiagram } from './diagrams/RitaDiagram';
-import { Section, SectionLabel, AnimatedSection } from './layout/Section';
-import { tokens } from '@/lib/design-tokens';
+import { ArrowUpRight } from 'lucide-react';
+import { tokens } from '@/lib/tokens';
+import { SiteHeader } from './navigation/SiteHeader';
+import { Section } from './layout/Section';
+import { HeroNetworkDiagram } from './diagrams/HeroNetwork';
 
-const capabilities = [
-  ['01', 'NATURAL-LANGUAGE QUERYING', 'Ask questions in plain language and begin with the objective, not a search term.'],
-  ['02', 'EVIDENCE RETRIEVAL', 'Gather source material, dates and entities into a traceable evidence base.'],
-  ['03', 'RELATIONSHIP IDENTIFICATION', 'Surface connections between people, institutions, policies, markets and events.'],
-  ['04', 'ANALYTICAL REPORTING', 'Turn validated relationships into a clearer picture for action.'],
-];
-
-const audience = ['BUILDERS', 'RESEARCHERS', 'INFORMATION HOLDERS', 'INDUSTRY EXPERTS', 'EARLY USERS', 'PARTNERS', 'CURIOUS PEOPLE'];
-
-const journey = [['TODAY', 'FOUNDATION'], ['NEXT', 'RELATIONSHIPS'], ['THEN', 'INTELLIGENCE'], ['BEYOND', 'AFRICA']];
-
-function Label({ children }: { children: React.ReactNode }) {
-  return <p className="sys-label"><span />{children}</p>;
-}
-
-function PrimaryLink({ href, children }: { href: string; children: React.ReactNode }) {
+export function AksosNewSite() {
   return (
-    <a className="primary-link" href={href}>
-      {children} <ArrowUpRight size={14} />
-    </a>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="sys-hero">
-      <div className="sys-grid">
-        <div className="hero-copy">
-          <Label>AKSOS / INTELLIGENCE INFRASTRUCTURE</Label>
-          <motion.h1 
+    <div id="top" className="relative">
+      <SiteHeader />
+      
+      {/* HERO SECTION */}
+      <section className="hero">
+        <div className="hero-grid">
+          <motion.div 
+            className="hero-copy"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: tokens.animation.duration.slow, ease: tokens.animation.easing.easeOut }}
-            style={{ marginBottom: '34px' }}
           >
-            Building intelligence infrastructure <em>for Africa.</em>
-          </motion.h1>
-          <p>Africa already produces enormous amounts of information. The harder problem is understanding how it connects.</p>
-          <div className="link-row">
-            <PrimaryLink href="#connect">Start a conversation</PrimaryLink>
-            <a href="https://atis.aksos.net">Explore ATIS <ArrowUpRight size={14} /></a>
-          </div>
+            <p className="section-label">
+              <span />AKSOS
+            </p>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow, delay: 0.1, ease: tokens.animation.easing.easeOut }}
+              style={{ marginBottom: tokens.spacing['8'] }}
+            >
+              You already know your field.<br />
+              <em>We help you become harder to beat in it.</em>
+            </motion.h1>
+
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow, delay: 0.2, ease: tokens.animation.easing.easeOut }}
+            >
+              <p className="text-lg text-muted max-w-content">
+                You have the relationships.<br />
+                You know the market.<br />
+                You understand the work.
+              </p>
+              
+              <p className="text-lg text-muted max-w-content">
+                But information is scattered.<br />
+                Opportunities are easy to miss.<br />
+                The systems behind good work often aren't strong enough to carry it further.
+              </p>
+
+              <p className="text-lg text-muted max-w-content mt-6">
+                You shouldn't have to build all of that alone.<br />
+                <strong>We're here to help.</strong>
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="flex items-center gap-6 mt-10 flex-wrap"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: tokens.animation.duration.slow, delay: 0.3, ease: tokens.animation.easing.easeOut }}
+            >
+              <a href="#what-we-build" className="btn btn-primary">
+                See what we're building
+              </a>
+              <a href="/batana" className="btn">
+                Start with Batana <ArrowUpRight size={14} />
+              </a>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            className="hero-visual"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: tokens.animation.duration.slow, delay: 0.4, ease: tokens.animation.easing.easeOut }}
+          >
+            <HeroNetworkDiagram />
+          </motion.div>
         </div>
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2, ease: tokens.animation.easing.easeOut }}
-        >
-          <HeroNetwork />
-        </motion.div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function ProblemSection() {
-  return (
-    <Section id="why" label="01 / THE PROBLEM">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        The information is there.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Governments publish policies. Organizations launch programs. Companies enter markets. The information exists, but it rarely arrives as one coherent picture.
-      </motion.p>
-    </Section>
-  );
-}
-
-function WhatWeLearnedSection() {
-  return (
-    <Section label="02 / WHAT WE LEARNED" tone="quiet">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        The internet is not the whole picture.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Better intelligence does not begin with a better answer. It begins with better evidence.
-      </motion.p>
-      <InformationDepthDiagram />
-    </Section>
-  );
-}
-
-function ApproachSection() {
-  return (
-    <Section id="approach" label="03 / THE AKSOS APPROACH">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Technology is only part of the infrastructure.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Meaningful intelligence requires both the system and the network around it.
-      </motion.p>
-      <ConvergenceDiagram />
-    </Section>
-  );
-}
-
-function AtisSection() {
-  return (
-    <Section id="atis" label="04 / THE SYSTEM" tone="dark">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-        style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '28px' }}
-      >
-        <img src="/atis-symbol-traced.svg" alt="ATIS" style={{ width: '40px', height: 'auto' }} />
+      {/* PROBLEM SECTION */}
+      <Section label="THE PROBLEM" tone="quiet">
         <motion.h2 
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          Good operators can still be held back by weak systems.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-6 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-          style={{ margin: 0 }}
         >
-          ATIS
+          <p>
+            You can know your market and still miss a signal.
+          </p>
+          <p>
+            You can have strong relationships and still lack the information to act on them.
+          </p>
+          <p>
+            You can see an opportunity and still struggle to move quickly enough.
+          </p>
+          <p>
+            You can be excellent at the work and still spend too much time finding, checking and connecting information.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <h3 className="text-2xl font-serif text-ink mb-2">
+            The operator isn't always the problem.
+          </h3>
+          <h3 className="text-2xl font-serif text-ink">
+            Sometimes the system around them is.
+          </h3>
+        </motion.div>
+      </Section>
+
+      {/* ALLY SECTION */}
+      <Section label="THE ALLY" tone="paper">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          You don't need another company telling you what to do.
         </motion.h2>
-      </motion.div>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        An intelligence platform we're building to connect evidence, relationships and emerging information.
-      </motion.p>
-      <motion.div 
-        className="atis-reveal"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <div>
-          <span>QUESTION</span>
-          <strong>What connects this policy to current opportunity?</strong>
-        </div>
-        <div>
-          <span>EVIDENCE → RELATIONSHIPS → CONTEXT</span>
-          <strong>Analysis assembled from traceable source material.</strong>
-        </div>
-        <div>
-          <span>REPORT</span>
-          <strong>A clearer picture for action.</strong>
-        </div>
-      </motion.div>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
-        style={{ marginTop: '40px' }}
-      >
-        <PrimaryLink href="https://atis.aksos.net">Explore the ATIS demo</PrimaryLink>
-      </motion.div>
-    </Section>
-  );
-}
 
-function BatanaSection() {
-  return (
-    <Section label="04A / THE NETWORK" tone="dark">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Information doesn't always live in databases. Sometimes, it lives in people.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Batana helps find relevant people and organizations when conventional search cannot.
-      </motion.p>
-      <IntelligenceCycle />
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
-        style={{ marginTop: '40px' }}
-      >
-        <PrimaryLink href="/batana">Explore Batana</PrimaryLink>
-      </motion.div>
-    </Section>
-  );
-}
+        <motion.div 
+          className="space-y-6 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>
+            You need someone who can help you do it better.
+          </p>
+          <p>
+            Someone who can help strengthen the systems behind your work.
+          </p>
+          <p>
+            Someone who can help you see what you can't see.
+          </p>
+          <p>
+            Someone who can build alongside you when the problem is bigger than one person.
+          </p>
+        </motion.div>
 
-function PipelineSection() {
-  return (
-    <Section label="05 / HOW INFORMATION BECOMES INTELLIGENCE">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Better signals. Clearer understanding.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Each stage adds structure, context and traceability.
-      </motion.p>
-      <PipelineDiagram />
+        <motion.div 
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <h3 className="text-2xl font-serif text-ink mb-4">
+            That's the relationship we're trying to build.
+          </h3>
+          <p className="text-lg text-muted max-w-content">
+            Not a vendor.<br />
+            Not another dashboard.<br />
+            A partner you can lean on when the work matters.
+          </p>
+        </motion.div>
+      </Section>
 
+      {/* WHAT WE BUILD SECTION */}
+      <Section id="what-we-build" label="WHAT WE BUILD" tone="quiet">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          So we build the things that should already exist.
+        </motion.h2>
 
-    </Section>
-  );
-}
-
-function CapabilitiesSection() {
-  return (
-    <Section label="06 / CURRENT CAPABILITIES" tone="quiet">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        What exists today.
-      </motion.h2>
-      <motion.div 
-        className="capability-index"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        {capabilities.map(([n, title, copy]) => (
+        <motion.div 
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          {/* ATIS */}
           <motion.div 
-            key={n}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.2 + (parseInt(n) * 0.05) }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.2 }}
           >
-            <span>{n}</span>
-            <h3>{title}</h3>
-            <p>{copy}</p>
+            <div className="flex items-center gap-4 mb-4">
+              <img src="/atis-symbol-traced.svg" alt="ATIS" className="w-10 h-10" />
+              <h3 className="text-xl font-serif text-ink">ATIS</h3>
+            </div>
+            <p className="text-muted">
+              Helps see what connects.
+            </p>
           </motion.div>
-        ))}
-      </motion.div>
-    </Section>
-  );
-}
 
-function RitaSection() {
-  return (
-    <Section id="rita" label="06A / RITA IN ACTION" tone="dark">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        From fragmented evidence to <em>actionable intelligence.</em>
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        RITA reveals which relationships around an event are meaningful enough to change what it means.
-      </motion.p>
-      <RitaDiagram />
-    </Section>
-  );
-}
-
-function ProvenanceSection() {
-  return (
-    <Section label="08 / PROVENANCE & TRUST">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        If we can't trace it, we don't know enough.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Intelligence is only useful when its origin can be understood. AKSOS is designed to preserve the chain: SOURCE → EVIDENCE → RELATIONSHIP → STORY. The purpose is not simply citation. It is being able to understand where information came from, what evidence supports it, how entities are connected, and how the conclusion was formed.
-      </motion.p>
-    </Section>
-  );
-}
-
-function StatusSection() {
-  return (
-    <Section label="09 / HONEST STATUS" tone="quiet">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We're still building.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        AKSOS is not presenting itself as a finished intelligence platform. ATIS is being actively developed. RITA is evolving. The network of people and institutions is still being built. The intelligence model improves as more evidence, relationships and first-source information enter the system. This should not sound apologetic. It should communicate that the infrastructure itself is being built alongside the technology.
-      </motion.p>
-      <motion.div 
-        className="status-list"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        {[['ATIS','EXPERIMENTAL'],['RITA','DEVELOPING'],['NETWORK','BUILDING'],['INTELLIGENCE MODEL','EVOLVING']].map(([a,b], index) => (
+          {/* RITA */}
           <motion.div 
-            key={a}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (index * 0.05) }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 }}
           >
-            <span>{a}</span>
-            <strong>{b}</strong>
+            <div className="flex items-center gap-4 mb-4">
+              <img src="/rita-symbol-traced.svg" alt="RITA" className="w-10 h-10" />
+              <h3 className="text-xl font-serif text-ink">RITA</h3>
+            </div>
+            <p className="text-muted">
+              Helps follow the relationships.
+            </p>
           </motion.div>
-        ))}
-      </motion.div>
-    </Section>
-  );
-}
 
-function NetworkSection() {
-  return (
-    <Section label="10 / THE NETWORK">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We're building the network, too.
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        The long-term value of AKSOS comes not only from software, but from the growing network of people, institutions, researchers, businesses and information holders contributing context.
-      </motion.p>
-      <GrowingNetwork />
-    </Section>
-  );
-}
-
-function InvitationSection() {
-  return (
-    <Section label="11 / WHO SHOULD BE PART OF THIS?" tone="quiet">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        People close to the information.
-      </motion.h2>
-      <motion.div 
-        className="audience-index"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        {audience.map((item, i) => (
+          {/* BATANA */}
           <motion.div 
-            key={item}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.2 + (i * 0.03) }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.4 }}
           >
-            <span>0{i + 1}</span>
-            <strong>{item}</strong>
-            <p>Contribute perspective, access, evidence or relationships.</p>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-10 h-10 bg-signal rounded-sm flex items-center justify-center">
+                <span className="text-paper font-mono text-xs">B</span>
+              </div>
+              <h3 className="text-xl font-serif text-ink">BATANA</h3>
+            </div>
+            <p className="text-muted">
+              Helps us understand who we're helping.
+            </p>
           </motion.div>
-        ))}
-      </motion.div>
-    </Section>
-  );
-}
+        </motion.div>
 
-function JourneySection() {
-  return (
-    <Section id="journey" label="12 / THE JOURNEY">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        Zimbabwe <em>→</em> Africa
-      </motion.h2>
-      <motion.p 
-        className="section-lede"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        Zimbabwe is the starting point for building and validating the infrastructure, but the underlying model is designed to expand across African markets. Today, we establish the infrastructure, relationships and operating model in Zimbabwe. Next, we expand the network and connect more first-source information. Then, we turn the growing evidence and relationship network into increasingly useful intelligence. Beyond, we expand the model across countries and interconnected markets. Zimbabwe is the starting point, not the limit of the ambition.
-      </motion.p>
-      <motion.div 
-        className="journey-line"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        {journey.map(([when, what], index) => (
-          <motion.div 
-            key={when}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.3 + (index * 0.05) }}
-          >
-            <span>{when}</span>
-            <strong>{what}</strong>
-          </motion.div>
-        ))}
-      </motion.div>
-    </Section>
-  );
-}
+        {/* Visual System */}
+        <motion.div 
+          className="mt-16 p-8 bg-paper border border-line"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.5 }}
+        >
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            <span className="text-sm font-mono text-muted">PERSON / ORGANIZATION</span>
+            <span className="text-2xl text-line">→</span>
+            <span className="text-sm font-mono text-muted">BATANA</span>
+            <span className="text-2xl text-line">↓</span>
+            <span className="text-sm font-mono text-muted">UNDERSTANDING</span>
+            <span className="text-2xl text-line">↓</span>
+            <span className="text-sm font-mono text-muted">ATIS + RITA</span>
+            <span className="text-2xl text-line">↓</span>
+            <span className="text-sm font-mono text-muted">STRONGER SYSTEM</span>
+            <span className="text-2xl text-line">↓</span>
+            <span className="text-sm font-mono text-muted">STRONGER OPERATOR</span>
+          </div>
+        </motion.div>
+      </Section>
 
-function FinalSection() {
-  return (
-    <section id="connect" className="final-statement">
-      <Label>13 / THE NEXT STAGE</Label>
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow }}
-      >
-        We're not finished.<br />
-        <em>That's the point.</em>
-      </motion.h2>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-      >
-        We are building the systems and relationships needed to understand how information connects.
-      </motion.p>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
-      >
-        <PrimaryLink href="mailto:hello@aksos.net">Start a conversation</PrimaryLink>
-      </motion.div>
-    </section>
-  );
-}
+      {/* ATIS SECTION */}
+      <Section id="atis" label="ATIS" tone="paper">
+        <motion.div 
+          className="flex items-center gap-4 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          <img src="/atis-symbol-traced.svg" alt="ATIS" className="w-12 h-12" />
+          <div>
+            <h2 className="text-3xl font-serif text-ink">ATIS</h2>
+            <h3 className="text-xl font-serif text-muted">The system for seeing what connects.</h3>
+          </div>
+        </motion.div>
 
-export function AksosNewSite() {
-  const [open, setOpen] = useState(false);
+        <motion.div 
+          className="space-y-4 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>A company announces an expansion.</p>
+          <p>A government changes a policy.</p>
+          <p>Capital moves.</p>
+          <p>A project begins.</p>
+          <p>A new relationship forms.</p>
+        </motion.div>
 
-  return (
-    <main>
-      <header className="site-header">
-        <a href="#top" className="wordmark">
-          <img src="/aksos-symbol-traced.svg" alt="AKSOS" />
+        <motion.p 
+          className="text-xl font-serif text-ink mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          ATIS connects the signals.
+        </motion.p>
+
+        <motion.div 
+          className="mt-12 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-muted">01</span>
+            <strong className="text-ink">What happened.</strong>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-muted">02</span>
+            <strong className="text-ink">Who is involved.</strong>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-muted">03</span>
+            <strong className="text-ink">What changed.</strong>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-muted">04</span>
+            <strong className="text-ink">What connects to it.</strong>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-muted">05</span>
+            <strong className="text-ink">What it could mean for you.</strong>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+        >
+          <h3 className="text-2xl font-serif text-ink mb-4">
+            We're still building it.
+          </h3>
+          <p className="text-lg text-muted max-w-content mb-8">
+            That's deliberate.<br />
+            We would rather make it genuinely useful before putting it in everyone's hands.
+          </p>
+          <p className="text-lg text-muted max-w-content mb-8">
+            Limited ATIS access is currently available through Batana.
+          </p>
+          <a href="/batana" className="btn btn-primary">
+            Join Batana
+          </a>
+        </motion.div>
+      </Section>
+
+      {/* RITA SECTION */}
+      <Section id="rita" label="RITA" tone="quiet">
+        <motion.div 
+          className="flex items-center gap-4 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          <img src="/rita-symbol-traced.svg" alt="RITA" className="w-12 h-12" />
+          <div>
+            <h2 className="text-3xl font-serif text-ink">RITA</h2>
+            <h3 className="text-xl font-serif text-muted">Because the signal is rarely the whole story.</h3>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="space-y-4 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>One announcement can lead to a company.</p>
+          <p>That company can lead to a person.</p>
+          <p>That person can lead to an institution.</p>
+          <p>That institution can lead to a decision.</p>
+          <p>That decision can change a market.</p>
+        </motion.div>
+
+        <motion.p 
+          className="text-xl font-serif text-ink mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          RITA helps follow the relationship.
+        </motion.p>
+
+        <motion.div 
+          className="mt-12 p-8 bg-paper border border-line"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          <p className="text-center text-muted mb-4">
+            Instead of stopping at:
+          </p>
+          <p className="text-center text-2xl font-serif text-ink mb-6">
+            &quot;Something happened.&quot;
+          </p>
+          <p className="text-center text-muted mb-4">
+            Show:
+          </p>
+          <p className="text-center text-2xl font-serif text-ink">
+            &quot;What does this connect to?&quot;
+          </p>
+        </motion.div>
+
+        <motion.p 
+          className="text-xl font-serif text-ink mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+        >
+          The design should make RITA feel like the intelligence layer that turns relationships into understanding.
+        </motion.p>
+      </Section>
+
+      {/* PERSPECTIVE SECTION */}
+      <Section label="PERSPECTIVE" tone="paper">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          The same event means different things to different people.
+        </motion.h2>
+
+        <motion.div 
+          className="mt-16 p-8 bg-paper border border-line"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <div className="text-center">
+            <h3 className="text-2xl font-serif text-ink mb-8">
+              NEW MINING PROJECT
+            </h3>
+            
+            <div className="space-y-6">
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-sm font-mono text-muted">INVESTOR</span>
+                <span className="text-2xl text-line">→</span>
+                <span className="text-muted">capital opportunity</span>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-sm font-mono text-muted">SUPPLIER</span>
+                <span className="text-2xl text-line">→</span>
+                <span className="text-muted">new demand</span>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-sm font-mono text-muted">COMPETITOR</span>
+                <span className="text-2xl text-line">→</span>
+                <span className="text-muted">market pressure</span>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-sm font-mono text-muted">GOVERNMENT</span>
+                <span className="text-2xl text-line">→</span>
+                <span className="text-muted">revenue / infrastructure / regulation</span>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <span className="text-sm font-mono text-muted">ANOTHER COUNTRY</span>
+                <span className="text-2xl text-line">→</span>
+                <span className="text-muted">strategic development</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <h3 className="text-2xl font-serif text-ink">
+            The event doesn't change.
+          </h3>
+          <h3 className="text-2xl font-serif text-ink">
+            The perspective does.
+          </h3>
+        </motion.div>
+      </Section>
+
+      {/* STANDARD/QUALITY SECTION */}
+      <Section label="STANDARD" tone="quiet">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          We don't want to give you something that's merely impressive.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-6 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>We want to give you something you can lean on.</p>
+          <p>Something that holds up when the work gets difficult.</p>
+          <p>Something your team can actually use.</p>
+          <p>Something that makes the way you operate stronger.</p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <h3 className="text-2xl font-serif text-ink">
+            Because respect is earned in the work.
+          </h3>
+          <p className="text-lg text-muted mt-4">
+            Not in a pitch deck.<br />
+            Not in a demo.<br />
+            Not in a promise.
+          </p>
+        </motion.div>
+      </Section>
+
+      {/* WHY ACCESS IS LIMITED */}
+      <Section label="ACCESS" tone="paper">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          We're building it with the people who will actually use it.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-6 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>
+            ATIS is not finished because we don't want to release an unfinished system and call it a product.
+          </p>
+          <p>
+            We want to test it.
+          </p>
+          <p>
+            Learn from real operators.
+          </p>
+          <p>
+            Find what breaks.
+          </p>
+          <p>
+            Improve it.
+          </p>
+          <p>
+            Then give it to more people.
+          </p>
+        </motion.div>
+
+        <motion.p 
+          className="text-lg text-muted max-w-content mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          This is a product philosophy, not a scarcity tactic.
+        </motion.p>
+
+        <motion.div 
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          <a href="/batana" className="btn btn-primary">
+            Join Batana
+          </a>
+        </motion.div>
+      </Section>
+
+      {/* BATANA SECTION */}
+      <Section label="BATANA" tone="dark">
+        <motion.h2 
+          className="section-heading text-paper"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          Start with a conversation.
+        </motion.h2>
+
+        <motion.h3 
+          className="text-xl font-serif text-paper mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          Batana
+        </motion.h3>
+
+        <motion.div 
+          className="space-y-6 text-lg text-muted-soft max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <p>Tell us about the work.</p>
+          <p>Tell us what you're building.</p>
+          <p>Tell us where you need stronger support.</p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          <p className="text-lg text-paper">
+            We'll listen first.
+          </p>
+          <p className="text-lg text-muted-soft">
+            Then we'll see where we can help.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-12 space-y-6 text-lg text-muted-soft max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+        >
+          <p>
+            We're already speaking with people outside Africa who want to build relationships, invest, trade and do business across the continent.
+          </p>
+          <p>
+            Some have already asked us to help them find the right people and opportunities.
+          </p>
+          <p>
+            The more African operators we know, the better we can make those connections.
+          </p>
+          <p>
+            The stronger the network becomes, the more useful it becomes to everyone inside it.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.5 }}
+        >
+          <a href="/batana" className="btn btn-primary">
+            Enter Batana
+          </a>
+        </motion.div>
+
+        <motion.p 
+          className="text-sm text-muted-soft mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.6 }}
+        >
+          The form route uses the existing form route. No backend changes.
+        </motion.p>
+      </Section>
+
+      {/* NETWORK SECTION */}
+      <Section label="NETWORK" tone="quiet">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          One operator becomes a connection.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-6 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>Every useful relationship makes the next one easier to find.</p>
+          <p>Every new connection strengthens the network.</p>
+        </motion.div>
+
+        <motion.div 
+          className="mt-16 p-8 bg-paper border border-line"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              <span className="bg-signal text-paper px-4 py-2 text-sm font-mono">YOU</span>
+              <span className="text-2xl text-line">↔</span>
+              <span className="border border-line px-4 py-2 text-sm font-mono text-muted">AFRICAN OPERATORS</span>
+            </div>
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              <span className="border border-line px-4 py-2 text-sm font-mono text-muted">AKSOS</span>
+              <span className="text-2xl text-line">↔</span>
+              <span className="border border-line px-4 py-2 text-sm font-mono text-muted">INTERNATIONAL PARTNERS</span>
+            </div>
+            <div className="flex items-center justify-center gap-8 flex-wrap">
+              <span className="border border-line px-4 py-2 text-sm font-mono text-muted">CAPITAL</span>
+              <span className="text-2xl text-line">↔</span>
+              <span className="border border-line px-4 py-2 text-sm font-mono text-muted">TRADE</span>
+            </div>
+            <div className="border border-line px-4 py-2 text-sm font-mono text-muted inline-block">
+              OPPORTUNITIES
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.p 
+          className="text-sm text-muted mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          Network visualization showing structural benefit of growing connections.
+        </motion.p>
+      </Section>
+
+      {/* BIGGER VISION SECTION */}
+      <Section label="VISION" tone="quiet">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          We want to see African operators become impossible to overlook.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-4 text-lg text-muted max-w-content"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          <p>Not because someone gave them a platform.</p>
+          <p>Because their work is strong.</p>
+          <p>Their systems are strong.</p>
+          <p>Their relationships are strong.</p>
+          <p>Their intelligence is strong.</p>
+          <p>Their ability to act is strong.</p>
+        </motion.div>
+
+        <motion.h3 
+          className="text-2xl font-serif text-ink mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          We want to help build that strength.
+        </motion.h3>
+
+        <motion.p 
+          className="text-xl text-muted mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          One operator.<br />
+          One system.<br />
+          One relationship at a time.
+        </motion.p>
+      </Section>
+
+      {/* FINAL CTA SECTION */}
+      <section className="section section-paper">
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow }}
+        >
+          If you're building something worth strengthening,
+        </motion.h2>
+        
+        <motion.h2 
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
+        >
+          we'd like to understand it.
+        </motion.h2>
+
+        <motion.div 
+          className="space-y-4 text-lg text-muted max-w-content mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        >
+          <p>You don't need to buy anything.</p>
+          <p>You don't need to prove anything.</p>
+          <p>Start by telling us what you're working on.</p>
+        </motion.div>
+
+        <motion.p 
+          className="text-xl font-serif text-ink mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        >
+          We'll take it from there.
+        </motion.p>
+
+        <motion.div 
+          className="flex items-center gap-6 mt-12 flex-wrap"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+        >
+          <a href="/batana" className="btn btn-primary">
+            Enter Batana
+          </a>
+          <a href="#what-we-build" className="btn">
+            Explore what we're building
+          </a>
+        </motion.div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <img src="/aksos-symbol-traced.svg" alt="AKSOS" className="w-8 h-8 mx-auto mb-4" />
           AKSOS
-        </a>
-        <nav className={open ? 'nav-open' : ''}>
-          <a href="#approach">Approach</a>
-          <a href="#atis">ATIS</a>
-          <a href="/batana">Batana</a>
-          <a href="#rita">RITA</a>
-          <a href="#journey">Journey</a>
-          <a href="#connect">Start a conversation →</a>
-        </nav>
-        <button className="menu-button" onClick={() => setOpen(!open)} aria-label={open ? 'Close navigation' : 'Open navigation'}>
-          {open ? <X /> : <Menu />}
-        </button>
-      </header>
-      
-      <div id="top">
-        <Hero />
-      </div>
-      
-      <ProblemSection />
-      <WhatWeLearnedSection />
-      <ApproachSection />
-      <AtisSection />
-      <BatanaSection />
-      <PipelineSection />
-      <CapabilitiesSection />
-      <RitaSection />
-      <ProvenanceSection />
-      <StatusSection />
-      <NetworkSection />
-      <InvitationSection />
-      <JourneySection />
-      <FinalSection />
-      
-      <footer>
-        <span>AKSOS</span>
-        <p>The information is already there. We're building the systems and relationships needed to understand how it connects.</p>
-        <small className="footer-meta">Harare · Zimbabwe / 2026</small>
+        </div>
+        <p className="footer-tagline">
+          The information is already there. We're building the systems and relationships needed to understand how it connects.
+        </p>
+        <p className="footer-meta">
+          Harare · Zimbabwe / 2026
+        </p>
       </footer>
-    </main>
+    </div>
   );
 }
 

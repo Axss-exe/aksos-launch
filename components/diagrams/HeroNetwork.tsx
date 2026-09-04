@@ -1,270 +1,511 @@
 'use client';
 
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { useState, useMemo } from 'react';
-import { tokens } from '@/lib/design-tokens';
-import {
-  DiagramLabel,
-  DiagramNode,
-  DiagramConnection,
-  Point,
-  calculateTextDimensions,
-  calculateCircularPositions,
-  useBreakpoint,
-  lineIntersectsCircle,
-  generateCurvedPath,
-} from './primitives';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useState, useMemo, useEffect } from 'react';
+import { tokens } from '@/lib/tokens';
 
 // =============================================================================
 // HERO NETWORK DIAGRAM
-// Concentric circles with Africa outline, AKSOS at center
-// Geometry: Calculated positions with golden ratio proportions, collision detection
-// Responsive: Simplified mobile layout
+// 
+// Visual System:
+// - Operator at center (YOU)
+// - Surrounding: organizations, institutions, companies, capital, information, relationships
+// - Mathematically aligned relationships
+// - No overlapping labels
+// - No arbitrary lines
+// - No decorative nodes
+//
+// The visual should communicate:
+// "the operator remains the center; AKSOS strengthens the system around them."
 // =============================================================================
 
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface NodeConfig {
+  id: string;
+  label: string;
+  category: string;
+  ring: number;
+  angle: number;
+  radius: number;
+}
+
 // Configuration
-const SAFE_MARGIN = 10;
-const CENTER_X = 50;
-const CENTER_Y = 50;
-const NODE_R = 2;
-const INNER_RING_R = 20;
-const MIDDLE_RING_R = 30;
-const OUTER_RING_R = 40;
-const CONNECTION_STROKE_WIDTH = 0.2;
-
-// Golden ratio for proportions
-const PHI = 1.618;
-
-// Center node (AKSOS)
-const CENTER_NODE = {
-  label: 'AKSOS',
-  r: 4,
-  stroke: tokens.color.signal,
-  strokeWidth: 0.5,
-};
-
-// Africa outline points (simplified for SVG)
-const AFRICA_OUTLINE = [
-  { x: 40, y: 35 },
-  { x: 42, y: 32 },
-  { x: 45, y: 30 },
-  { x: 48, y: 31 },
-  { x: 52, y: 30 },
-  { x: 55, y: 32 },
-  { x: 58, y: 35 },
-  { x: 60, y: 38 },
-  { x: 62, y: 42 },
-  { x: 60, y: 45 },
-  { x: 58, y: 48 },
-  { x: 55, y: 50 },
-  { x: 52, y: 52 },
-  { x: 48, y: 50 },
-  { x: 45, y: 48 },
-  { x: 42, y: 45 },
-  { x: 40, y: 42 },
-  { x: 38, y: 38 },
+const CENTER = { x: 50, y: 50 };
+const CENTER_RADIUS = 6;
+const RINGS = [
+  { radius: 22, nodeRadius: 2.5 },
+  { radius: 34, nodeRadius: 2.2 },
+  { radius: 46, nodeRadius: 2 },
 ];
 
-// Relationship types for rings
-const RING_NODES = {
-  inner: [
-    { label: 'PEOPLE', delay: 0.1 },
-    { label: 'ORGANIZATIONS', delay: 0.15 },
-    { label: 'LOCATIONS', delay: 0.2 },
-  ],
-  middle: [
-    { label: 'EVENTS', delay: 0.25 },
-    { label: 'OBJECTS', delay: 0.3 },
-    { label: 'IDEAS', delay: 0.35 },
-  ],
-  outer: [
-    { label: 'CONTEXT', delay: 0.4 },
-    { label: 'RELATIONSHIPS', delay: 0.45 },
-    { label: 'INSIGHTS', delay: 0.5 },
-  ],
+// Node definitions with meaningful hierarchy
+const NODES: NodeConfig[] = [
+  // Inner ring - Direct connections
+  { id: 'operator', label: 'YOU', category: 'operator', ring: 0, angle: 0, radius: CENTER_RADIUS },
+  
+  // Ring 1 - Core system elements
+  { id: 'relationships', label: 'RELATIONSHIPS', category: 'system', ring: 1, angle: 0, radius: RINGS[0].radius },
+  { id: 'information', label: 'INFORMATION', category: 'system', ring: 1, angle: Math.PI * 2 / 3, radius: RINGS[0].radius },
+  { id: 'capital', label: 'CAPITAL', category: 'system', ring: 1, angle: Math.PI * 4 / 3, radius: RINGS[0].radius },
+  
+  // Ring 2 - Organizations and entities
+  { id: 'organizations', label: 'ORGANIZATIONS', category: 'entity', ring: 2, angle: Math.PI / 4, radius: RINGS[1].radius },
+  { id: 'institutions', label: 'INSTITUTIONS', category: 'entity', ring: 2, angle: Math.PI * 3 / 4, radius: RINGS[1].radius },
+  { id: 'companies', label: 'COMPANIES', category: 'entity', ring: 2, angle: Math.PI * 5 / 4, radius: RINGS[1].radius },
+  { id: 'government', label: 'GOVERNMENT', category: 'entity', ring: 2, angle: Math.PI * 7 / 4, radius: RINGS[1].radius },
+  
+  // Ring 3 - External factors
+  { id: 'markets', label: 'MARKETS', category: 'external', ring: 3, angle: Math.PI / 6, radius: RINGS[2].radius },
+  { id: 'policy', label: 'POLICY', category: 'external', ring: 3, angle: Math.PI / 2, radius: RINGS[2].radius },
+  { id: 'opportunities', label: 'OPPORTUNITIES', category: 'external', ring: 3, angle: Math.PI * 5 / 6, radius: RINGS[2].radius },
+  { id: 'trade', label: 'TRADE', category: 'external', ring: 3, angle: Math.PI * 7 / 6, radius: RINGS[2].radius },
+  { id: 'investment', label: 'INVESTMENT', category: 'external', ring: 3, angle: Math.PI * 11 / 6, radius: RINGS[2].radius },
+];
+
+// Category colors
+const CATEGORY_COLORS = {
+  operator: tokens.color.signal,
+  system: tokens.color.green,
+  entity: tokens.color.ink,
+  external: tokens.color.muted,
 };
 
-// Calculate desktop layout
-function calculateDesktopLayout(viewBoxWidth: number = 100): {
-  centerX: number;
-  centerY: number;
-  innerRing: { label: string; x: number; y: number; delay: number }[];
-  middleRing: { label: string; x: number; y: number; delay: number }[];
-  outerRing: { label: string; x: number; y: number; delay: number }[];
-  totalHeight: number;
-  viewBoxHeight: number;
-} {
-  const centerX = viewBoxWidth / 2;
-  const centerY = 50;
+// Calculate node positions
+function calculateNodePositions(width: number, height: number): Point[] {
+  const centerX = width / 2;
+  const centerY = height / 2;
   
-  // Calculate positions for each ring
-  const innerPositions = calculateCircularPositions(
-    { x: centerX, y: centerY },
-    INNER_RING_R,
-    RING_NODES.inner.length,
-    Math.PI / 2 // Start at 90 degrees (north)
-  );
-  
-  const middlePositions = calculateCircularPositions(
-    { x: centerX, y: centerY },
-    MIDDLE_RING_R,
-    RING_NODES.middle.length,
-    Math.PI / 3 // Start at 60 degrees
-  );
-  
-  const outerPositions = calculateCircularPositions(
-    { x: centerX, y: centerY },
-    OUTER_RING_R,
-    RING_NODES.outer.length,
-    Math.PI / 4 // Start at 45 degrees
-  );
-  
-  const innerRing = RING_NODES.inner.map((node, index) => ({
-    ...node,
-    x: innerPositions[index].x,
-    y: innerPositions[index].y,
-  }));
-  
-  const middleRing = RING_NODES.middle.map((node, index) => ({
-    ...node,
-    x: middlePositions[index].x,
-    y: middlePositions[index].y,
-  }));
-  
-  const outerRing = RING_NODES.outer.map((node, index) => ({
-    ...node,
-    x: outerPositions[index].x,
-    y: outerPositions[index].y,
-  }));
-  
-  // Calculate total height based on outer ring
-  const topMost = Math.min(
-    ...innerRing.map(n => n.y),
-    ...middleRing.map(n => n.y),
-    ...outerRing.map(n => n.y)
-  );
-  const bottomMost = Math.max(
-    ...innerRing.map(n => n.y),
-    ...middleRing.map(n => n.y),
-    ...outerRing.map(n => n.y)
-  );
-  
-  // Calculate label positions and ensure they don't cause clipping
-  const labelMargin = 15;
-  const viewBoxHeight = bottomMost + labelMargin + SAFE_MARGIN;
-  
-  return {
-    centerX,
-    centerY,
-    innerRing,
-    middleRing,
-    outerRing,
-    totalHeight: viewBoxHeight,
-    viewBoxHeight,
-  };
+  return NODES.map(node => {
+    if (node.ring === 0) {
+      return { x: centerX, y: centerY };
+    }
+    
+    const ring = RINGS[node.ring - 1];
+    const x = centerX + Math.cos(node.angle) * ring.radius * (width / 100);
+    const y = centerY + Math.sin(node.angle) * ring.radius * (height / 100);
+    
+    return { x, y };
+  });
 }
 
-// Calculate mobile layout (simplified vertical stack)
-function calculateMobileLayout(viewBoxWidth: number = 100): {
-  centerX: number;
-  centerY: number;
-  allNodes: { label: string; x: number; y: number; delay: number; ring: string }[];
-  totalHeight: number;
-  viewBoxHeight: number;
-} {
-  const centerX = viewBoxWidth / 2;
-  const startY = 25;
-  const spacing = 12;
+// Check if line intersects with exclusion zone
+function lineIntersectsCircle(
+  from: Point,
+  to: Point,
+  center: Point,
+  radius: number
+): boolean {
+  // Simplified check - if line passes within radius of center
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const lineLength = Math.sqrt(dx * dx + dy * dy);
   
-  // Stack all nodes vertically
+  if (lineLength === 0) return false;
+  
+  // Distance from center to line
+  const u = ((center.x - from.x) * dx + (center.y - from.y) * dy) / (lineLength * lineLength);
+  
+  if (u < 0 || u > 1) return false;
+  
+  const closestX = from.x + u * dx;
+  const closestY = from.y + u * dy;
+  
+  const distance = Math.sqrt(
+    Math.pow(closestX - center.x, 2) + Math.pow(closestY - center.y, 2)
+  );
+  
+  return distance < radius;
+}
+
+// Generate curved path to avoid center
+function generateCurvedPath(
+  from: Point,
+  to: Point,
+  center: Point,
+  radius: number,
+  curvature: number = 0.5
+): string {
+  const midX = (from.x + to.x) / 2;
+  const midY = (from.y + to.y) / 2;
+  
+  // Calculate control point to curve around center
+  const angle = Math.atan2(to.y - from.y, to.x - from.x);
+  const perpendicular = angle + Math.PI / 2;
+  
+  // Adjust control point based on position relative to center
+  let controlX = midX;
+  let controlY = midY;
+  
+  if (lineIntersectsCircle(from, to, center, radius)) {
+    // Curve away from center
+    const direction = Math.sign(
+      (from.y - center.y) * (to.x - center.x) - (from.x - center.x) * (to.y - center.y)
+    );
+    const offset = radius * 0.8 * direction;
+    controlX = midX + Math.cos(perpendicular) * offset;
+    controlY = midY + Math.sin(perpendicular) * offset;
+  }
+  
+  return `M ${from.x} ${from.y} Q ${controlX} ${controlY}, ${to.x} ${to.y}`;
+}
+
+// Node component
+function DiagramNode({
+  x,
+  y,
+  r,
+  label,
+  labelPosition = 'bottom',
+  labelOffset = 8,
+  fill,
+  stroke,
+  strokeWidth = 0.3,
+  isCenter = false,
+  delay = 0,
+}: {
+  x: number;
+  y: number;
+  r: number;
+  label: string;
+  labelPosition?: 'top' | 'bottom' | 'left' | 'right';
+  labelOffset?: number;
+  fill: string;
+  stroke?: string;
+  strokeWidth?: number;
+  isCenter?: boolean;
+  delay?: number;
+}) {
+  const labelX = useMemo(() => {
+    switch (labelPosition) {
+      case 'top':
+      case 'bottom':
+        return x;
+      case 'left':
+        return x - labelOffset - 20;
+      case 'right':
+        return x + labelOffset + 20;
+      default:
+        return x;
+    }
+  }, [x, labelPosition, labelOffset]);
+
+  const labelY = useMemo(() => {
+    switch (labelPosition) {
+      case 'top':
+        return y - labelOffset;
+      case 'bottom':
+        return y + labelOffset;
+      case 'left':
+      case 'right':
+        return y;
+      default:
+        return y + labelOffset;
+    }
+  }, [y, labelPosition, labelOffset]);
+
+  const textAnchor = useMemo(() => {
+    switch (labelPosition) {
+      case 'top':
+      case 'bottom':
+        return 'middle';
+      case 'left':
+        return 'end';
+      case 'right':
+        return 'start';
+      default:
+        return 'middle';
+    }
+  }, [labelPosition]);
+
+  return (
+    <motion.g
+      initial={{ opacity: 0, scale: 0.5 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ 
+        duration: tokens.animation.duration.normal, 
+        delay: delay + (isCenter ? 0.1 : 0.2)
+      }}
+      whileHover={{ scale: 1.2 }}
+    >
+      {/* Node circle */}
+      <circle
+        cx={x}
+        cy={y}
+        r={r}
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+      />
+      
+      {/* Label */}
+      <motion.text
+        x={labelX}
+        y={labelY}
+        textAnchor={textAnchor}
+        fontSize="4"
+        fontFamily={tokens.font.mono}
+        fill={isCenter ? tokens.color.signal : tokens.color.muted}
+        letterSpacing="0.05em"
+        initial={{ opacity: 0, y: labelPosition === 'top' ? -10 : 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ 
+          duration: tokens.animation.duration.normal, 
+          delay: delay + (isCenter ? 0.2 : 0.3)
+        }}
+      >
+        {label}
+      </motion.text>
+    </motion.g>
+  );
+}
+
+// Connection component
+function DiagramConnection({
+  from,
+  to,
+  stroke,
+  strokeWidth = 0.2,
+  curved = false,
+  delay = 0,
+}: {
+  from: Point;
+  to: Point;
+  stroke: string;
+  strokeWidth?: number;
+  curved?: boolean;
+  delay?: number;
+}) {
+  if (curved) {
+    const path = generateCurvedPath(from, to, CENTER, CENTER_RADIUS + 4);
+    
+    return (
+      <motion.path
+        d={path}
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ 
+          duration: tokens.animation.duration.normal, 
+          delay: delay + 0.3
+        }}
+      />
+    );
+  }
+  
+  return (
+    <motion.line
+      x1={from.x}
+      y1={from.y}
+      x2={to.x}
+      y2={to.y}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      initial={{ pathLength: 0, opacity: 0 }}
+      whileInView={{ pathLength: 1, opacity: 1 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ 
+        duration: tokens.animation.duration.normal, 
+        delay: delay + 0.3
+      }}
+    />
+  );
+}
+
+// Breakpoint hook
+function useBreakpoint() {
+  const [breakpoint, setBreakpoint] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  
+  useEffect(() => {
+    const checkBreakpoint = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setBreakpoint('mobile');
+      } else if (width < 1024) {
+        setBreakpoint('tablet');
+      } else {
+        setBreakpoint('desktop');
+      }
+    };
+  
+    checkBreakpoint();
+    window.addEventListener('resize', checkBreakpoint);
+    return () => window.removeEventListener('resize', checkBreakpoint);
+  }, []);
+  
+  return breakpoint;
+}
+
+// Mobile layout - simplified vertical stack
+function MobileHeroNetwork({ width, height }: { width: number; height: number }) {
+  const centerX = width / 2;
+  const startY = height * 0.2;
+  const spacing = height * 0.08;
+  
+  // Stack nodes vertically
   let y = startY;
   
-  // Center node
-  const centerY = y;
-  y += 15;
+  const positions = [
+    { x: centerX, y, node: NODES[0] }, // Operator
+    { x: centerX, y: y + spacing, node: NODES[1] }, // Relationships
+    { x: centerX, y: y + spacing * 2, node: NODES[2] }, // Information
+    { x: centerX, y: y + spacing * 3, node: NODES[3] }, // Capital
+    { x: centerX, y: y + spacing * 4, node: NODES[4] }, // Organizations
+    { x: centerX, y: y + spacing * 5, node: NODES[5] }, // Institutions
+    { x: centerX, y: y + spacing * 6, node: NODES[6] }, // Companies
+    { x: centerX, y: y + spacing * 7, node: NODES[7] }, // Government
+  ];
   
-  // All ring nodes
-  const allNodes: { label: string; x: number; y: number; delay: number; ring: string }[] = [];
-  
-  // Add inner ring
-  RING_NODES.inner.forEach(node => {
-    allNodes.push({ ...node, x: centerX, y: y, ring: 'inner' });
-    y += spacing;
-  });
-  
-  y += 10; // Space between rings
-  
-  // Add middle ring
-  RING_NODES.middle.forEach(node => {
-    allNodes.push({ ...node, x: centerX, y: y, ring: 'middle' });
-    y += spacing;
-  });
-  
-  y += 10; // Space between rings
-  
-  // Add outer ring
-  RING_NODES.outer.forEach(node => {
-    allNodes.push({ ...node, x: centerX, y: y, ring: 'outer' });
-    y += spacing;
-  });
-  
-  const bottomMost = Math.max(
-    centerY,
-    ...allNodes.map(n => n.y)
+  return (
+    <>
+      {/* Connections */}
+      {positions.slice(1).map((pos, index) => {
+        const from = positions[0];
+        const to = pos;
+        return (
+          <DiagramConnection
+            key={`conn-mobile-${index}`}
+            from={{ x: from.x, y: from.y }}
+            to={{ x: to.x, y: to.y }}
+            stroke={tokens.color.line}
+            strokeWidth={0.2}
+            curved={false}
+            delay={index * 0.05}
+          />
+        );
+      })}
+      
+      {/* Nodes */}
+      {positions.map((pos, index) => {
+        const node = pos.node;
+        const category = node.category as keyof typeof CATEGORY_COLORS;
+        return (
+          <DiagramNode
+            key={node.id}
+            x={pos.x}
+            y={pos.y}
+            r={node.ring === 0 ? CENTER_RADIUS : RINGS[node.ring - 1]?.nodeRadius || 2}
+            label={node.label}
+            labelPosition="bottom"
+            labelOffset={6}
+            fill={CATEGORY_COLORS[category]}
+            stroke={tokens.color.line}
+            isCenter={node.ring === 0}
+            delay={index * 0.05}
+          />
+        );
+      })}
+    </>
   );
-  
-  const viewBoxHeight = bottomMost + 20 + SAFE_MARGIN;
-  
-  return {
-    centerX,
-    centerY,
-    allNodes,
-    totalHeight: viewBoxHeight,
-    viewBoxHeight,
-  };
 }
 
-// Pre-calculate layouts
-const DESKTOP_LAYOUT = calculateDesktopLayout(100);
-const MOBILE_LAYOUT = calculateMobileLayout(100);
+// Desktop layout - full network
+function DesktopHeroNetwork({ width, height }: { width: number; height: number }) {
+  const positions = calculateNodePositions(width, height);
+  const centerPos = positions[0];
+  
+  return (
+    <>
+      {/* Connections from center to all nodes */}
+      {positions.slice(1).map((to, index) => {
+        const node = NODES[index + 1];
+        const curved = lineIntersectsCircle(centerPos, to, CENTER, CENTER_RADIUS + 4);
+        
+        return (
+          <DiagramConnection
+            key={`conn-${node.id}`}
+            from={centerPos}
+            to={to}
+            stroke={tokens.color.line}
+            strokeWidth={0.2}
+            curved={curved}
+            delay={index * 0.03}
+          />
+        );
+      })}
+      
+      {/* Nodes */}
+      {positions.map((pos, index) => {
+        const node = NODES[index];
+        const category = node.category as keyof typeof CATEGORY_COLORS;
+        
+        // Determine label position based on angle
+        let labelPosition: 'top' | 'bottom' | 'left' | 'right' = 'bottom';
+        if (node.ring > 0) {
+          const angle = NODES[index].angle;
+          if (angle > Math.PI / 4 && angle < Math.PI * 3 / 4) {
+            labelPosition = 'bottom';
+          } else if (angle > Math.PI * 3 / 4 && angle < Math.PI * 5 / 4) {
+            labelPosition = 'left';
+          } else if (angle > Math.PI * 5 / 4 && angle < Math.PI * 7 / 4) {
+            labelPosition = 'top';
+          } else {
+            labelPosition = 'right';
+          }
+        }
+        
+        return (
+          <DiagramNode
+            key={node.id}
+            x={pos.x}
+            y={pos.y}
+            r={node.ring === 0 ? CENTER_RADIUS : RINGS[node.ring - 1]?.nodeRadius || 2}
+            label={node.label}
+            labelPosition={labelPosition}
+            labelOffset={node.ring === 0 ? 10 : 6}
+            fill={CATEGORY_COLORS[category]}
+            stroke={node.ring === 0 ? tokens.color.signal : tokens.color.line}
+            strokeWidth={node.ring === 0 ? 0.5 : 0.3}
+            isCenter={node.ring === 0}
+            delay={index * 0.05}
+          />
+        );
+      })}
+    </>
+  );
+}
 
-// Aspect ratios
-const DESKTOP_ASPECT_RATIO = 100 / DESKTOP_LAYOUT.viewBoxHeight;
-const MOBILE_ASPECT_RATIO = 100 / MOBILE_LAYOUT.viewBoxHeight;
-
-// Exclusion zone around center
-const EXCLUSION_ZONE = { center: { x: CENTER_X, y: CENTER_Y }, radius: 12 };
-
-export function HeroNetwork() {
+export function HeroNetworkDiagram() {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const breakpoint = useBreakpoint();
   const [isHovered, setIsHovered] = useState(false);
   
-  const breakpoint = useBreakpoint();
-  const layout = useMemo(() => 
-    breakpoint === 'mobile' ? MOBILE_LAYOUT : DESKTOP_LAYOUT
-  , [breakpoint]);
+  const containerRef = (node: HTMLDivElement | null) => {
+    if (node) {
+      const rect = node.getBoundingClientRect();
+      setDimensions({ width: rect.width, height: rect.height });
+    }
+  };
   
-  const viewBoxHeight = layout.viewBoxHeight;
-  const aspectRatio = breakpoint === 'mobile' ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
-  const minHeight = 500;
+  // Calculate aspect ratio
+  const aspectRatio = useMemo(() => {
+    if (breakpoint === 'mobile') return 1;
+    if (breakpoint === 'tablet') return 16 / 10;
+    return 16 / 12;
+  }, [breakpoint]);
   
   return (
     <motion.div
-      className="hero-network-diagram"
+      ref={containerRef}
+      className="diagram-container"
+      style={{ aspectRatio }}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      style={{
-        gridColumn: '1 / -1',
-        aspectRatio: aspectRatio,
-        minHeight: `${minHeight}px`,
-        width: '100%',
-      }}
     >
       <svg 
-        viewBox={`0 0 100 ${viewBoxHeight}`} 
+        viewBox={`0 0 ${dimensions.width || 100} ${dimensions.height || 100}`}
         preserveAspectRatio="xMidYMid meet"
         style={{
           position: 'absolute',
@@ -274,388 +515,54 @@ export function HeroNetwork() {
           height: '100%',
         }}
       >
-        {/* Africa Outline */}
-        <motion.path
-          d={generateAfricaPath()}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth={0.3}
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
-        />
-
-        {/* Concentric circles */}
-        <motion.circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={INNER_RING_R}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth={0.3}
-          initial={{ r: 0 }}
-          whileInView={{ r: INNER_RING_R }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        {/* Background grid lines (subtle) */}
+        <rect
+          x="0"
+          y="0"
+          width={dimensions.width || 100}
+          height={dimensions.height || 100}
+          fill="transparent"
         />
         
-        <motion.circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={MIDDLE_RING_R}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth={0.3}
-          initial={{ r: 0 }}
-          whileInView={{ r: MIDDLE_RING_R }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
-        />
+        {breakpoint === 'mobile' && dimensions.width > 0 && (
+          <MobileHeroNetwork width={dimensions.width} height={dimensions.height} />
+        )}
         
-        <motion.circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={OUTER_RING_R}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth={0.3}
-          initial={{ r: 0 }}
-          whileInView={{ r: OUTER_RING_R }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
-        />
-
-        {/* Center AKSOS Node */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0.5 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
-          whileHover={{ scale: 1.1 }}
-        >
-          <DiagramNode
-            x={layout.centerX}
-            y={layout.centerY}
-            r={CENTER_NODE.r}
-            fill={tokens.color.ink}
-            stroke={CENTER_NODE.stroke}
-            strokeWidth={CENTER_NODE.strokeWidth}
-            label={CENTER_NODE.label}
-            labelPosition="bottom"
-            labelOffset={8}
-            labelFontSize={7}
-            labelColor={tokens.color.ink}
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
-          />
-        </motion.g>
-
-        {/* Ring Nodes */}
-        {breakpoint !== 'mobile' && (
-          <>
-            {DESKTOP_LAYOUT.innerRing.map((node, index) => (
-              <motion.g
-                key={`inner-${node.label}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                whileHover={{ scale: 1.15 }}
-              >
-                <DiagramNode
-                  x={node.x}
-                  y={node.y}
-                  r={NODE_R}
-                  fill={tokens.color.ink}
-                  stroke={tokens.color.line}
-                  strokeWidth={0.3}
-                  label={node.label}
-                  labelPosition="top"
-                  labelOffset={7}
-                  labelFontSize={5}
-                  labelColor={tokens.color.muted}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                />
-              </motion.g>
-            ))}
-
-            {DESKTOP_LAYOUT.middleRing.map((node, index) => (
-              <motion.g
-                key={`middle-${node.label}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                whileHover={{ scale: 1.15 }}
-              >
-                <DiagramNode
-                  x={node.x}
-                  y={node.y}
-                  r={NODE_R}
-                  fill={tokens.color.ink}
-                  stroke={tokens.color.line}
-                  strokeWidth={0.3}
-                  label={node.label}
-                  labelPosition="top"
-                  labelOffset={7}
-                  labelFontSize={5}
-                  labelColor={tokens.color.muted}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                />
-              </motion.g>
-            ))}
-
-            {DESKTOP_LAYOUT.outerRing.map((node, index) => (
-              <motion.g
-                key={`outer-${node.label}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                whileHover={{ scale: 1.15 }}
-              >
-                <DiagramNode
-                  x={node.x}
-                  y={node.y}
-                  r={NODE_R}
-                  fill={tokens.color.ink}
-                  stroke={tokens.color.line}
-                  strokeWidth={0.3}
-                  label={node.label}
-                  labelPosition="top"
-                  labelOffset={7}
-                  labelFontSize={5}
-                  labelColor={tokens.color.muted}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                />
-              </motion.g>
-            ))}
-          </>
-        )}
-
-        {breakpoint === 'mobile' && (
-          <>
-            {MOBILE_LAYOUT.allNodes.map((node, index) => (
-              <motion.g
-                key={`${node.ring}-${node.label}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                whileHover={{ scale: 1.15 }}
-              >
-                <DiagramNode
-                  x={node.x}
-                  y={node.y}
-                  r={NODE_R}
-                  fill={tokens.color.ink}
-                  stroke={tokens.color.line}
-                  strokeWidth={0.3}
-                  label={node.label}
-                  labelPosition="bottom"
-                  labelOffset={7}
-                  labelFontSize={5}
-                  labelColor={tokens.color.muted}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
-                />
-              </motion.g>
-            ))}
-          </>
-        )}
-
-        {/* Connections from AKSOS to all nodes */}
-        {breakpoint !== 'mobile' && (
-          <>
-            {DESKTOP_LAYOUT.innerRing.map((node, index) => {
-              const from = { x: CENTER_X, y: CENTER_Y };
-              const to = { x: node.x, y: node.y };
-              
-              // Check if line intersects exclusion zone
-              const intersects = lineIntersectsCircle(from, to, EXCLUSION_ZONE.center, EXCLUSION_ZONE.radius);
-              
-              return (
-                <motion.g
-                  key={`conn-inner-${node.label}`}
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  whileInView={{ opacity: 1, pathLength: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                >
-                  <DiagramConnection
-                    from={from}
-                    to={to}
-                    stroke={tokens.color.line}
-                    strokeWidth={CONNECTION_STROKE_WIDTH}
-                    curved={intersects}
-                    curvature={0.4}
-                    exclusionZone={EXCLUSION_ZONE}
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    whileInView={{ opacity: 1, pathLength: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                  />
-                </motion.g>
-              );
-            })}
-
-            {DESKTOP_LAYOUT.middleRing.map((node, index) => {
-              const from = { x: CENTER_X, y: CENTER_Y };
-              const to = { x: node.x, y: node.y };
-              
-              return (
-                <motion.g
-                  key={`conn-middle-${node.label}`}
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  whileInView={{ opacity: 1, pathLength: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                >
-                  <DiagramConnection
-                    from={from}
-                    to={to}
-                    stroke={tokens.color.line}
-                    strokeWidth={CONNECTION_STROKE_WIDTH}
-                    curved={true}
-                    curvature={0.5}
-                    exclusionZone={EXCLUSION_ZONE}
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    whileInView={{ opacity: 1, pathLength: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                  />
-                </motion.g>
-              );
-            })}
-
-            {DESKTOP_LAYOUT.outerRing.map((node, index) => {
-              const from = { x: CENTER_X, y: CENTER_Y };
-              const to = { x: node.x, y: node.y };
-              
-              return (
-                <motion.g
-                  key={`conn-outer-${node.label}`}
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  whileInView={{ opacity: 1, pathLength: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                >
-                  <DiagramConnection
-                    from={from}
-                    to={to}
-                    stroke={tokens.color.line}
-                    strokeWidth={CONNECTION_STROKE_WIDTH}
-                    curved={true}
-                    curvature={0.6}
-                    exclusionZone={EXCLUSION_ZONE}
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    whileInView={{ opacity: 1, pathLength: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                  />
-                </motion.g>
-              );
-            })}
-          </>
-        )}
-
-        {breakpoint === 'mobile' && (
-          <>
-            {MOBILE_LAYOUT.allNodes.map((node, index) => {
-              const from = { x: CENTER_X, y: CENTER_Y };
-              const to = { x: node.x, y: node.y };
-              
-              // For mobile, use vertical connections
-              const mobileFrom = { x: CENTER_X, y: CENTER_Y };
-              const mobileTo = { x: CENTER_X, y: node.y };
-              
-              return (
-                <motion.g
-                  key={`conn-mobile-${node.label}`}
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  whileInView={{ opacity: 1, pathLength: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                >
-                  <DiagramConnection
-                    from={mobileFrom}
-                    to={mobileTo}
-                    stroke={tokens.color.line}
-                    strokeWidth={CONNECTION_STROKE_WIDTH}
-                    curved={false}
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    whileInView={{ opacity: 1, pathLength: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
-                  />
-                </motion.g>
-              );
-            })}
-          </>
+        {(breakpoint === 'tablet' || breakpoint === 'desktop') && dimensions.width > 0 && (
+          <DesktopHeroNetwork width={dimensions.width} height={dimensions.height} />
         )}
 
         {/* Title */}
-        <motion.g
-          initial={{ opacity: 0, y: -20 }}
+        <motion.text
+          x={dimensions.width ? dimensions.width / 2 : 50}
+          y={dimensions.height ? dimensions.height - 10 : 90}
+          textAnchor="middle"
+          fontSize="5"
+          fontFamily={tokens.font.mono}
+          fill={tokens.color.muted}
+          letterSpacing="0.1em"
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
+          transition={{ duration: tokens.animation.duration.normal, delay: 0.5 }}
         >
-          <DiagramLabel
-            x={CENTER_X}
-            y={viewBoxHeight - 8}
-            text="AKSOS NETWORK"
-            textAnchor="middle"
-            fontSize={6}
-            fill={tokens.color.muted}
-            letterSpacing={0.1}
-          />
-        </motion.g>
+          OPERATOR-CENTRIC INTELLIGENCE SYSTEM
+        </motion.text>
 
         {/* Hover indicator */}
         {isHovered && breakpoint !== 'mobile' && (
           <motion.text
-            x={CENTER_X}
-            y={viewBoxHeight - 3}
+            x={dimensions.width ? dimensions.width / 2 : 50}
+            y={dimensions.height ? dimensions.height - 25 : 85}
             textAnchor="middle"
-            fontSize="4"
+            fontSize="3"
             fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
+            fill={tokens.color.signal}
             letterSpacing="0.1em"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            HOVER TO EXPLORE NETWORK
-          </motion.text>
-        )}
-
-        {isHovered && breakpoint === 'mobile' && (
-          <motion.text
-            x={CENTER_X}
-            y={viewBoxHeight - 3}
-            textAnchor="middle"
-            fontSize="4"
-            fontFamily={tokens.font.mono}
-            fill={tokens.color.muted}
-            letterSpacing="0.1em"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            TAP TO EXPLORE NETWORK
+            HOVER TO EXPLORE
           </motion.text>
         )}
       </svg>
@@ -663,18 +570,4 @@ export function HeroNetwork() {
   );
 }
 
-// Generate Africa outline path
-function generateAfricaPath(): string {
-  const points = AFRICA_OUTLINE;
-  let path = `M ${points[0].x} ${points[0].y}`;
-  
-  for (let i = 1; i < points.length; i++) {
-    const p = points[i];
-    path += ` L ${p.x} ${p.y}`;
-  }
-  
-  // Close the path
-  path += ` Z`;
-  
-  return path;
-}
+export default HeroNetworkDiagram;
