@@ -219,7 +219,7 @@ export function InformationDepthDiagram() {
   
   // Calculate dynamic container height based on viewport
   // For mobile, we might need more height
-  const minHeight = 400;
+  const minHeight = 500;
   const calculatedHeight = Math.max(minHeight, VIEWBOX_HEIGHT * 4);
   
   return (

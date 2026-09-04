@@ -286,19 +286,43 @@ img {
 .information-depth-diagram,
 .convergence-diagram,
 .intelligence-cycle,
-.growing-network {
+.growing-network,
+.pipeline-diagram,
+.rita-diagram {
   grid-column: 1 / -1;
-  min-height: 400px;
   margin: 70px 0 35px;
 }
 
-.depth-diagram-svg,
-.convergence-diagram-svg,
-.cycle-diagram-svg,
-.network-diagram-svg {
-  width: 100%;
-  height: 100%;
+/* Information Depth Diagram - needs extra height for content */
+.information-depth-diagram {
+  min-height: 500px;
+}
+
+/* Pipeline Diagram - has borders */
+.pipeline-diagram {
   min-height: 400px;
+  border-top: var(--border-thin) solid var(--line);
+  border-bottom: var(--border-thin) solid var(--line);
+}
+
+/* Other diagrams */
+.convergence-diagram,
+.intelligence-cycle,
+.growing-network,
+.rita-diagram {
+  min-height: 400px;
+}
+
+/* Diagram SVG containers - ensure proper sizing */
+.information-depth-diagram svg,
+.convergence-diagram svg,
+.intelligence-cycle svg,
+.growing-network svg,
+.pipeline-diagram svg,
+.rita-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ========================================
