@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { tokens } from '@/lib/design-tokens';
 import {
@@ -10,328 +10,627 @@ import {
   Point,
   calculateTextDimensions,
   calculateCircularPositions,
-  createDiagramLayout,
-  generateCurvedPath,
+  useBreakpoint,
   lineIntersectsCircle,
+  generateCurvedPath,
 } from './primitives';
 
 // =============================================================================
 // HERO NETWORK DIAGRAM
 // Concentric circles with Africa outline, AKSOS at center
-// Geometry: Collision-free with proper exclusion zones and connection routing
+// Geometry: Calculated positions with golden ratio proportions, collision detection
+// Responsive: Simplified mobile layout
 // =============================================================================
 
-// Golden ratio constants
-const PHI = 1.618;
-
-// Configuration constants
+// Configuration
+const SAFE_MARGIN = 10;
 const CENTER_X = 50;
 const CENTER_Y = 50;
-const CENTER_EXCLUSION_RADIUS = 8; // Exclusion zone around AKSOS center
-const NODE_RADIUS = 1.5;
-const CIRCLE_STROKE_WIDTH = 0.3;
-const HIGHLIGHT_STROKE_WIDTH = 0.5;
-const CONNECTION_STROKE_WIDTH = 0.15;
-const HIGHLIGHT_CONNECTION_WIDTH = 0.3;
-const SAFE_MARGIN = 5;
+const NODE_R = 2;
+const INNER_RING_R = 20;
+const MIDDLE_RING_R = 30;
+const OUTER_RING_R = 40;
+const CONNECTION_STROKE_WIDTH = 0.2;
 
-// Concentric circles representing information depth
-const CIRCLES = [
-  { r: 12, label: 'PUBLIC', color: tokens.color.line, delay: 0.1 },
-  { r: 25, label: 'CONTEXT', color: tokens.color.line, delay: 0.2 },
-  { r: 38, label: 'PEOPLE', color: tokens.color.line, delay: 0.3 },
-  { r: 50, label: 'INSTITUTIONS', color: tokens.color.line, delay: 0.4 },
+// Golden ratio for proportions
+const PHI = 1.618;
+
+// Center node (AKSOS)
+const CENTER_NODE = {
+  label: 'AKSOS',
+  r: 4,
+  stroke: tokens.color.signal,
+  strokeWidth: 0.5,
+};
+
+// Africa outline points (simplified for SVG)
+const AFRICA_OUTLINE = [
+  { x: 40, y: 35 },
+  { x: 42, y: 32 },
+  { x: 45, y: 30 },
+  { x: 48, y: 31 },
+  { x: 52, y: 30 },
+  { x: 55, y: 32 },
+  { x: 58, y: 35 },
+  { x: 60, y: 38 },
+  { x: 62, y: 42 },
+  { x: 60, y: 45 },
+  { x: 58, y: 48 },
+  { x: 55, y: 50 },
+  { x: 52, y: 52 },
+  { x: 48, y: 50 },
+  { x: 45, y: 48 },
+  { x: 42, y: 45 },
+  { x: 40, y: 42 },
+  { x: 38, y: 38 },
 ];
 
-// Africa outline - simplified abstract representation using golden ratio proportions
-const AFRICA_OUTLINE: Point[] = [
-  { x: 50, y: 10 }, { x: 58, y: 8 }, { x: 65, y: 10 }, { x: 72, y: 8 },
-  { x: 78, y: 12 }, { x: 80, y: 20 }, { x: 78, y: 28 }, { x: 75, y: 35 },
-  { x: 75, y: 45 }, { x: 70, y: 55 }, { x: 65, y: 62 }, { x: 60, y: 65 },
-  { x: 50, y: 68 }, { x: 40, y: 65 }, { x: 35, y: 62 }, { x: 30, y: 55 },
-  { x: 25, y: 45 }, { x: 25, y: 35 }, { x: 28, y: 28 }, { x: 35, y: 20 },
-  { x: 42, y: 15 }, { x: 50, y: 10 },
-];
+// Relationship types for rings
+const RING_NODES = {
+  inner: [
+    { label: 'PEOPLE', delay: 0.1 },
+    { label: 'ORGANIZATIONS', delay: 0.15 },
+    { label: 'LOCATIONS', delay: 0.2 },
+  ],
+  middle: [
+    { label: 'EVENTS', delay: 0.25 },
+    { label: 'OBJECTS', delay: 0.3 },
+    { label: 'IDEAS', delay: 0.35 },
+  ],
+  outer: [
+    { label: 'CONTEXT', delay: 0.4 },
+    { label: 'RELATIONSHIPS', delay: 0.45 },
+    { label: 'INSIGHTS', delay: 0.5 },
+  ],
+};
 
-// Connection nodes positioned on circles
-const NODES = [
-  // Public layer
-  { label: 'GOVERNMENT', r: 12, angle: 45, circleIndex: 0, delay: 0.5 },
-  { label: 'COMPANIES', r: 12, angle: 135, circleIndex: 0, delay: 0.55 },
-  { label: 'RESEARCH', r: 12, angle: 225, circleIndex: 0, delay: 0.6 },
-  { label: 'MARKETS', r: 12, angle: 315, circleIndex: 0, delay: 0.65 },
+// Calculate desktop layout
+function calculateDesktopLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  innerRing: { label: string; x: number; y: number; delay: number }[];
+  middleRing: { label: string; x: number; y: number; delay: number }[];
+  outerRing: { label: string; x: number; y: number; delay: number }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const centerY = 50;
   
-  // Context layer
-  { label: 'POLICIES', r: 25, angle: 0, circleIndex: 1, delay: 0.7 },
-  { label: 'PROGRAMS', r: 25, angle: 90, circleIndex: 1, delay: 0.75 },
-  { label: 'EVENTS', r: 25, angle: 180, circleIndex: 1, delay: 0.8 },
-  { label: 'REPORTS', r: 25, angle: 270, circleIndex: 1, delay: 0.85 },
+  // Calculate positions for each ring
+  const innerPositions = calculateCircularPositions(
+    { x: centerX, y: centerY },
+    INNER_RING_R,
+    RING_NODES.inner.length,
+    Math.PI / 2 // Start at 90 degrees (north)
+  );
   
-  // People layer
-  { label: 'EXPERTS', r: 38, angle: 30, circleIndex: 2, delay: 0.9 },
-  { label: 'LEADERS', r: 38, angle: 150, circleIndex: 2, delay: 0.95 },
-  { label: 'ANALYSTS', r: 38, angle: 210, circleIndex: 2, delay: 1.0 },
-  { label: 'SOURCES', r: 38, angle: 330, circleIndex: 2, delay: 1.05 },
-];
-
-// Calculate layout geometry
-function calculateLayout(viewBoxWidth: number = 100, viewBoxHeight: number = 100) {
-  const center = { x: CENTER_X, y: CENTER_Y };
+  const middlePositions = calculateCircularPositions(
+    { x: centerX, y: centerY },
+    MIDDLE_RING_R,
+    RING_NODES.middle.length,
+    Math.PI / 3 // Start at 60 degrees
+  );
   
-  // Scale Africa outline to viewBox
-  const scaledAfricaOutline = AFRICA_OUTLINE.map(p => ({
-    x: (p.x / 100) * viewBoxWidth,
-    y: (p.y / 100) * viewBoxHeight,
+  const outerPositions = calculateCircularPositions(
+    { x: centerX, y: centerY },
+    OUTER_RING_R,
+    RING_NODES.outer.length,
+    Math.PI / 4 // Start at 45 degrees
+  );
+  
+  const innerRing = RING_NODES.inner.map((node, index) => ({
+    ...node,
+    x: innerPositions[index].x,
+    y: innerPositions[index].y,
   }));
   
-  // Calculate node positions
-  const nodePositions = NODES.map(node => {
-    const angleRad = (node.angle - 90) * Math.PI / 180; // -90 to start at top
-    return {
-      ...node,
-      x: center.x + node.r * Math.cos(angleRad),
-      y: center.y + node.r * Math.sin(angleRad),
-    };
-  });
+  const middleRing = RING_NODES.middle.map((node, index) => ({
+    ...node,
+    x: middlePositions[index].x,
+    y: middlePositions[index].y,
+  }));
   
-  // Calculate label positions for circles
-  const labelPositions = CIRCLES.map((circle, index) => {
-    const labelAngle = index * 90 + 45;
-    const angleRad = (labelAngle - 90) * Math.PI / 180;
-    return {
-      x: center.x + (circle.r + 3) * Math.cos(angleRad),
-      y: center.y + (circle.r + 3) * Math.sin(angleRad),
-    };
-  });
+  const outerRing = RING_NODES.outer.map((node, index) => ({
+    ...node,
+    x: outerPositions[index].x,
+    y: outerPositions[index].y,
+  }));
   
-  // Exclusion zone around center
-  const exclusionZone = {
-    center,
-    radius: CENTER_EXCLUSION_RADIUS,
-  };
+  // Calculate total height based on outer ring
+  const topMost = Math.min(
+    ...innerRing.map(n => n.y),
+    ...middleRing.map(n => n.y),
+    ...outerRing.map(n => n.y)
+  );
+  const bottomMost = Math.max(
+    ...innerRing.map(n => n.y),
+    ...middleRing.map(n => n.y),
+    ...outerRing.map(n => n.y)
+  );
+  
+  // Calculate label positions and ensure they don't cause clipping
+  const labelMargin = 15;
+  const viewBoxHeight = bottomMost + labelMargin + SAFE_MARGIN;
   
   return {
-    viewBox: { width: viewBoxWidth, height: viewBoxHeight },
-    center,
-    exclusionZone,
-    circles: CIRCLES.map((circle, index) => ({
-      ...circle,
-      labelPosition: labelPositions[index],
-    })),
-    africaOutline: scaledAfricaOutline,
-    nodes: nodePositions,
+    centerX,
+    centerY,
+    innerRing,
+    middleRing,
+    outerRing,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
   };
 }
 
-// Pre-calculate layout
-const LAYOUT = calculateLayout(100, 100);
-
-// ViewBox dimensions
-const VIEWBOX = { width: 100, height: 100 };
-
-// Generate path string from points
-function generatePath(points: Point[]): string {
-  if (points.length === 0) return '';
-  let path = `M ${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) {
-    path += ` L ${points[i].x} ${points[i].y}`;
-  }
-  path += ' Z';
-  return path;
+// Calculate mobile layout (simplified vertical stack)
+function calculateMobileLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  allNodes: { label: string; x: number; y: number; delay: number; ring: string }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const startY = 25;
+  const spacing = 12;
+  
+  // Stack all nodes vertically
+  let y = startY;
+  
+  // Center node
+  const centerY = y;
+  y += 15;
+  
+  // All ring nodes
+  const allNodes: { label: string; x: number; y: number; delay: number; ring: string }[] = [];
+  
+  // Add inner ring
+  RING_NODES.inner.forEach(node => {
+    allNodes.push({ ...node, x: centerX, y: y, ring: 'inner' });
+    y += spacing;
+  });
+  
+  y += 10; // Space between rings
+  
+  // Add middle ring
+  RING_NODES.middle.forEach(node => {
+    allNodes.push({ ...node, x: centerX, y: y, ring: 'middle' });
+    y += spacing;
+  });
+  
+  y += 10; // Space between rings
+  
+  // Add outer ring
+  RING_NODES.outer.forEach(node => {
+    allNodes.push({ ...node, x: centerX, y: y, ring: 'outer' });
+    y += spacing;
+  });
+  
+  const bottomMost = Math.max(
+    centerY,
+    ...allNodes.map(n => n.y)
+  );
+  
+  const viewBoxHeight = bottomMost + 20 + SAFE_MARGIN;
+  
+  return {
+    centerX,
+    centerY,
+    allNodes,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
+  };
 }
+
+// Pre-calculate layouts
+const DESKTOP_LAYOUT = calculateDesktopLayout(100);
+const MOBILE_LAYOUT = calculateMobileLayout(100);
+
+// Aspect ratios
+const DESKTOP_ASPECT_RATIO = 100 / DESKTOP_LAYOUT.viewBoxHeight;
+const MOBILE_ASPECT_RATIO = 100 / MOBILE_LAYOUT.viewBoxHeight;
+
+// Exclusion zone around center
+const EXCLUSION_ZONE = { center: { x: CENTER_X, y: CENTER_Y }, radius: 12 };
 
 export function HeroNetwork() {
   const [isHovered, setIsHovered] = useState(false);
   
-  const layout = useMemo(() => LAYOUT, []);
+  const breakpoint = useBreakpoint();
+  const layout = useMemo(() => 
+    breakpoint === 'mobile' ? MOBILE_LAYOUT : DESKTOP_LAYOUT
+  , [breakpoint]);
   
-  // Get position from angle and radius
-  const getPosition = (r: number, angle: number): Point => ({
-    x: layout.center.x + r * Math.cos((angle - 90) * Math.PI / 180),
-    y: layout.center.y + r * Math.sin((angle - 90) * Math.PI / 180),
-  });
+  const viewBoxHeight = layout.viewBoxHeight;
+  const aspectRatio = breakpoint === 'mobile' ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
+  const minHeight = 500;
   
   return (
     <motion.div
-      className="hero-network"
+      className="hero-network-diagram"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: tokens.animation.duration.slower }}
+      transition={{ duration: tokens.animation.duration.slow }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      style={{
+        gridColumn: '1 / -1',
+        aspectRatio: aspectRatio,
+        minHeight: `${minHeight}px`,
+        width: '100%',
+      }}
     >
-      <svg viewBox={`0 0 ${VIEWBOX.width} ${VIEWBOX.height}`} preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '400px' }}>
-        
-        {/* Africa outline - subtle, using golden ratio for proportions */}
+      <svg 
+        viewBox={`0 0 100 ${viewBoxHeight}`} 
+        preserveAspectRatio="xMidYMid meet"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {/* Africa Outline */}
         <motion.path
-          d={generatePath(layout.africaOutline)}
+          d={generateAfricaPath()}
           fill="none"
           stroke={tokens.color.line}
-          strokeWidth="0.2"
-          opacity={0.3}
-          initial={{ pathLength: 0, opacity: 0 }}
-          whileInView={{ pathLength: 1, opacity: 0.3 }}
+          strokeWidth={0.3}
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slower, ease: tokens.animation.easing.easeInOut }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.1 }}
         />
 
-        {/* Concentric circles - information depth layers */}
-        {layout.circles.map((circle, index) => (
-          <motion.circle
-            key={`circle-${index}`}
-            cx={layout.center.x}
-            cy={layout.center.y}
-            r={circle.r}
-            fill="none"
-            stroke={circle.color}
-            strokeWidth={CIRCLE_STROKE_WIDTH}
-            initial={{ pathLength: 0, opacity: 0 }}
-            whileInView={{ pathLength: 1, opacity: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: tokens.animation.duration.normal, delay: circle.delay }}
-            animate={isHovered ? { strokeWidth: [CIRCLE_STROKE_WIDTH, HIGHLIGHT_STROKE_WIDTH, CIRCLE_STROKE_WIDTH] } : {}}
-            transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 } : {}}
-          />
-        ))}
+        {/* Concentric circles */}
+        <motion.circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={INNER_RING_R}
+          fill="none"
+          stroke={tokens.color.line}
+          strokeWidth={0.3}
+          initial={{ r: 0 }}
+          whileInView={{ r: INNER_RING_R }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.2 }}
+        />
+        
+        <motion.circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={MIDDLE_RING_R}
+          fill="none"
+          stroke={tokens.color.line}
+          strokeWidth={0.3}
+          initial={{ r: 0 }}
+          whileInView={{ r: MIDDLE_RING_R }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.3 }}
+        />
+        
+        <motion.circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={OUTER_RING_R}
+          fill="none"
+          stroke={tokens.color.line}
+          strokeWidth={0.3}
+          initial={{ r: 0 }}
+          whileInView={{ r: OUTER_RING_R }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.slow, delay: 0.4 }}
+        />
 
-        {/* AKSOS center node with signal color */}
+        {/* Center AKSOS Node */}
         <motion.g
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
-          animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
-          transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : {}}
+          transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
+          whileHover={{ scale: 1.1 }}
         >
-          <circle cx={layout.center.x} cy={layout.center.y} r={3} fill="none" stroke={tokens.color.signal} strokeWidth="0.5" />
-          <circle cx={layout.center.x} cy={layout.center.y} r={1.5} fill={tokens.color.signal} />
-          <DiagramLabel
-            x={layout.center.x}
-            y={layout.center.y}
-            text="AKSOS"
-            dy={-18}
-            fontSize={8}
-            fill={tokens.color.signal}
-            letterSpacing={0.15}
+          <DiagramNode
+            x={layout.centerX}
+            y={layout.centerY}
+            r={CENTER_NODE.r}
+            fill={tokens.color.ink}
+            stroke={CENTER_NODE.stroke}
+            strokeWidth={CENTER_NODE.strokeWidth}
+            label={CENTER_NODE.label}
+            labelPosition="bottom"
+            labelOffset={8}
+            labelFontSize={7}
+            labelColor={tokens.color.ink}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.25 }}
           />
+        </motion.g>
+
+        {/* Ring Nodes */}
+        {breakpoint !== 'mobile' && (
+          <>
+            {DESKTOP_LAYOUT.innerRing.map((node, index) => (
+              <motion.g
+                key={`inner-${node.label}`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                whileHover={{ scale: 1.15 }}
+              >
+                <DiagramNode
+                  x={node.x}
+                  y={node.y}
+                  r={NODE_R}
+                  fill={tokens.color.ink}
+                  stroke={tokens.color.line}
+                  strokeWidth={0.3}
+                  label={node.label}
+                  labelPosition="top"
+                  labelOffset={7}
+                  labelFontSize={5}
+                  labelColor={tokens.color.muted}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                />
+              </motion.g>
+            ))}
+
+            {DESKTOP_LAYOUT.middleRing.map((node, index) => (
+              <motion.g
+                key={`middle-${node.label}`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                whileHover={{ scale: 1.15 }}
+              >
+                <DiagramNode
+                  x={node.x}
+                  y={node.y}
+                  r={NODE_R}
+                  fill={tokens.color.ink}
+                  stroke={tokens.color.line}
+                  strokeWidth={0.3}
+                  label={node.label}
+                  labelPosition="top"
+                  labelOffset={7}
+                  labelFontSize={5}
+                  labelColor={tokens.color.muted}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                />
+              </motion.g>
+            ))}
+
+            {DESKTOP_LAYOUT.outerRing.map((node, index) => (
+              <motion.g
+                key={`outer-${node.label}`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                whileHover={{ scale: 1.15 }}
+              >
+                <DiagramNode
+                  x={node.x}
+                  y={node.y}
+                  r={NODE_R}
+                  fill={tokens.color.ink}
+                  stroke={tokens.color.line}
+                  strokeWidth={0.3}
+                  label={node.label}
+                  labelPosition="top"
+                  labelOffset={7}
+                  labelFontSize={5}
+                  labelColor={tokens.color.muted}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                />
+              </motion.g>
+            ))}
+          </>
+        )}
+
+        {breakpoint === 'mobile' && (
+          <>
+            {MOBILE_LAYOUT.allNodes.map((node, index) => (
+              <motion.g
+                key={`${node.ring}-${node.label}`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                whileHover={{ scale: 1.15 }}
+              >
+                <DiagramNode
+                  x={node.x}
+                  y={node.y}
+                  r={NODE_R}
+                  fill={tokens.color.ink}
+                  stroke={tokens.color.line}
+                  strokeWidth={0.3}
+                  label={node.label}
+                  labelPosition="bottom"
+                  labelOffset={7}
+                  labelFontSize={5}
+                  labelColor={tokens.color.muted}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
+                />
+              </motion.g>
+            ))}
+          </>
+        )}
+
+        {/* Connections from AKSOS to all nodes */}
+        {breakpoint !== 'mobile' && (
+          <>
+            {DESKTOP_LAYOUT.innerRing.map((node, index) => {
+              const from = { x: CENTER_X, y: CENTER_Y };
+              const to = { x: node.x, y: node.y };
+              
+              // Check if line intersects exclusion zone
+              const intersects = lineIntersectsCircle(from, to, EXCLUSION_ZONE.center, EXCLUSION_ZONE.radius);
+              
+              return (
+                <motion.g
+                  key={`conn-inner-${node.label}`}
+                  initial={{ opacity: 0, pathLength: 0 }}
+                  whileInView={{ opacity: 1, pathLength: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                >
+                  <DiagramConnection
+                    from={from}
+                    to={to}
+                    stroke={tokens.color.line}
+                    strokeWidth={CONNECTION_STROKE_WIDTH}
+                    curved={intersects}
+                    curvature={0.4}
+                    exclusionZone={EXCLUSION_ZONE}
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    whileInView={{ opacity: 1, pathLength: 1 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                  />
+                </motion.g>
+              );
+            })}
+
+            {DESKTOP_LAYOUT.middleRing.map((node, index) => {
+              const from = { x: CENTER_X, y: CENTER_Y };
+              const to = { x: node.x, y: node.y };
+              
+              return (
+                <motion.g
+                  key={`conn-middle-${node.label}`}
+                  initial={{ opacity: 0, pathLength: 0 }}
+                  whileInView={{ opacity: 1, pathLength: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                >
+                  <DiagramConnection
+                    from={from}
+                    to={to}
+                    stroke={tokens.color.line}
+                    strokeWidth={CONNECTION_STROKE_WIDTH}
+                    curved={true}
+                    curvature={0.5}
+                    exclusionZone={EXCLUSION_ZONE}
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    whileInView={{ opacity: 1, pathLength: 1 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                  />
+                </motion.g>
+              );
+            })}
+
+            {DESKTOP_LAYOUT.outerRing.map((node, index) => {
+              const from = { x: CENTER_X, y: CENTER_Y };
+              const to = { x: node.x, y: node.y };
+              
+              return (
+                <motion.g
+                  key={`conn-outer-${node.label}`}
+                  initial={{ opacity: 0, pathLength: 0 }}
+                  whileInView={{ opacity: 1, pathLength: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                >
+                  <DiagramConnection
+                    from={from}
+                    to={to}
+                    stroke={tokens.color.line}
+                    strokeWidth={CONNECTION_STROKE_WIDTH}
+                    curved={true}
+                    curvature={0.6}
+                    exclusionZone={EXCLUSION_ZONE}
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    whileInView={{ opacity: 1, pathLength: 1 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                  />
+                </motion.g>
+              );
+            })}
+          </>
+        )}
+
+        {breakpoint === 'mobile' && (
+          <>
+            {MOBILE_LAYOUT.allNodes.map((node, index) => {
+              const from = { x: CENTER_X, y: CENTER_Y };
+              const to = { x: node.x, y: node.y };
+              
+              // For mobile, use vertical connections
+              const mobileFrom = { x: CENTER_X, y: CENTER_Y };
+              const mobileTo = { x: CENTER_X, y: node.y };
+              
+              return (
+                <motion.g
+                  key={`conn-mobile-${node.label}`}
+                  initial={{ opacity: 0, pathLength: 0 }}
+                  whileInView={{ opacity: 1, pathLength: 1 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                >
+                  <DiagramConnection
+                    from={mobileFrom}
+                    to={mobileTo}
+                    stroke={tokens.color.line}
+                    strokeWidth={CONNECTION_STROKE_WIDTH}
+                    curved={false}
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    whileInView={{ opacity: 1, pathLength: 1 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+                  />
+                </motion.g>
+              );
+            })}
+          </>
+        )}
+
+        {/* Title */}
+        <motion.g
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: tokens.animation.duration.normal }}
+        >
           <DiagramLabel
-            x={layout.center.x}
-            y={layout.center.y}
-            text="INTELLIGENCE"
-            dy={-8}
-            fontSize={5}
-            fill={tokens.color.muted}
-            letterSpacing={0.1}
-          />
-          <DiagramLabel
-            x={layout.center.x}
-            y={layout.center.y}
-            text="INFRASTRUCTURE"
-            dy={4}
-            fontSize={5}
+            x={CENTER_X}
+            y={viewBoxHeight - 8}
+            text="AKSOS NETWORK"
+            textAnchor="middle"
+            fontSize={6}
             fill={tokens.color.muted}
             letterSpacing={0.1}
           />
         </motion.g>
 
-        {/* Nodes positioned on concentric circles */}
-        {layout.nodes.map((node, nodeIndex) => {
-          const pos = { x: node.x, y: node.y };
-          const nodeDelay = node.delay;
-          
-          return (
-            <motion.g
-              key={`node-${nodeIndex}`}
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: nodeDelay }}
-              whileHover={{ scale: 1.2, cursor: 'default' }}
-              animate={isHovered ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
-              transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: nodeDelay } : {}}
-            >
-              <DiagramNode
-                x={pos.x}
-                y={pos.y}
-                r={NODE_RADIUS}
-                fill={tokens.color.ink}
-                stroke={tokens.color.line}
-                strokeWidth={0.2}
-                label={node.label}
-                labelPosition="bottom"
-                labelOffset={node.label.length > 6 ? 12 : 10}
-                labelFontSize={5}
-                labelColor={tokens.color.muted}
-                exclusionZone={layout.exclusionZone}
-              />
-            </motion.g>
-          );
-        })}
-
-        {/* Connection lines from AKSOS to nodes */}
-        {layout.nodes.map((node, index) => {
-          const pos = { x: node.x, y: node.y };
-          
-          // Check if line intersects exclusion zone
-          const intersects = lineIntersectsCircle(
-            layout.center,
-            pos,
-            layout.exclusionZone.center,
-            layout.exclusionZone.radius
-          );
-          
-          // For Hero, we use straight lines but ensure they don't pass through the center
-          // by stopping at the exclusion zone boundary
-          return (
-            <motion.line
-              key={`line-${index}`}
-              x1={layout.center.x}
-              y1={layout.center.y}
-              x2={pos.x}
-              y2={pos.y}
-              stroke={tokens.color.line}
-              strokeWidth={CONNECTION_STROKE_WIDTH}
-              initial={{ pathLength: 0, opacity: 0 }}
-              whileInView={{ pathLength: 1, opacity: 0.5 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: 0.6 + (index * 0.02) }}
-              animate={isHovered ? { opacity: [0.5, 1, 0.5], strokeWidth: [CONNECTION_STROKE_WIDTH, HIGHLIGHT_CONNECTION_WIDTH, CONNECTION_STROKE_WIDTH] } : {}}
-              transition={isHovered ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.05 } : {}}
-            />
-          );
-        })}
-
-        {/* Depth labels */}
-        {layout.circles.map((circle, index) => {
-          const labelPos = circle.labelPosition;
-          
-          return (
-            <motion.g
-              key={`label-${index}`}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: circle.delay + 0.2 }}
-            >
-              <DiagramLabel
-                x={labelPos.x}
-                y={labelPos.y}
-                text={circle.label}
-                textAnchor="middle"
-                fontSize={4}
-                fill={tokens.color.muted}
-                letterSpacing={0.1}
-              />
-            </motion.g>
-          );
-        })}
-
         {/* Hover indicator */}
-        {isHovered && (
+        {isHovered && breakpoint !== 'mobile' && (
           <motion.text
-            x={layout.center.x}
-            y={92}
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
             fontFamily={tokens.font.mono}
@@ -340,10 +639,42 @@ export function HeroNetwork() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            HOVER TO SEE CONNECTIONS
+            HOVER TO EXPLORE NETWORK
+          </motion.text>
+        )}
+
+        {isHovered && breakpoint === 'mobile' && (
+          <motion.text
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
+            textAnchor="middle"
+            fontSize="4"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            TAP TO EXPLORE NETWORK
           </motion.text>
         )}
       </svg>
     </motion.div>
   );
+}
+
+// Generate Africa outline path
+function generateAfricaPath(): string {
+  const points = AFRICA_OUTLINE;
+  let path = `M ${points[0].x} ${points[0].y}`;
+  
+  for (let i = 1; i < points.length; i++) {
+    const p = points[i];
+    path += ` L ${p.x} ${p.y}`;
+  }
+  
+  // Close the path
+  path += ` Z`;
+  
+  return path;
 }

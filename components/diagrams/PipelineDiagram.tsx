@@ -10,71 +10,121 @@ import {
   DiagramArrow,
   Point,
   calculateTextDimensions,
-  calculateHorizontalFlowPositions,
+  useBreakpoint,
 } from './primitives';
 
 // =============================================================================
 // PIPELINE DIAGRAM
 // Horizontal flow: Information to Intelligence Pipeline
-// Geometry: Calculated horizontal positions, no control characters, proper arrows
+// Geometry: Horizontal flow with calculated positions
+// Responsive: Converts to vertical stack on mobile
 // =============================================================================
 
-// Golden ratio for proportions
-const PHI = 1.618;
+// Configuration
+const SAFE_MARGIN = 10;
+const CENTER_X = 50;
+const NODE_R = 2;
+const CONNECTION_STROKE_WIDTH = 0.2;
+const ARROW_SIZE = 6;
 
-// Configuration constants
-const CENTER_Y = 50;
-const NODE_RADIUS = 2.5;
-const LINE_STROKE_WIDTH = 0.3;
-const HIGHLIGHT_STROKE_WIDTH = 0.5;
-const SAFE_MARGIN = 8;
-
-// Stages with golden ratio spacing
-const STAGES = [
-  { label: 'SIGNALS', x: 5, delay: 0.1, stageIndex: 0 },
-  { label: 'SOURCE', x: 20, delay: 0.2, stageIndex: 1 },
-  { label: 'EVIDENCE', x: 35, delay: 0.3, stageIndex: 2 },
-  { label: 'CONTEXT', x: 50, delay: 0.4, stageIndex: 3 },
-  { label: 'RELATIONSHIPS', x: 65, delay: 0.5, stageIndex: 4 },
-  { label: 'RITA', x: 80, delay: 0.6, stageIndex: 5 },
-  { label: 'STORY', x: 90, delay: 0.7, stageIndex: 6 },
-  { label: 'ACTION', x: 98, delay: 0.8, stageIndex: 7 },
+// Pipeline stages
+const PIPELINE_STAGES = [
+  { label: 'INFORMATION', delay: 0.1 },
+  { label: 'KNOWLEDGE', delay: 0.2 },
+  { label: 'INTELLIGENCE', delay: 0.3 },
+  { label: 'DECISIONS', delay: 0.4 },
+  { label: 'ACTIONS', delay: 0.5 },
 ];
 
-// Calculate layout geometry
-function calculateLayout(viewBoxWidth: number = 100, viewBoxHeight: number = 100) {
-  const centerY = viewBoxHeight / 2;
+// Calculate desktop layout
+function calculateDesktopLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  stages: { label: string; x: number; y: number; delay: number }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const centerY = 50;
   
-  // Calculate positions for each stage
-  const positions: Point[] = STAGES.map(stage => ({
-    x: (stage.x / 100) * viewBoxWidth,
+  // Calculate text dimensions
+  const labelWidths = PIPELINE_STAGES.map(s => 
+    calculateTextDimensions(s.label, 5, 0.1).width
+  );
+  
+  // Calculate stage positions (horizontal flow)
+  const safeWidth = viewBoxWidth - SAFE_MARGIN * 2;
+  const stageSpacing = safeWidth / (PIPELINE_STAGES.length - 1);
+  
+  const stages = PIPELINE_STAGES.map((stage, index) => ({
+    ...stage,
+    x: SAFE_MARGIN + index * stageSpacing,
     y: centerY,
   }));
   
-  // Calculate label dimensions for positioning
-  const labelDims = STAGES.map(stage => 
-    calculateTextDimensions(stage.label, stage.label === 'RITA' ? 6 : 5, 0.1)
-  );
+  // Calculate total height
+  const labelMargin = 15;
+  const viewBoxHeight = centerY + labelMargin + SAFE_MARGIN;
   
   return {
-    viewBox: { width: viewBoxWidth, height: viewBoxHeight },
+    centerX,
     centerY,
-    positions,
-    labelDims,
+    stages,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
   };
 }
 
-// Pre-calculate layout
-const LAYOUT = calculateLayout(100, 100);
+// Calculate mobile layout (vertical stack)
+function calculateMobileLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  stages: { label: string; x: number; y: number; delay: number }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const startY = 20;
+  const spacing = 15;
+  
+  // Stack stages vertically
+  const stages = PIPELINE_STAGES.map((stage, index) => ({
+    ...stage,
+    x: centerX,
+    y: startY + index * spacing,
+  }));
+  
+  const bottomMost = stages[stages.length - 1].y;
+  const viewBoxHeight = bottomMost + 20 + SAFE_MARGIN;
+  
+  return {
+    centerX,
+    centerY: startY + (PIPELINE_STAGES.length * spacing) / 2,
+    stages,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
+  };
+}
 
-// ViewBox dimensions
-const VIEWBOX = { width: 100, height: 100 };
+// Pre-calculate layouts
+const DESKTOP_LAYOUT = calculateDesktopLayout(100);
+const MOBILE_LAYOUT = calculateMobileLayout(100);
+
+// Aspect ratios
+const DESKTOP_ASPECT_RATIO = 100 / DESKTOP_LAYOUT.viewBoxHeight;
+const MOBILE_ASPECT_RATIO = 100 / MOBILE_LAYOUT.viewBoxHeight;
 
 export function PipelineDiagram() {
   const [isHovered, setIsHovered] = useState(false);
-  const [highlightedStage, setHighlightedStage] = useState<number | null>(null);
   
-  const layout = useMemo(() => LAYOUT, []);
+  const breakpoint = useBreakpoint();
+  const layout = useMemo(() => 
+    breakpoint === 'mobile' ? MOBILE_LAYOUT : DESKTOP_LAYOUT
+  , [breakpoint]);
+  
+  const viewBoxHeight = layout.viewBoxHeight;
+  const aspectRatio = breakpoint === 'mobile' ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
+  const minHeight = 400;
   
   return (
     <motion.div
@@ -84,74 +134,98 @@ export function PipelineDiagram() {
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
       onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => {
-        setIsHovered(false);
-        setHighlightedStage(null);
+      onHoverEnd={() => setIsHovered(false)}
+      style={{
+        gridColumn: '1 / -1',
+        aspectRatio: aspectRatio,
+        minHeight: `${minHeight}px`,
+        width: '100%',
       }}
     >
       <svg 
-        viewBox={`0 0 ${VIEWBOX.width} ${VIEWBOX.height}`} 
+        viewBox={`0 0 100 ${viewBoxHeight}`} 
         preserveAspectRatio="xMidYMid meet"
-        style={{ width: '100%', height: '400px' }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}
       >
-        
-        {/* Main flow line */}
-        <motion.path
-          d={`M ${SAFE_MARGIN} ${layout.centerY} H ${VIEWBOX.width - SAFE_MARGIN}`}
-          fill="none"
-          stroke={tokens.color.line}
-          strokeWidth={LINE_STROKE_WIDTH}
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.slower, delay: 0.1 }}
-          animate={isHovered ? { strokeWidth: [LINE_STROKE_WIDTH, HIGHLIGHT_STROKE_WIDTH, LINE_STROKE_WIDTH] } : {}}
-          transition={isHovered ? { duration: 3, repeat: Infinity, ease: 'easeInOut' } : {}}
-        />
-
-        {/* Stage nodes */}
-        {STAGES.map((stage, index) => {
-          const pos = layout.positions[index];
-          const isHighlighted = highlightedStage === stage.stageIndex || isHovered;
-          const circleSize = stage.label === 'RITA' ? 3.5 : NODE_RADIUS;
-          const fontSize = stage.label === 'RITA' ? 6 : 5;
-          const signalColor = stage.label === 'RITA' ? tokens.color.signal : tokens.color.ink;
+        {/* Pipeline Stage Nodes */}
+        {layout.stages.map((stage, index) => {
+          const isMobile = breakpoint === 'mobile';
           
           return (
             <motion.g
-              key={stage.label}
-              initial={{ opacity: 0, scale: 0 }}
+              key={`stage-${stage.label}`}
+              initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
-              whileHover={{ scale: 1.15 }}
-              onHoverStart={() => setHighlightedStage(stage.stageIndex)}
-              onHoverEnd={() => setHighlightedStage(null)}
-              animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
-              transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.05 } : {}}
+              whileHover={{ scale: 1.1 }}
             >
-              {/* Node circle */}
-              <circle 
-                cx={pos.x} 
-                cy={pos.y} 
-                r={circleSize}
-                fill={stage.label === 'RITA' ? tokens.color.signal : 'none'}
-                stroke={isHighlighted ? tokens.color.signal : signalColor}
-                strokeWidth={isHighlighted ? HIGHLIGHT_STROKE_WIDTH : stage.label === 'RITA' ? 0.5 : 0.3}
+              <DiagramNode
+                x={stage.x}
+                y={stage.y}
+                r={NODE_R}
+                fill={tokens.color.ink}
+                stroke={tokens.color.line}
+                strokeWidth={0.3}
+                label={stage.label}
+                labelPosition={isMobile ? 'bottom' : 'top'}
+                labelOffset={8}
+                labelFontSize={5}
+                labelColor={tokens.color.muted}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay }}
               />
-              
-              {/* Stage label */}
-              <DiagramLabel
-                x={pos.x}
-                y={pos.y}
-                text={stage.label}
-                textAnchor="middle"
-                dy={stage.label.length > 6 ? 14 : 12}
-                fontSize={fontSize}
-                fill={isHighlighted ? tokens.color.signal : signalColor}
-                letterSpacing={0.1}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
+            </motion.g>
+          );
+        })}
+
+        {/* Connections between stages */}
+        {layout.stages.slice(0, -1).map((stage, index) => {
+          const isMobile = breakpoint === 'mobile';
+          const from = { x: stage.x, y: stage.y };
+          const to = { x: layout.stages[index + 1].x, y: layout.stages[index + 1].y };
+          
+          // For mobile, use vertical connections
+          const mobileFrom = isMobile ? { x: layout.centerX, y: stage.y } : from;
+          const mobileTo = isMobile ? { x: layout.centerX, y: layout.stages[index + 1].y } : to;
+          
+          return (
+            <motion.g
+              key={`conn-${stage.label}-${layout.stages[index + 1].label}`}
+              initial={{ opacity: 0, pathLength: 0 }}
+              whileInView={{ opacity: 1, pathLength: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.05 }}
+            >
+              <DiagramConnection
+                from={isMobile ? mobileFrom : from}
+                to={isMobile ? mobileTo : to}
+                stroke={tokens.color.line}
+                strokeWidth={CONNECTION_STROKE_WIDTH}
+                curved={false}
+                initial={{ opacity: 0, pathLength: 0 }}
+                whileInView={{ opacity: 1, pathLength: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.05 }}
+              />
+              {/* Arrow at end of connection */}
+              <DiagramArrow
+                x={isMobile ? layout.centerX : layout.stages[index + 1].x}
+                y={layout.stages[index + 1].y}
+                direction={isMobile ? 'down' : 'left'}
+                size={ARROW_SIZE}
+                stroke={tokens.color.line}
+                strokeWidth={0.3}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.1 }}
               />
@@ -159,76 +233,29 @@ export function PipelineDiagram() {
           );
         })}
 
-        {/* Arrow indicators between stages - PROPER SVG ARROWS (no control characters) */}
-        {STAGES.map((stage, index) => {
-          if (index === STAGES.length - 1) return null;
-          
-          const midX = (layout.positions[index].x + layout.positions[index + 1].x) / 2;
-          
-          return (
-            <motion.g
-              key={`arrow-${index}`}
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: stage.delay + 0.1 }}
-              animate={isHovered ? { opacity: [0.5, 1, 0.5], scale: [1, 1.2, 1] } : {}}
-              transition={isHovered ? { duration: 1, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 } : {}}
-            >
-              <DiagramArrow
-                x={midX}
-                y={layout.centerY}
-                direction="right"
-                size={6}
-                stroke={tokens.color.muted}
-                strokeWidth={0.3}
-                fill={tokens.color.muted}
-              />
-            </motion.g>
-          );
-        })}
-
-        {/* Flow label at top */}
+        {/* Title */}
         <motion.g
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.2 }}
+          transition={{ duration: tokens.animation.duration.normal }}
         >
           <DiagramLabel
-            x={VIEWBOX.width / 2}
-            y={12}
-            text="INFORMATION" 
+            x={CENTER_X}
+            y={viewBoxHeight - 8}
+            text="INFORMATION TO INTELLIGENCE PIPELINE"
             textAnchor="middle"
-            fontSize={5}
-            fill={tokens.color.muted}
-            letterSpacing={0.1}
-          />
-          <DiagramArrow
-            x={VIEWBOX.width / 2}
-            y={18}
-            direction="right"
-            size={5}
-            stroke={tokens.color.muted}
-            strokeWidth={0.2}
-            fill={tokens.color.muted}
-          />
-          <DiagramLabel
-            x={VIEWBOX.width / 2}
-            y={24}
-            text="INTELLIGENCE"
-            textAnchor="middle"
-            fontSize={5}
+            fontSize={6}
             fill={tokens.color.muted}
             letterSpacing={0.1}
           />
         </motion.g>
 
         {/* Hover indicator */}
-        {isHovered && (
+        {isHovered && breakpoint !== 'mobile' && (
           <motion.text
-            x={VIEWBOX.width / 2}
-            y={92}
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
             fontFamily={tokens.font.mono}
@@ -237,7 +264,23 @@ export function PipelineDiagram() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            HOVER TO SEE FLOW
+            INFORMATION -> KNOWLEDGE -> INTELLIGENCE -> DECISIONS -> ACTIONS
+          </motion.text>
+        )}
+
+        {isHovered && breakpoint === 'mobile' && (
+          <motion.text
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
+            textAnchor="middle"
+            fontSize="4"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            TAP TO EXPLORE PIPELINE
           </motion.text>
         )}
       </svg>

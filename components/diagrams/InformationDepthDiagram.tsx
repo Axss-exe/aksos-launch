@@ -4,17 +4,17 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { tokens } from '@/lib/design-tokens';
 import {
-  DiagramContainer,
   DiagramLabel,
   Point,
   calculateTextDimensions,
-  createDiagramLayout,
+  useBreakpoint,
 } from './primitives';
 
 // =============================================================================
 // INFORMATION DEPTH DIAGRAM
 // Inverted pyramid showing information depth layers
 // Geometry: Calculated from content dimensions, no overlaps guaranteed
+// Responsive: Dynamic aspect ratio, mobile-optimized layout
 // =============================================================================
 
 // Golden ratio for proportions
@@ -115,8 +115,8 @@ function calculateLayerGeometry(layerIndex: number, totalLayers: number): {
   };
 }
 
-// Calculate the full layout
-function calculateFullLayout(viewBoxWidth: number = 100): {
+// Calculate the full layout for desktop
+function calculateDesktopLayout(viewBoxWidth: number = 100): {
   layers: ReturnType<typeof calculateLayerGeometry>[];
   totalHeight: number;
   centerX: number;
@@ -128,20 +128,13 @@ function calculateFullLayout(viewBoxWidth: number = 100): {
   // Calculate geometry for each layer
   const layers = LAYER_DATA.map((_, index) => calculateLayerGeometry(index, LAYER_DATA.length));
   
-  // Calculate cumulative Y positions (inverted pyramid: widest at bottom, narrowest at top)
-  // Start from top with apex
-  let currentY = SAFE_MARGIN + 20; // Space for depth indicator
-  
-  // Sort layers by width (widest first for inverted pyramid)
-  const sortedLayers = [...layers].sort((a, b) => b.width - a.width);
-  
   // Calculate pyramid proportions using golden ratio
   const maxWidth = safeWidth * 0.9; // 90% of safe width
   const minWidth = maxWidth * Math.pow(1 / PHI, LAYER_DATA.length - 1);
   
   // Scale layer widths to fit pyramid
   const widthRange = maxWidth - minWidth;
-  const sortedWidths = sortedLayers.map(l => l.width);
+  const sortedWidths = layers.map(l => l.width);
   const maxLayerWidth = Math.max(...sortedWidths);
   const minLayerWidth = Math.min(...sortedWidths);
   const layerWidthRange = maxLayerWidth - minLayerWidth;
@@ -201,26 +194,75 @@ function calculateFullLayout(viewBoxWidth: number = 100): {
   };
 }
 
-// Pre-calculate layout (memoized)
-const LAYOUT = calculateFullLayout(100);
+// Calculate mobile layout (vertical stack)
+function calculateMobileLayout(viewBoxWidth: number = 100): {
+  layers: ReturnType<typeof calculateLayerGeometry>[];
+  totalHeight: number;
+  centerX: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const safeWidth = viewBoxWidth - SAFE_MARGIN * 2;
+  
+  // For mobile, use full width and stack vertically
+  const layerWidth = safeWidth * 0.95;
+  
+  // Calculate Y positions
+  let y = SAFE_MARGIN + 20;
+  
+  const finalLayers = LAYER_DATA.map((layer, index) => {
+    const layerY = y;
+    const labelY = layerY + 12;
+    const descY = labelY + LABEL_FONT_SIZE * LINE_HEIGHT_MULTIPLIER + 4;
+    const accessY = descY + DESC_FONT_SIZE * LINE_HEIGHT_MULTIPLIER + 4;
+    
+    const result = {
+      label: layer.label,
+      desc: layer.desc,
+      access: layer.access,
+      y: layerY,
+      width: layerWidth,
+      height: 24, // Fixed height for mobile
+      labelY,
+      descY,
+      accessY,
+      bottom: accessY + ACCESS_FONT_SIZE * LINE_HEIGHT_MULTIPLIER + 6,
+    };
+    
+    y = result.bottom + VERTICAL_SPACING;
+    
+    return result;
+  });
+  
+  const totalHeight = finalLayers[finalLayers.length - 1].bottom + SAFE_MARGIN + 20;
+  
+  return {
+    layers: finalLayers,
+    totalHeight,
+    centerX,
+  };
+}
 
-// Calculate viewBox height based on content
-const VIEWBOX_HEIGHT = Math.max(100, LAYOUT.totalHeight + 20);
+// Pre-calculate layouts
+const DESKTOP_LAYOUT = calculateDesktopLayout(100);
+const MOBILE_LAYOUT = calculateMobileLayout(100);
 
-// Aspect ratio for this diagram (vertical)
-const ASPECT_RATIO = 100 / VIEWBOX_HEIGHT;
+// Aspect ratios
+const DESKTOP_ASPECT_RATIO = 100 / DESKTOP_LAYOUT.totalHeight;
+const MOBILE_ASPECT_RATIO = 100 / MOBILE_LAYOUT.totalHeight;
 
 export function InformationDepthDiagram() {
   const [isHovered, setIsHovered] = useState(false);
   const [highlightedLayer, setHighlightedLayer] = useState<number | null>(null);
   
-  // Use memoized layout
-  const layout = useMemo(() => LAYOUT, []);
+  const breakpoint = useBreakpoint();
+  const layout = useMemo(() => 
+    breakpoint === 'mobile' ? MOBILE_LAYOUT : DESKTOP_LAYOUT
+  , [breakpoint]);
   
-  // Calculate dynamic container height based on viewport
-  // For mobile, we might need more height
-  const minHeight = 500;
-  const calculatedHeight = Math.max(minHeight, VIEWBOX_HEIGHT * 4);
+  // Calculate viewBox and container dimensions
+  const viewBoxHeight = layout.totalHeight;
+  const aspectRatio = breakpoint === 'mobile' ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
+  const minHeight = 400;
   
   return (
     <motion.div
@@ -234,14 +276,22 @@ export function InformationDepthDiagram() {
         setIsHovered(false);
         setHighlightedLayer(null);
       }}
+      style={{
+        gridColumn: '1 / -1',
+        aspectRatio: aspectRatio,
+        minHeight: `${minHeight}px`,
+        width: '100%',
+      }}
     >
       <svg 
-        viewBox={`0 0 100 ${VIEWBOX_HEIGHT}`} 
+        viewBox={`0 0 100 ${viewBoxHeight}`} 
         preserveAspectRatio="xMidYMid meet"
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
           width: '100%',
-          height: `${calculatedHeight}px`,
-          minHeight: `${minHeight}px`,
+          height: '100%',
         }}
       >
         
@@ -413,7 +463,7 @@ export function InformationDepthDiagram() {
         >
           <DiagramLabel
             x={10}
-            y={VIEWBOX_HEIGHT - 15}
+            y={viewBoxHeight - 15}
             text="EASY"
             textAnchor="start"
             fontSize={5}
@@ -422,7 +472,7 @@ export function InformationDepthDiagram() {
           />
           <DiagramLabel
             x={10}
-            y={VIEWBOX_HEIGHT - 10}
+            y={viewBoxHeight - 10}
             text="ACCESS"
             textAnchor="start"
             fontSize={5}
@@ -431,7 +481,7 @@ export function InformationDepthDiagram() {
           />
           <DiagramLabel
             x={90}
-            y={VIEWBOX_HEIGHT - 15}
+            y={viewBoxHeight - 15}
             text="DIFFICULT"
             textAnchor="end"
             fontSize={5}
@@ -440,7 +490,7 @@ export function InformationDepthDiagram() {
           />
           <DiagramLabel
             x={90}
-            y={VIEWBOX_HEIGHT - 10}
+            y={viewBoxHeight - 10}
             text="ACCESS"
             textAnchor="end"
             fontSize={5}
@@ -453,7 +503,7 @@ export function InformationDepthDiagram() {
         {isHovered && (
           <motion.text
             x={layout.centerX}
-            y={VIEWBOX_HEIGHT - 5}
+            y={viewBoxHeight - 5}
             textAnchor="middle"
             fontSize="4"
             fontFamily={tokens.font.mono}

@@ -1,12 +1,12 @@
 'use client';
 
 import { motion, MotionProps } from 'framer-motion';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, useMemo } from 'react';
 import { tokens } from '@/lib/design-tokens';
 
 // =============================================================================
 // DIAGRAM PRIMITIVES
-// Reusable, geometry-aware components for building all AKSOS diagrams
+// Reusable, geometry-aware, responsive components for building all AKSOS diagrams
 // =============================================================================
 
 // ----------------------------------------------------------------------------
@@ -52,6 +52,8 @@ export function useBreakpoint(): 'mobile' | 'tablet' | 'desktop' {
   const [breakpoint, setBreakpoint] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     function handleResize() {
       const width = window.innerWidth;
       if (width < BREAKPOINTS.mobile) {
@@ -76,6 +78,8 @@ export function useViewportDimensions(): { width: number; height: number } {
   const [dimensions, setDimensions] = useState({ width: 1440, height: 900 });
   
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     function handleResize() {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
     }
@@ -232,7 +236,7 @@ export function generateCurvedPath(
 }
 
 // ----------------------------------------------------------------------------
-// Diagram Container
+// Diagram Container - Responsive version
 // ----------------------------------------------------------------------------
 
 export interface DiagramContainerProps {
@@ -242,6 +246,8 @@ export interface DiagramContainerProps {
   minHeight?: number;
   className?: string;
   layout?: DiagramLayout;
+  mobileAspectRatio?: number;
+  tabletAspectRatio?: number;
 }
 
 export function DiagramContainer({
@@ -251,10 +257,27 @@ export function DiagramContainer({
   minHeight = 300,
   className,
   layout,
+  mobileAspectRatio,
+  tabletAspectRatio,
 }: DiagramContainerProps) {
-  // Calculate container dimensions based on viewBox aspect ratio
-  const containerHeight = minHeight;
-  const containerWidth = containerHeight * aspectRatio;
+  const breakpoint = useBreakpoint();
+  
+  // Determine aspect ratio based on breakpoint
+  const getAspectRatio = () => {
+    switch (breakpoint) {
+      case 'mobile':
+        return mobileAspectRatio || aspectRatio * 1.5; // Mobile often needs taller
+      case 'tablet':
+        return tabletAspectRatio || aspectRatio * 1.2; // Tablet slightly taller
+      default:
+        return aspectRatio;
+    }
+  };
+  
+  const currentAspectRatio = getAspectRatio();
+  
+  // Calculate padding-bottom percentage for aspect-ratio technique
+  const paddingBottom = (1 / currentAspectRatio) * 100;
   
   return (
     <motion.div
@@ -263,14 +286,22 @@ export function DiagramContainer({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: `${minHeight}px`,
+        aspectRatio: currentAspectRatio,
+      }}
     >
       <svg
         viewBox={`0 0 ${viewBox.width} ${viewBox.height}`}
         preserveAspectRatio="xMidYMid meet"
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
           width: '100%',
-          height: `${containerHeight}px`,
-          minHeight: `${minHeight}px`,
+          height: '100%',
         }}
       >
         {children}
@@ -1030,4 +1061,44 @@ export function calculateResponsiveViewBox(
     default:
       return { width: baseWidth, height: baseHeight };
   }
+}
+
+// ----------------------------------------------------------------------------
+// Responsive Position Utilities
+// ----------------------------------------------------------------------------
+
+/**
+ * Get mobile-optimized positions for a horizontal flow (converts to vertical)
+ */
+export function getMobileFlowPositions(
+  items: Point[],
+  centerX: number,
+  startY: number,
+  spacing: number = 15
+): Point[] {
+  return items.map((_, index) => ({
+    x: centerX,
+    y: startY + index * spacing,
+  }));
+}
+
+/**
+ * Get mobile-optimized positions for a radial layout (converts to vertical)
+ */
+export function getMobileRadialPositions(
+  rings: { r: number; nodes: Point[] }[],
+  centerX: number,
+  startY: number
+): { r: number; nodes: Point[] }[] {
+  let currentY = startY;
+  const spacing = 15;
+  
+  return rings.map(ring => {
+    const positions = ring.nodes.map(() => ({
+      x: centerX,
+      y: currentY,
+    }));
+    currentY += ring.nodes.length * spacing + spacing;
+    return { r: ring.r, nodes: positions };
+  });
 }

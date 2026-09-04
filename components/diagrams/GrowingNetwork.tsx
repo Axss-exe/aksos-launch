@@ -10,249 +10,296 @@ import {
   Point,
   calculateTextDimensions,
   calculateCircularPositions,
-  createDiagramLayout,
+  useBreakpoint,
 } from './primitives';
 
 // =============================================================================
 // GROWING NETWORK DIAGRAM
 // Network showing AKSOS node growing with relationship types
-// Geometry: Proper connection routing with exclusion zones
+// Geometry: Central AKSOS with surrounding nodes, exclusion zone at center
+// Responsive: Converts to vertical stack on mobile
 // =============================================================================
 
-// Configuration constants
+// Configuration
+const SAFE_MARGIN = 10;
 const CENTER_X = 50;
-const CENTER_Y = 40;
-const CENTER_EXCLUSION_RADIUS = 10; // Exclusion zone around AKSOS
-const NODE_RADIUS = 2;
-const LINE_STROKE_WIDTH = 0.2;
-const HIGHLIGHT_STROKE_WIDTH = 0.4;
-const SAFE_MARGIN = 8;
+const CENTER_Y = 50;
+const NODE_R = 2;
+const INNER_RING_R = 15;
+const OUTER_RING_R = 28;
+const CONNECTION_STROKE_WIDTH = 0.2;
 
-// Node types with different relationship styles
-const NODE_TYPES = [
-  { 
-    type: 'PERSON', 
-    nodes: [{ x: 20, y: 20 }, { x: 20, y: 60 }],
-    delay: 0.1
-  },
-  { 
-    type: 'ORGANIZATION', 
-    nodes: [{ x: 80, y: 20 }, { x: 80, y: 60 }],
-    delay: 0.2
-  },
-  { 
-    type: 'INSTITUTION', 
-    nodes: [{ x: 20, y: 80 }, { x: 80, y: 80 }],
-    delay: 0.3
-  },
-  { 
-    type: 'RESEARCH', 
-    nodes: [{ x: 50, y: 20 }],
-    delay: 0.4
-  },
-  { 
-    type: 'MARKET', 
-    nodes: [{ x: 50, y: 80 }],
-    delay: 0.5
-  },
-  { 
-    type: 'LOCAL', 
-    nodes: [{ x: 80, y: 40 }],
-    delay: 0.6
-  },
+// Center node (AKSOS)
+const CENTER_NODE = {
+  label: 'AKSOS',
+  r: 4,
+  stroke: tokens.color.signal,
+  strokeWidth: 0.5,
+};
+
+// Relationship types (surrounding nodes)
+const RELATIONSHIP_TYPES = [
+  { label: 'PEOPLE', delay: 0.1 },
+  { label: 'ORGANIZATIONS', delay: 0.15 },
+  { label: 'LOCATIONS', delay: 0.2 },
+  { label: 'EVENTS', delay: 0.25 },
+  { label: 'OBJECTS', delay: 0.3 },
+  { label: 'IDEAS', delay: 0.35 },
 ];
 
-// Calculate layout geometry
-function calculateLayout(viewBoxWidth: number = 100, viewBoxHeight: number = 100) {
-  const center = { x: CENTER_X, y: CENTER_Y };
+// Calculate desktop layout
+function calculateDesktopLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  nodes: { label: string; x: number; y: number; delay: number }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const centerY = 50;
   
-  // Scale node positions to viewBox
-  const scaledNodeTypes = NODE_TYPES.map(type => ({
-    ...type,
-    nodes: type.nodes.map(node => ({
-      x: (node.x / 100) * viewBoxWidth,
-      y: (node.y / 100) * viewBoxHeight,
-    })),
-  }));
-  
-  // Flatten all nodes for connections
-  const allNodes: { x: number; y: number; type: string }[] = scaledNodeTypes.flatMap(type => 
-    type.nodes.map(n => ({ ...n, type: type.type }))
+  // Calculate positions for nodes on a circle
+  const positions = calculateCircularPositions(
+    { x: centerX, y: centerY },
+    INNER_RING_R,
+    RELATIONSHIP_TYPES.length,
+    0 // Start at 0 radians (east)
   );
   
-  // Exclusion zone around AKSOS
-  const exclusionZone = {
-    center,
-    radius: CENTER_EXCLUSION_RADIUS,
-  };
+  const nodes = RELATIONSHIP_TYPES.map((node, index) => ({
+    ...node,
+    x: positions[index].x,
+    y: positions[index].y,
+  }));
+  
+  // Calculate total height based on nodes
+  const topMost = Math.min(...nodes.map(n => n.y));
+  const bottomMost = Math.max(...nodes.map(n => n.y));
+  
+  // Calculate label positions and ensure they don't cause clipping
+  const labelMargin = 12;
+  const viewBoxHeight = bottomMost + labelMargin + SAFE_MARGIN;
   
   return {
-    viewBox: { width: viewBoxWidth, height: viewBoxHeight },
-    center,
-    exclusionZone,
-    nodeTypes: scaledNodeTypes,
-    allNodes,
+    centerX,
+    centerY,
+    nodes,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
   };
 }
 
-// Pre-calculate layout
-const LAYOUT = calculateLayout(100, 100);
+// Calculate mobile layout (vertical stack)
+function calculateMobileLayout(viewBoxWidth: number = 100): {
+  centerX: number;
+  centerY: number;
+  nodes: { label: string; x: number; y: number; delay: number }[];
+  totalHeight: number;
+  viewBoxHeight: number;
+} {
+  const centerX = viewBoxWidth / 2;
+  const startY = 25;
+  const spacing = 12;
+  
+  // Stack: Center -> Nodes
+  let y = startY;
+  
+  // Center node
+  const centerY = y;
+  y += 15;
+  
+  // Relationship type nodes
+  const nodes = RELATIONSHIP_TYPES.map((node, index) => ({
+    ...node,
+    x: centerX,
+    y: y + index * spacing,
+  }));
+  
+  const bottomMost = Math.max(
+    centerY,
+    ...nodes.map(n => n.y)
+  );
+  
+  const viewBoxHeight = bottomMost + 20 + SAFE_MARGIN;
+  
+  return {
+    centerX,
+    centerY,
+    nodes,
+    totalHeight: viewBoxHeight,
+    viewBoxHeight,
+  };
+}
 
-// ViewBox dimensions
-const VIEWBOX = { width: 100, height: 100 };
+// Pre-calculate layouts
+const DESKTOP_LAYOUT = calculateDesktopLayout(100);
+const MOBILE_LAYOUT = calculateMobileLayout(100);
 
-// AKSOS node
-const AKSOS_NODE = { label: 'AKSOS', x: CENTER_X, y: CENTER_Y };
+// Aspect ratios
+const DESKTOP_ASPECT_RATIO = 100 / DESKTOP_LAYOUT.viewBoxHeight;
+const MOBILE_ASPECT_RATIO = 100 / MOBILE_LAYOUT.viewBoxHeight;
+
+// Exclusion zone around center
+const EXCLUSION_ZONE = { center: { x: CENTER_X, y: CENTER_Y }, radius: 10 };
 
 export function GrowingNetwork() {
   const [isHovered, setIsHovered] = useState(false);
-  const [highlightedType, setHighlightedType] = useState<string | null>(null);
   
-  const layout = useMemo(() => LAYOUT, []);
+  const breakpoint = useBreakpoint();
+  const layout = useMemo(() => 
+    breakpoint === 'mobile' ? MOBILE_LAYOUT : DESKTOP_LAYOUT
+  , [breakpoint]);
+  
+  const viewBoxHeight = layout.viewBoxHeight;
+  const aspectRatio = breakpoint === 'mobile' ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
+  const minHeight = 400;
   
   return (
     <motion.div
-      className="growing-network"
+      className="growing-network-diagram"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: tokens.animation.duration.slow }}
       onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => {
-        setIsHovered(false);
-        setHighlightedType(null);
+      onHoverEnd={() => setIsHovered(false)}
+      style={{
+        gridColumn: '1 / -1',
+        aspectRatio: aspectRatio,
+        minHeight: `${minHeight}px`,
+        width: '100%',
       }}
     >
       <svg 
-        viewBox={`0 0 ${VIEWBOX.width} ${VIEWBOX.height}`} 
+        viewBox={`0 0 100 ${viewBoxHeight}`} 
         preserveAspectRatio="xMidYMid meet"
-        style={{ width: '100%', height: '400px' }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}
       >
-        
-        {/* AKSOS central node with pulsing */}
+        {/* Center AKSOS Node */}
         <motion.g
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal }}
-          animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
-          transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : {}}
+          transition={{ duration: tokens.animation.duration.normal, delay: 0.15 }}
+          whileHover={{ scale: 1.1 }}
         >
-          <circle 
-            cx={AKSOS_NODE.x} 
-            cy={AKSOS_NODE.y} 
-            r={4} 
-            fill="none" 
-            stroke={tokens.color.signal} 
-            strokeWidth="0.5"
-          />
-          <DiagramLabel
-            x={AKSOS_NODE.x}
-            y={AKSOS_NODE.y}
-            text={AKSOS_NODE.label}
-            dy={15}
-            fontSize={8}
-            fill={tokens.color.signal}
-            letterSpacing={0.15}
+          <DiagramNode
+            x={layout.centerX}
+            y={layout.centerY}
+            r={CENTER_NODE.r}
+            fill={tokens.color.ink}
+            stroke={CENTER_NODE.stroke}
+            strokeWidth={CENTER_NODE.strokeWidth}
+            label={CENTER_NODE.label}
+            labelPosition="bottom"
+            labelOffset={8}
+            labelFontSize={7}
+            labelColor={tokens.color.ink}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: tokens.animation.duration.normal, delay: 0.15 }}
           />
         </motion.g>
 
-        {/* Peripheral nodes by type */}
-        {layout.nodeTypes.map((type, typeIndex) => {
-          const isHighlighted = highlightedType === type.type || isHovered;
+        {/* Relationship Type Nodes */}
+        {layout.nodes.map((node, index) => {
+          const isMobile = breakpoint === 'mobile';
           
-          return type.nodes.map((node, nodeIndex) => (
+          return (
             <motion.g
-              key={`node-${type.type}-${nodeIndex}`}
-              initial={{ opacity: 0, scale: 0 }}
+              key={`node-${node.label}`}
+              initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: tokens.animation.duration.normal, delay: type.delay + (nodeIndex * 0.05) }}
+              transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
               whileHover={{ scale: 1.15 }}
-              onHoverStart={() => setHighlightedType(type.type)}
-              onHoverEnd={() => setHighlightedType(null)}
-              animate={isHovered ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
-              transition={isHovered ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: type.delay } : {}}
             >
               <DiagramNode
                 x={node.x}
                 y={node.y}
-                r={NODE_RADIUS}
+                r={NODE_R}
                 fill={tokens.color.ink}
-                stroke={isHighlighted ? tokens.color.signal : tokens.color.line}
-                strokeWidth={isHighlighted ? HIGHLIGHT_STROKE_WIDTH : 0.3}
-                label={type.type}
-                labelPosition="bottom"
-                labelOffset={12}
+                stroke={tokens.color.line}
+                strokeWidth={0.3}
+                label={node.label}
+                labelPosition={isMobile ? 'bottom' : 'top'}
+                labelOffset={7}
                 labelFontSize={5}
-                labelColor={tokens.color.ink}
-                exclusionZone={layout.exclusionZone}
-                initial={{ opacity: 0, scale: 0 }}
+                labelColor={tokens.color.muted}
+                initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: tokens.animation.duration.normal, delay: type.delay + (nodeIndex * 0.05) }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay }}
               />
             </motion.g>
-          ));
-        })}
-
-        {/* Relationship lines with different styles */}
-        {layout.allNodes.map((node, index) => {
-          const isHighlighted = highlightedType === node.type || isHovered;
-          
-          return (
-            <motion.line
-              key={`rel-${index}`}
-              x1={AKSOS_NODE.x}
-              y1={AKSOS_NODE.y}
-              x2={node.x}
-              y2={node.y}
-              stroke={isHighlighted ? tokens.color.signal : tokens.color.line}
-              strokeWidth={isHighlighted ? HIGHLIGHT_STROKE_WIDTH : LINE_STROKE_WIDTH}
-              initial={{ pathLength: 0, opacity: 0 }}
-              whileInView={{ pathLength: 1, opacity: 0.5 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{
-                duration: tokens.animation.duration.normal,
-                delay: 0.5 + (index * 0.03)
-              }}
-              animate={isHovered ? { opacity: [0.5, 1, 0.5], strokeWidth: [LINE_STROKE_WIDTH, HIGHLIGHT_STROKE_WIDTH, LINE_STROKE_WIDTH] } : {}}
-              transition={isHovered ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.05 } : {}}
-            />
           );
         })}
 
-        {/* Value statement at bottom */}
+        {/* Connections from AKSOS to Relationship Types */}
+        {layout.nodes.map((node, index) => {
+          const isMobile = breakpoint === 'mobile';
+          const from = { x: layout.centerX, y: layout.centerY };
+          const to = { x: node.x, y: node.y };
+          
+          // For mobile, adjust to vertical connections
+          const mobileFrom = isMobile ? { x: layout.centerX, y: layout.centerY } : from;
+          const mobileTo = isMobile ? { x: layout.centerX, y: node.y } : to;
+          
+          return (
+            <motion.g
+              key={`conn-${node.label}`}
+              initial={{ opacity: 0, pathLength: 0 }}
+              whileInView={{ opacity: 1, pathLength: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+            >
+              <DiagramConnection
+                from={isMobile ? mobileFrom : from}
+                to={isMobile ? mobileTo : to}
+                stroke={tokens.color.line}
+                strokeWidth={CONNECTION_STROKE_WIDTH}
+                curved={!isMobile}
+                curvature={0.3}
+                exclusionZone={EXCLUSION_ZONE}
+                initial={{ opacity: 0, pathLength: 0 }}
+                whileInView={{ opacity: 1, pathLength: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: tokens.animation.duration.normal, delay: node.delay + 0.05 }}
+              />
+            </motion.g>
+          );
+        })}
+
+        {/* Title */}
         <motion.g
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: tokens.animation.duration.normal, delay: 0.8 }}
-          animate={isHovered ? { fill: tokens.color.signal } : {}}
+          transition={{ duration: tokens.animation.duration.normal }}
         >
           <DiagramLabel
-            x={VIEWBOX.width / 2}
-            y={90}
-            text="NETWORK VALUE INCREASES"
+            x={CENTER_X}
+            y={viewBoxHeight - 8}
+            text="GROWING NETWORK"
+            textAnchor="middle"
             fontSize={6}
-            fill={isHovered ? tokens.color.signal : tokens.color.muted}
-            letterSpacing={0.1}
-          />
-          <DiagramLabel
-            x={VIEWBOX.width / 2}
-            y={96}
-            text="WITH RELATIONSHIPS"
-            fontSize={6}
-            fill={isHovered ? tokens.color.signal : tokens.color.muted}
+            fill={tokens.color.muted}
             letterSpacing={0.1}
           />
         </motion.g>
 
         {/* Hover indicator */}
-        {isHovered && (
+        {isHovered && breakpoint !== 'mobile' && (
           <motion.text
-            x={VIEWBOX.width / 2}
-            y={80}
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
             textAnchor="middle"
             fontSize="4"
             fontFamily={tokens.font.mono}
@@ -261,7 +308,23 @@ export function GrowingNetwork() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            HOVER TO SEE CONNECTIONS
+            HOVER TO EXPLORE NETWORK GROWTH
+          </motion.text>
+        )}
+
+        {isHovered && breakpoint === 'mobile' && (
+          <motion.text
+            x={CENTER_X}
+            y={viewBoxHeight - 3}
+            textAnchor="middle"
+            fontSize="4"
+            fontFamily={tokens.font.mono}
+            fill={tokens.color.muted}
+            letterSpacing="0.1em"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            TAP TO EXPLORE NETWORK
           </motion.text>
         )}
       </svg>
