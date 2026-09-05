@@ -88,8 +88,8 @@ export function FragmentedPlates({
       
       // Size: plates should be large and architectural
       const sizeFactor = 0.2 + seededRandom(seedValue) * 0.15;
-      const width = width * sizeFactor;
-      const height = height * (0.15 + seededRandom(seedValue + 1) * 0.1);
+      const plateWidth = width * sizeFactor;
+      const plateHeight = height * (0.15 + seededRandom(seedValue + 1) * 0.1);
       
       // Position: centered but with controlled misalignment
       const centerX = width / 2;
@@ -98,8 +98,8 @@ export function FragmentedPlates({
       const offsetX = (seededRandom(seedValue + 2) - 0.5) * width * 0.15;
       const offsetY = (seededRandom(seedValue + 3) - 0.5) * height * 0.1;
       
-      const x = centerX + offsetX - width / 2;
-      const y = centerY + offsetY - height / 2;
+      const x = centerX + offsetX - plateWidth / 2;
+      const y = centerY + offsetY - plateHeight / 2;
       
       // Slight rotation for misalignment
       const rotation = (seededRandom(seedValue + 4) - 0.5) * 2;
@@ -111,8 +111,8 @@ export function FragmentedPlates({
         id: `plate-${i}`,
         x,
         y,
-        width,
-        height,
+        width: plateWidth,
+        height: plateHeight,
         rotation,
         color,
       });
@@ -315,14 +315,14 @@ export function FragmentedPlates({
             {/* Plates with parallax */}
             {plates.map((plate, index) => {
               const offsetX = getParallaxOffset(index);
+              const xValue = typeof offsetX === 'number' ? offsetX : offsetX.get();
               
               return (
                 <motion.g
                   key={plate.id}
                   initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: offsetX }}
+                  animate={{ opacity: 1, x: xValue }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  style={{ x: offsetX }}
                 >
                   <g transform={`translate(${plate.x}, ${plate.y}) rotate(${plate.rotation})`}>
                     {/* Plate base */}

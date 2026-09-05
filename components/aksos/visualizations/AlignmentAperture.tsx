@@ -177,20 +177,21 @@ export function AlignmentAperture({
   // Trigger animation sequence when in view
   useEffect(() => {
     if (inView && !prefersReducedMotion) {
-      // Start with chaotic state
-      controls.start({
-        nodes: nodes.map(node => ({
-          x: [node.x, node.resolvedX],
-          y: [node.y, node.resolvedY],
-        })),
-      }).then(() => {
+      // Animate all nodes to resolved positions
+      const nodeAnimations = nodes.map(node => ({
+        x: node.resolvedX,
+        y: node.resolvedY,
+      }));
+      // Use a simpler approach - just set isResolved after a delay
+      const timer = setTimeout(() => {
         setIsResolved(true);
-      });
+      }, 500);
+      return () => clearTimeout(timer);
     } else if (inView && prefersReducedMotion) {
       // For reduced motion, just show resolved state
       setIsResolved(true);
     }
-  }, [inView, controls, nodes, prefersReducedMotion]);
+  }, [inView, nodes, prefersReducedMotion]);
   
   // Get container dimensions for SVG
   const svgWidth = dimensions.width || 600;
@@ -265,16 +266,19 @@ export function AlignmentAperture({
         })}
         
         {/* Nodes */}
-        {nodes.map(node => (
-          <circle
-            key={node.id}
-            cx={node.resolvedX}
-            cy={node.resolvedY}
-            r={node.size}
-            fill={categoryColors[node.category]}
-            opacity={0.8}
-          />
-        ))}
+        {nodes.map(node => {
+          const color = categoryColors[node.category as keyof typeof categoryColors];
+          return (
+            <circle
+              key={node.id}
+              cx={node.resolvedX}
+              cy={node.resolvedY}
+              r={node.size}
+              fill={color}
+              opacity={0.8}
+            />
+          );
+        })}
       </g>
       
       {/* Aperture border */}
@@ -373,19 +377,22 @@ export function AlignmentAperture({
               })}
               
               {/* Chaotic nodes */}
-              {nodes.map(node => (
-                <motion.circle
-                  key={`chaotic-${node.id}`}
-                  cx={node.x}
-                  cy={node.y}
-                  r={node.size}
-                  fill={categoryColors[node.category]}
-                  opacity={0.4}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 0.4, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                />
-              ))}
+              {nodes.map(node => {
+                const color = categoryColors[node.category as keyof typeof categoryColors];
+                return (
+                  <motion.circle
+                    key={`chaotic-${node.id}`}
+                    cx={node.x}
+                    cy={node.y}
+                    r={node.size}
+                    fill={color}
+                    opacity={0.4}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 0.4, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
+                  />
+                );
+              })}
             </g>
             
             {/* INSIDE: Resolved nodes and connections (clipped by aperture) */}
@@ -422,28 +429,31 @@ export function AlignmentAperture({
               })}
               
               {/* Resolved nodes */}
-              {nodes.map((node, index) => (
-                <motion.circle
-                  key={`resolved-${node.id}`}
-                  cx={node.x}
-                  cy={node.y}
-                  r={node.size}
-                  fill={categoryColors[node.category]}
-                  opacity={0.7}
-                  initial={{ opacity: 0, scale: 0, x: node.x, y: node.y }}
-                  animate={{ 
-                    opacity: isResolved ? 0.7 : 0,
-                    scale: isResolved ? 1 : 0,
-                    x: isResolved ? node.resolvedX : node.x,
-                    y: isResolved ? node.resolvedY : node.y,
-                  }}
-                  transition={{ 
-                    duration: 0.4,
-                    delay: 0.2 + index * 0.005,
-                    ease: vizTokens.easing.snap
-                  }}
-                />
-              ))}
+              {nodes.map((node, index) => {
+                const color = categoryColors[node.category as keyof typeof categoryColors];
+                return (
+                  <motion.circle
+                    key={`resolved-${node.id}`}
+                    cx={node.x}
+                    cy={node.y}
+                    r={node.size}
+                    fill={color}
+                    opacity={0.7}
+                    initial={{ opacity: 0, scale: 0, x: node.x, y: node.y }}
+                    animate={{ 
+                      opacity: isResolved ? 0.7 : 0,
+                      scale: isResolved ? 1 : 0,
+                      x: isResolved ? node.resolvedX : node.x,
+                      y: isResolved ? node.resolvedY : node.y,
+                    }}
+                    transition={{ 
+                      duration: 0.4,
+                      delay: 0.2 + index * 0.005,
+                      ease: vizTokens.easing.snap
+                    }}
+                  />
+                );
+              })}
             </g>
             
             {/* Aperture border */}

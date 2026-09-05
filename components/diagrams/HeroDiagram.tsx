@@ -45,8 +45,8 @@ export function HeroDiagram({ breakpoint = 'desktop' }: HeroDiagramProps) {
     { id: 'competitor', x: 10, y: 80, label: 'COMPETITOR', category: 'company' as const, role: 'secondary' as const },
     
     // Tertiary signals (visible on desktop only)
-    { id: 'institution', x: 20, y: 85, label: 'INSTITUTION', category: 'context' as const, role: 'tertiary' as const },
-    { id: 'market', x: 80, y: 85, label: 'MARKET', category: 'context' as const, role: 'tertiary' as const },
+    { id: 'institution', x: 20, y: 85, label: 'INSTITUTION', category: 'company' as const, role: 'tertiary' as const },
+    { id: 'market', x: 80, y: 85, label: 'MARKET', category: 'event' as const, role: 'tertiary' as const },
   ];
 
   // Filter signals based on breakpoint

@@ -4,7 +4,7 @@
 // =============================================================================
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import { motion, useAnimation, useInView, AnimationDefinition } from 'framer-motion';
 import { useReducedMotion } from './useReducedMotion';
 import { vizTokens } from './visualizationTokens';
 
@@ -38,9 +38,9 @@ export function VisualizationFrame({
   backgroundColor = vizTokens.color.bgPrimary,
   borderColor = vizTokens.color.mutedLight,
   showBorder = false,
-  initial = { opacity: 0, scale: 0.98 },
-  animate = { opacity: 1, scale: 1 },
-  transition = { duration: 0.4, delay: 0.2 },
+  initial,
+  animate,
+  transition = { duration: 0.4, delay: 0.2 } as const,
   viewport = { once: true, margin: '-100px' },
   reducedMotionFallback,
 }: VisualizationFrameProps) {
@@ -54,7 +54,7 @@ export function VisualizationFrame({
   
   useEffect(() => {
     if (inView) {
-      controls.start(animate);
+      controls.start(animate as any);
       setIsVisible(true);
     }
   }, [inView, controls, animate]);
@@ -97,9 +97,9 @@ export function VisualizationFrame({
         position: 'relative',
         ...style,
       }}
-      initial={initial}
+      initial={initial as any}
       animate={controls}
-      transition={transition}
+      transition={transition as any}
       viewport={viewport}
     >
       {children}

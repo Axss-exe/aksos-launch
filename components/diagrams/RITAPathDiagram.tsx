@@ -64,13 +64,13 @@ export function RITAPathDiagram({ breakpoint = 'desktop', activeStep }: RITAPath
       ))}
       
       {/* Path nodes */}
-      {pathNodes.map((node, index) => (
+      {pathNodes.map((node) => (
         <NetworkNode
           key={node.id}
           x={node.x}
           y={node.y}
           label={node.label}
-          category={node.category}
+          category={node.category as 'operator' | 'signal' | 'context' | 'system' | 'company' | 'policy' | 'capital' | 'project' | 'relationship'}
           role={node.role}
           size="md"
         />

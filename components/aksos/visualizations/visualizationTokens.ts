@@ -116,8 +116,8 @@ export const vizTokens = {
   // ===========================================================================
   
   grid: {
-    spacing: tokens.layout.gutter,
-    columnWidth: tokens.layout.columnWidth,
+    spacing: tokens.layout.gridGap,
+    columnWidth: tokens.layout.contentWidth,
   },
   
   // ===========================================================================
@@ -194,11 +194,11 @@ export const vizTokens = {
   
   // Extraction Paths
   extractionPaths: {
-    spineWidth: 1,
     pathWidth: 0.75,
     pathCount: 5,
     revealDuration: 0.6,
     revealStagger: 0.15,
+    spineWidth: 1,
   },
   
   // Topographic Hierarchy

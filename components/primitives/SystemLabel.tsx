@@ -1,7 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, MotionValue } from 'framer-motion';
 import { tokens } from '@/lib/tokens';
+
+type TextAnchor = 'start' | 'middle' | 'end' | 'inherit';
 
 interface SystemLabelProps {
   x: number;
@@ -29,7 +31,7 @@ export function SystemLabel({
     right: { x: 4, y: 0 },
   };
 
-  const textAnchor = {
+  const textAnchor: Record<'top' | 'bottom' | 'left' | 'right', TextAnchor> = {
     top: 'middle',
     bottom: 'middle',
     left: 'end',

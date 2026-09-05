@@ -255,7 +255,7 @@ export function ExtractionPaths({
             d={getSpinePath()}
             fill="none"
             stroke={tokens.color.lineStrong}
-            strokeWidth={vizTokens.line.spineWidth}
+            strokeWidth={vizTokens.extractionPaths.spineWidth}
             opacity={0.5}
           />
           
