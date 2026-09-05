@@ -189,12 +189,8 @@ export function FragmentedPlates({
   const svgHeight = dimensions.height || 400;
   
   // Calculate parallax offsets for each plate
-  const getParallaxOffset = (index: number) => {
-    if (prefersReducedMotion) return 0;
-    // Each plate moves at a slightly different rate
-    const multiplier = 1 - (index * 0.15);
-    return useTransform(scrollYProgress, [0, 1], [-svgWidth * 0.05 * multiplier, svgWidth * 0.05 * multiplier]);
-  };
+  // Pre-compute parallax multipliers, then apply in render
+  const parallaxMultipliers = Array(10).fill(0).map((_, i) => 1 - (i * 0.15));
   
   // Reduced motion fallback - show static resolved state
   const renderReducedMotion = () => (
@@ -314,14 +310,14 @@ export function FragmentedPlates({
             
             {/* Plates with parallax */}
             {plates.map((plate, index) => {
-              const offsetX = getParallaxOffset(index);
-              const xValue = typeof offsetX === 'number' ? offsetX : offsetX.get();
+              const multiplier = parallaxMultipliers[index];
+              const offsetX = useTransform(scrollYProgress, [0, 1], [-svgWidth * 0.05 * multiplier, svgWidth * 0.05 * multiplier]);
               
               return (
                 <motion.g
                   key={plate.id}
                   initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: xValue }}
+                  animate={{ opacity: 1, x: offsetX as any }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 >
                   <g transform={`translate(${plate.x}, ${plate.y}) rotate(${plate.rotation})`}>
