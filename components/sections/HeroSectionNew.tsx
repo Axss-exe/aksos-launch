@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { HeroGraph } from '../diagrams/HeroGraph';
+import { RawDataStream } from '../aksos/visualizations';
 import { useState, useEffect, useCallback } from 'react';
 import { tokens } from '@/lib/tokens';
 
@@ -170,7 +170,7 @@ export function HeroSectionNew({ breakpoint = 'desktop' }: HeroSectionNewProps) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          whileHover={{ 
+          whileHover={{
             backgroundColor: tokens.color.signalLight,
             borderColor: tokens.color.signalLight,
           }}
@@ -187,7 +187,7 @@ export function HeroSectionNew({ breakpoint = 'desktop' }: HeroSectionNewProps) 
         </motion.a>
       </motion.div>
       
-      {/* RIGHT: Living Graph */}
+      {/* RIGHT: Raw Data Stream */}
       <motion.div
         className="hero-graph"
         style={{
@@ -195,14 +195,14 @@ export function HeroSectionNew({ breakpoint = 'desktop' }: HeroSectionNewProps) 
           width: '100%',
           height: isMobile ? '400px' : '100%',
           minHeight: isMobile ? '400px' : '600px',
-          overflow: 'visible',
+          overflow: 'hidden',
         }}
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.1 }}
       >
-        <HeroGraph 
+        <RawDataStream 
           breakpoint={getBreakpoint()} 
           key={getBreakpoint()}
         />

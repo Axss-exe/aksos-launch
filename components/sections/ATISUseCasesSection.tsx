@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraphicPlaceholder } from '../primitives/GraphicPlaceholder';
+import { ExtractionPaths } from '../aksos/visualizations';
 import { tokens } from '@/lib/tokens';
 
 // =============================================================================
@@ -51,8 +51,30 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
+          position: 'relative',
         }}
       >
+        {/* Extraction Paths - Background visualization */}
+        {!isMobile && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          >
+            <ExtractionPaths 
+              breakpoint={breakpoint}
+              cardCount={3}
+              key={breakpoint}
+            />
+          </div>
+        )}
+
         {/* Section Label */}
         <motion.p
           className="section-label"
@@ -63,6 +85,8 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             letterSpacing: tokens.letterSpacing.widest,
             marginBottom: tokens.spacing['4'],
             textTransform: 'uppercase',
+            position: 'relative',
+            zIndex: 1,
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,6 +108,8 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             letterSpacing: tokens.letterSpacing.tight,
             marginBottom: tokens.spacing['16'],
             maxWidth: '700px',
+            position: 'relative',
+            zIndex: 1,
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,6 +127,8 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             backgroundColor: tokens.color.paper,
             border: `1px solid ${tokens.color.line}`,
             borderRadius: tokens.border.radius.sm,
+            position: 'relative',
+            zIndex: 1,
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -262,15 +290,18 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             <motion.div
               style={{
                 position: 'relative',
+                zIndex: 1,
               }}
             >
-              <GraphicPlaceholder
-                title="GRAPHIC PLACEHOLDER"
-                description="Investor use case visualization"
-                aspectRatio={1 / 1}
-                minHeight={isMobile ? '250px' : '350px'}
-                bgColor={tokens.color.background}
-                borderColor={tokens.color.line}
+              {/* Placeholder for now - ExtractionPaths is the background visualization */}
+              <div
+                style={{
+                  width: '100%',
+                  minHeight: isMobile ? '250px' : '350px',
+                  backgroundColor: tokens.color.background,
+                  border: `1px solid ${tokens.color.line}`,
+                  borderRadius: tokens.border.radius.sm,
+                }}
               />
             </motion.div>
           </motion.div>
@@ -284,6 +315,8 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             backgroundColor: tokens.color.paper,
             border: `1px solid ${tokens.color.line}`,
             borderRadius: tokens.border.radius.sm,
+            position: 'relative',
+            zIndex: 1,
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -445,15 +478,17 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             <motion.div
               style={{
                 position: 'relative',
+                zIndex: 1,
               }}
             >
-              <GraphicPlaceholder
-                title="GRAPHIC PLACEHOLDER"
-                description="Enterprise use case visualization"
-                aspectRatio={1 / 1}
-                minHeight={isMobile ? '250px' : '350px'}
-                bgColor={tokens.color.background}
-                borderColor={tokens.color.line}
+              <div
+                style={{
+                  width: '100%',
+                  minHeight: isMobile ? '250px' : '350px',
+                  backgroundColor: tokens.color.background,
+                  border: `1px solid ${tokens.color.line}`,
+                  borderRadius: tokens.border.radius.sm,
+                }}
               />
             </motion.div>
           </motion.div>
@@ -467,6 +502,8 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             backgroundColor: tokens.color.paper,
             border: `1px solid ${tokens.color.line}`,
             borderRadius: tokens.border.radius.sm,
+            position: 'relative',
+            zIndex: 1,
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -628,15 +665,17 @@ export function ATISUseCasesSection({ breakpoint = 'desktop' }: ATISUseCasesSect
             <motion.div
               style={{
                 position: 'relative',
+                zIndex: 1,
               }}
             >
-              <GraphicPlaceholder
-                title="GRAPHIC PLACEHOLDER"
-                description="Person perspective use case visualization"
-                aspectRatio={1 / 1}
-                minHeight={isMobile ? '250px' : '350px'}
-                bgColor={tokens.color.background}
-                borderColor={tokens.color.line}
+              <div
+                style={{
+                  width: '100%',
+                  minHeight: isMobile ? '250px' : '350px',
+                  backgroundColor: tokens.color.background,
+                  border: `1px solid ${tokens.color.line}`,
+                  borderRadius: tokens.border.radius.sm,
+                }}
               />
             </motion.div>
           </motion.div>

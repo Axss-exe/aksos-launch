@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraphicPlaceholder } from '../primitives/GraphicPlaceholder';
+import { AlignmentAperture } from '../aksos/visualizations';
 import { tokens } from '@/lib/tokens';
 
 // =============================================================================
@@ -340,7 +340,7 @@ export function AksosSection({ breakpoint = 'desktop' }: AksosSectionProps) {
             </motion.div>
           </motion.div>
           
-          {/* RIGHT: Graphic Placeholder */}
+          {/* RIGHT: Alignment Aperture */}
           <motion.div
             style={{
               position: 'relative',
@@ -350,13 +350,9 @@ export function AksosSection({ breakpoint = 'desktop' }: AksosSectionProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <GraphicPlaceholder
-              title="GRAPHIC PLACEHOLDER  AKSOS"
-              description="Asymmetric visualization: YOU  YOUR WORK  AKSOS  BETTER VISIBILITY/CONTEXT/UNDERSTANDING. Operator remains visually dominant."
-              aspectRatio={16 / 10}
-              minHeight={isMobile ? '350px' : '500px'}
-              bgColor={tokens.color.paper}
-              borderColor={tokens.color.line}
+            <AlignmentAperture 
+              breakpoint={breakpoint}
+              key={breakpoint}
             />
           </motion.div>
         </motion.div>

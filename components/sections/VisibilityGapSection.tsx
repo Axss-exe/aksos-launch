@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraphicPlaceholder } from '../primitives/GraphicPlaceholder';
+import { FragmentedPlates } from '../aksos/visualizations';
 import { tokens } from '@/lib/tokens';
 
 // =============================================================================
@@ -299,24 +299,24 @@ export function VisibilityGapSection({ breakpoint = 'desktop' }: VisibilityGapSe
           </motion.div>
         </motion.div>
         
-        {/* Graphic Placeholder */}
+        {/* Fragmented Plates Visualization */}
         <motion.div
           style={{
             marginTop: tokens.spacing['12'],
             marginBottom: tokens.spacing['12'],
+            width: '100%',
+            maxWidth: '800px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <GraphicPlaceholder
-            title="GRAPHIC PLACEHOLDER — VISIBILITY GAP"
-            description="Contrast visualization: Ecosystem visibility vs. distance obscurity"
-            aspectRatio={21 / 9}
-            minHeight={isMobile ? '300px' : '450px'}
-            bgColor={tokens.color.background}
-            borderColor={tokens.color.line}
+          <FragmentedPlates 
+            breakpoint={breakpoint}
+            key={breakpoint}
           />
         </motion.div>
         
